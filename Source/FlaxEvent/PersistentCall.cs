@@ -1,6 +1,5 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
-using System;
 using System.Reflection;
 
 namespace FlaxEvent;
@@ -50,6 +49,11 @@ public record struct PersistentCall
         for (int i = 0; useRuntimeParams && i < eventParams.Length; i++)
             if (Parameters[i].ParameterType == null || eventParams[i].GetType() != Parameters[i].ParameterType)
                 useRuntimeParams = false;
+
+        // TODO: useRuntimeParams can probably be cached, since the event signature and this call signature won't
+        // change at runtime. Also, for micro-optimization, the target method could be susbscribed to the action
+        // delegate in the main event, but there isn't a proper pipeline for that right now.
+        // Not sure if worth exploring.
 
         // Early exit, we don't need to convert the parameters if we use runtime params
         if (useRuntimeParams)

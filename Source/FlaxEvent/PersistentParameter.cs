@@ -1,8 +1,6 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System;
-using System.Collections.Generic;
-using FlaxEngine;
 
 namespace FlaxEvent;
 
