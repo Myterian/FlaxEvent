@@ -1,0 +1,17 @@
+Source/obj/
+Source/Properties/
+Source/Game
+Binaries/
+Logs/
+Cache/
+Icons/
+Content/Materials
+Content/SceneData
+.vscode
+omnisharp.json
+
+Source/Game.Gen.cs
+Source/Game.csproj
+FlaxEvent.sln
+FlaxEvent.code-workspace
+FlaxEvent.sln.DotSettings.user

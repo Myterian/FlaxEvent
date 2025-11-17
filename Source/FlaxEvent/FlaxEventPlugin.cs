@@ -1,0 +1,42 @@
+﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
+
+using System;
+using FlaxEngine;
+
+namespace FlaxEvent;
+
+/// <summary>FlaxEventPlugin GamePlugin.</summary>
+public class FlaxEventPlugin : GamePlugin
+{
+    public static Version PluginVersion = new(3, 0, 0);
+
+    /// <inheritdoc/>
+    public override void Initialize()
+    {
+        base.Initialize();
+        
+    }
+
+    /// <inheritdoc/>
+    public override void Deinitialize()
+    {
+        base.Deinitialize();
+        
+    }
+
+    public FlaxEventPlugin()
+    {
+        _description = new()
+        {
+            Name = "FlaxEvent 3.0",
+            Description = "Editor-Configureable Events for the Flax Engine",
+            Category = "FlaxEvent",
+            RepositoryUrl = "https://github.com/Myterian/ExtensionMethods.git",
+            Author = "Thomas Jungclaus",
+            AuthorUrl = "https://github.com/Myterian",
+            IsAlpha = false,
+            IsBeta = false,
+            Version = PluginVersion
+        };
+    }
+}

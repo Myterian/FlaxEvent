@@ -1,0 +1,74 @@
+﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
+
+using System;
+using System.Reflection;
+
+namespace FlaxEvent;
+
+/// <summary>Stores infos about object and method/member, that will be dynamically invoked by a <see cref="FlaxEventBase"/></summary>
+public record struct PersistentCall
+{
+    /// <summary>Editor-Configured invokation parameters</summary>
+    public PersistentParameter[] Parameters = [];
+
+    /// <summary>Editor-Configured invokation target</summary>
+    public FlaxEngine.Object TargetObject = null;
+
+    /// <summary>Editor-Configured invokation method</summary>
+    public string MethodName = string.Empty;
+
+    /// <summary>MethodInfo of the target method</summary>
+    public MethodInfo MethodInfo => methodInfo ??= CacheMethodInfo();
+
+    private MethodInfo methodInfo;
+    
+    /// <summary>Caches the method info for runtime, because flax doesn't serialize methodinfo types</summary>
+    private MethodInfo CacheMethodInfo()
+    {
+        if (TargetObject == null || string.IsNullOrEmpty(MethodName))
+            return null;
+
+        return TargetObject.GetType().GetMethod(MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
+    }
+
+    /// <summary>Invokes the stored persistent action</summary>
+    /// <param name="eventParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>
+    public void Invoke(object[] eventParams)
+    {
+        if (MethodInfo == null)
+            return;
+
+        // Parameter signature matching check
+        bool useRuntimeParams = eventParams != null ? eventParams.Length == Parameters.Length : false;
+
+
+        // TODO: Instead of instantly returning false when parameter types dont match, the types could be checked
+        // for assignability, like with ints and floats, where an int gets automatically converted to a float.
+        // useRuntimeParams = Parameters[i].ParameterType.IsAssignableFrom(eventParams[i].GetType());
+        // Q: Will there be a noticable performance difference, when checking for 100 invokes?
+
+        for (int i = 0; useRuntimeParams && i < eventParams.Length; i++)
+            if (Parameters[i].ParameterType == null || eventParams[i].GetType() != Parameters[i].ParameterType)
+                useRuntimeParams = false;
+
+        // Early exit, we don't need to convert the parameters if we use runtime params
+        if (useRuntimeParams)
+        {
+            MethodInfo?.Invoke(TargetObject, eventParams);
+            return;
+        }
+
+        // Use the serialized parameters
+        object[] runtimeParameter = new object[Parameters.Length];
+
+        for (int i = 0; i < Parameters.Length; i++)
+            runtimeParameter[i] = Parameters[i].GetValue();
+
+        MethodInfo?.Invoke(TargetObject, runtimeParameter);
+    }
+
+    public PersistentCall()
+    {
+    }
+
+}
