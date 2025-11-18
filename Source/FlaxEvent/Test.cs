@@ -19,35 +19,26 @@ public class Test : Script
     // }
     // // [Serialize] public MethodInfo methodInfo;
     // [Serialize] public Type type;
+    public List<Vector3> Vectors = new();
 
-    public FlaxEvent flaxEvent = new();
+    public FlaxEvent OnSomething = new();
 
-    /// <inheritdoc/>
-    public override void OnStart()
-    {
-        // Here you can add code that needs to be called when script is created, just before the first game update
-    }
 
     /// <inheritdoc/>
     public override void OnEnable()
     {
-        // Here you can add code that needs to be called when script is enabled (eg. register for events)
+        OnSomething?.Invoke();
     }
 
-    /// <inheritdoc/>
-    public override void OnDisable()
+    public void MyMethod()
     {
-        // Here you can add code that needs to be called when script is disabled (eg. unregister from events)
+        Debug.Log("FlaxEvent Invoked!");
     }
 
-    /// <inheritdoc/>
-    public override void OnUpdate()
+    // [Button("Subscribe")]
+    public void Subscribe()
     {
-        // Here you can add code that needs to be called every frame
-    }
-
-    public void MyMethod(string someting)
-    {
-        // methodInfo.Invoke(this, ["dsf"]);
+        OnSomething?.AddListener(MyMethod);
+        
     }
 }

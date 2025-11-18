@@ -1,6 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -9,19 +10,29 @@ using Object = FlaxEngine.Object;
 
 namespace FlaxEvent;
 
-/// <summary>FlaxEvent class.</summary>
+/// <summary>Base Class of all FlaxEvent types</summary>
 public abstract class FlaxEventBase
 {
+    /// <summary>List of all editor-configured actions</summary>
     public List<PersistentCall> PersistentCallList { get; private set; } = new();
 
-    public void AddPersistentListener(PersistentCall call) => PersistentCallList.Add(call);
+    /// <summary>Add a new persistent call</summary>
+    /// <param name="call">Call to add</param>
+    internal void AddPersistentListener(PersistentCall call) => PersistentCallList.Add(call);
 
-    public void RemovePersistentListener(PersistentCall call) => PersistentCallList.Remove(call);
+    /// <summary>Clears the persistent calls list</summary>
+    internal void ClearPersistent() => PersistentCallList.Clear();
 
-    public void RemovePersistentListener(int index) => PersistentCallList.RemoveAt(index);
+    /// <summary>Removes the first occurance of a persistent call</summary>
+    /// <param name="call">Call to remove</param>
+    internal void RemovePersistentListener(PersistentCall call) => PersistentCallList.Remove(call);
 
-    /// <summary>Invokes persistent listeners</summary>
-    public void InvokePersistent(object[] args)
+    /// <summary>Removes a persistent call at an index</summary>
+    /// <param name="index">Index of the element to remove</param>
+    internal void RemovePersistentListener(int index) => PersistentCallList.RemoveAt(index);
+
+    /// <summary>Invokes persistent listeners. Get invoked automatically, when calling <see cref="FlaxEvent.Invoke"/></summary>
+    protected void InvokePersistent(object[] args)
     {
         try
         {
