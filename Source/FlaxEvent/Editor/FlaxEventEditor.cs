@@ -1,16 +1,21 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
-using System;
+// using System;
 using System.Collections.Generic;
+// using FlaxEditor;
 using FlaxEditor.CustomEditors;
+// using FlaxEditor.CustomEditors.Dedicated;
 using FlaxEditor.CustomEditors.Editors;
+// using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
+// using FlaxEditor.GUI.Drag;
+
 
 namespace FlaxEvent;
 
 /// <summary>Custom editor to make <see cref="FlaxEventBase"/> appear as a list in the inspector</summary>
-[CustomEditor(typeof(FlaxEventBase))]
+[CustomEditor(typeof(FlaxEventBase)), DefaultEditor]
 public class FlaxEventEditor : GenericEditor
 {
     public override void Initialize(LayoutElementsContainer layout)
@@ -20,8 +25,8 @@ public class FlaxEventEditor : GenericEditor
         layout.Label("This could be your ad!");
         layout.ContainerControl.ClipChildren = false;
         layout.ContainerControl.CullChildren = false;
-        // layout.ContainerControl.Offsets = new Margin(7, 7, 0, 0);
-        layout.ContainerControl.BackgroundColor = Color.DarkGreen;
+        layout.ContainerControl.Offsets = new Margin(7, 7, 0, 0);
+        // layout.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
         // Debug.Log(layout.Control.Width);
         // (layout.Control as DropPanel).HeaderText = 
         // base.Initialize(layout);
@@ -54,9 +59,16 @@ public class FlaxEventEditor : GenericEditor
         //     layout.AddElement(new PersistentCallElement());
         // }
 
+        // var dragArea = layout.CustomContainer<DragAreaControl>();
+        // dragArea.CustomControl.E
+
         var test = new PersistentCallElement();
         test.SetTitle("Adam Splasher");
         layout.AddElement(test);
+        // layout.cu
+
+        // layout.AddPropertyItem("Label NAME", "Tooltip"); 
+        // layout.CustomContainer<PropertyNameLabel>();
 
         var propertyItem = layout.AddPropertyItem("Yes", "This is tooltip, yes");
         // propertyItem

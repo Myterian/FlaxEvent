@@ -19,7 +19,8 @@ public class Test : Script
     // }
     // // [Serialize] public MethodInfo methodInfo;
     // [Serialize] public Type type;
-    public List<Vector3> Vectors = new();
+    // public List<Vector3> Vectors = new();
+    public List<PersistentCall> persistentCalls = [new PersistentCall()];
 
     public FlaxEvent OnSomething = new();
 
@@ -27,7 +28,7 @@ public class Test : Script
     /// <inheritdoc/>
     public override void OnEnable()
     {
-        OnSomething?.Invoke();
+        // OnSomething?.Invoke();
     }
 
     public void MyMethod()
@@ -38,7 +39,7 @@ public class Test : Script
     // [Button("Subscribe")]
     public void Subscribe()
     {
-        OnSomething?.AddListener(MyMethod);
+        // OnSomething?.AddListener(MyMethod);
         
     }
 }

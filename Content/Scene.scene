@@ -35,7 +35,24 @@
 			"TypeName": "FlaxEvent.Test",
 			"ParentID": "74a68a984824b4510d12589f199ad68f",
 			"V": {
-	"flaxEvent": {}
+	"persistentCalls": [
+		{
+			"Parameters": [],
+			"TargetObject": null,
+			"MethodName": ""
+		},
+		{
+			"Parameters": [],
+			"TargetObject": null,
+			"MethodName": ""
+		},
+		{
+			"Parameters": [],
+			"TargetObject": null,
+			"MethodName": ""
+		}
+	],
+	"OnSomething": {}
 }
 		},
 		{
