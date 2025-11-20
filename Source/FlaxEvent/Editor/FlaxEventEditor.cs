@@ -2,7 +2,10 @@
 
 // using System;
 using System.Collections.Generic;
+using FlaxEditor;
+
 // using FlaxEditor;
+
 using FlaxEditor.CustomEditors;
 // using FlaxEditor.CustomEditors.Dedicated;
 using FlaxEditor.CustomEditors.Editors;
@@ -22,10 +25,11 @@ public class FlaxEventEditor : GenericEditor
     {
         List<PersistentCall> activePersistentCalls = (Values[0] as FlaxEventBase).PersistentCallList;
         // throw new NotImplementedException();
-        layout.Label("This could be your ad!");
-        layout.ContainerControl.ClipChildren = false;
-        layout.ContainerControl.CullChildren = false;
-        layout.Control.Offsets = new Margin(7, 7, 0, 0);
+        // layout.Label("This could be your ad!");
+        // layout.ContainerControl.ClipChildren = false;
+        // layout.ContainerControl.CullChildren = false;
+        // layout.Control.Offsets = new Margin(7, 7, 0, 0);
+        // layout.ContainerControl.chil
         // layout.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
         // Debug.Log(layout.Control.Width);
         // (layout.Control as DropPanel).HeaderText = 
@@ -61,16 +65,60 @@ public class FlaxEventEditor : GenericEditor
 
         // var dragArea = layout.CustomContainer<DragAreaControl>();
         // dragArea.CustomControl.E
+        // layout.AddPropertyItem
 
-        var test = new PersistentCallElement();
-        test.SetTitle("Adam Splasher");
-        layout.AddElement(test);
+        // var group = layout.Group("<null>");
+        // group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
+
+        // float height = group.Panel.HeaderHeight;
+
+        // var toggle = new CheckBox
+        // {
+        //     TooltipText = "If checked, the target will be invoked",
+        //     IsScrollable = false,
+        //     Checked = true, // Change to persistentcall.IsEnabled
+        //     Parent = group.Panel,
+        //     Size = new(height),
+        //     Bounds = new(height, 0, height, height),
+        //     BoxSize = height - 4
+        // };
+
+        // var dragButton = new Button
+        // {
+        //     BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
+        //     AutoFocus = true,
+        //     IsScrollable = false,
+        //     BackgroundColor = FlaxEngine.GUI.Style.Current.ForegroundGrey,
+        //     BackgroundColorHighlighted = FlaxEngine.GUI.Style.Current.ForegroundGrey.RGBMultiplied(1.5f),
+        //     HasBorder = false,
+        //     Parent = group.Panel,
+        //     Bounds = new(toggle.Right, 1, height, height),
+        //     Scale = new(0.9f)
+        // };
+
+        FlaxEventBase eventBase = Values[0] as FlaxEventBase;
+
+        for (int i = 0; i < eventBase.PersistentCallList.Count; i++)
+        {
+            var callElement = new PersistentCallElement();
+            callElement.Init(this, i);
+            layout.AddElement(callElement);
+        }
+
+        // var test = new PersistentCallElement();
+        // test.SetTitle("Adam Splasher");
+        // var callElement = layout.Custom<PersistentCallElement>();
+        // callElement.CustomControl.Init(this, 0);
+        // layout.Custom<PersistentCallElement>();
+        // layout.VerticalPanel();
         // layout.cu
 
         // layout.AddPropertyItem("Label NAME", "Tooltip"); 
         // layout.CustomContainer<PropertyNameLabel>();
-
-        var propertyItem = layout.AddPropertyItem("Yes", "This is tooltip, yes");
+        // var panel = layout.VerticalPanel();
+        // var propertyItem = panel.AddPropertyItem("Yes", "This is tooltip, yes");
+        // propertyItem.Control.Height = 20;
+        // layout.AddPropertyItem();
         // propertyItem
         // test.Control.AnchorMin = new(0.1f, 0);
         // test.Control.Offsets = new Margin(7, 7, 0, 0);
@@ -90,7 +138,7 @@ public class FlaxEventEditor : GenericEditor
 
         // NOTE: Margin of 3 for top margin (3rd parameter) is taken from FlaxEditor.Utilities.Constants.UIMargin. 
         // Due to accessibility level, here it needs to be set manualy. If that value changes it needs to be updated here, too.
-        buttonPanel.Panel.Margin = new Margin(0, 0, 3, 0); 
+        buttonPanel.Panel.Margin = new Margin(0, 0, 3, 0);
 
 
         var removeButton = buttonPanel.Button("-", "Remove last item");
@@ -103,7 +151,16 @@ public class FlaxEventEditor : GenericEditor
         addButton.Button.Size = new Float2(16, 16);
         addButton.Button.Enabled = true; // !IsSetBlocked && persistencalls.count < int32.maxvalue
         addButton.Button.AnchorPreset = AnchorPresets.TopRight;
-        // addButton.Button.Clicked += () =>
+        addButton.Button.Clicked += () =>
+        {
+            if (IsSetBlocked)
+                return;
+
+            // List<PersistentCall> newList = [.. activePersistentCalls];
+            // newList.Add(new PersistentCall());
+
+            // FlaxEventBase
+        };
         // IsSetBlocked
     }
 }

@@ -25,12 +25,6 @@
 			}
 		},
 		{
-			"ID": "6ff0581d474c84230b3d0fa9f17e0972",
-			"TypeName": "ExitOnEsc",
-			"ParentID": "74a68a984824b4510d12589f199ad68f",
-			"V": {}
-		},
-		{
 			"ID": "a4e7a5e646ce5997033057bdf6f37fc7",
 			"TypeName": "FlaxEvent.Test",
 			"ParentID": "74a68a984824b4510d12589f199ad68f",
@@ -39,21 +33,30 @@
 		{
 			"Parameters": [],
 			"TargetObject": null,
-			"MethodName": ""
+			"MethodName": "",
+			"IsEnabled": false
 		},
 		{
 			"Parameters": [],
 			"TargetObject": null,
-			"MethodName": ""
+			"MethodName": "",
+			"IsEnabled": false
 		},
 		{
 			"Parameters": [],
 			"TargetObject": null,
-			"MethodName": ""
+			"MethodName": "",
+			"IsEnabled": false
 		}
 	],
 	"OnSomething": {}
 }
+		},
+		{
+			"ID": "6ff0581d474c84230b3d0fa9f17e0972",
+			"TypeName": "ExitOnEsc",
+			"ParentID": "74a68a984824b4510d12589f199ad68f",
+			"V": {}
 		},
 		{
 			"ID": "28553d634087c67c711ebd96080482aa",

@@ -31,6 +31,10 @@ public abstract class FlaxEventBase
     /// <param name="index">Index of the element to remove</param>
     internal void RemovePersistentListener(int index) => PersistentCallList.RemoveAt(index);
 
+    /// <summary>Replaces the current peristent calls list</summary>
+    /// <param name="newCalls">New List</param>
+    internal void SetPersistentCalls(List<PersistentCall> newCalls) => PersistentCallList = newCalls;
+
     /// <summary>Invokes persistent listeners. Get invoked automatically, when calling <see cref="FlaxEvent.Invoke"/></summary>
     protected void InvokePersistent(object[] args)
     {
