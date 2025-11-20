@@ -20,6 +20,9 @@ public record struct PersistentCall
     public MethodInfo MethodInfo => methodInfo ??= CacheMethodInfo();
 
     private MethodInfo methodInfo;
+
+    /// <summary>Enables or disables the invokation of this call</summary>
+    public bool IsEnabled = true;
     
     /// <summary>Caches the method info for runtime, because flax doesn't serialize methodinfo types</summary>
     private MethodInfo CacheMethodInfo()
@@ -30,13 +33,13 @@ public record struct PersistentCall
         return TargetObject.GetType().GetMethod(MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
     }
 
-    /// <summary>Invokes the stored persistent action</summary>
+    /// <summary>Invokes the stored persistent action, if <see cref="IsEnabled"/> is true</summary>
     /// <param name="eventParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>
     public void Invoke(object[] eventParams)
     {
-        if (MethodInfo == null)
+        if (!IsEnabled || MethodInfo == null)
             return;
-
+        
         // Parameter signature matching check
         bool useRuntimeParams = eventParams != null ? eventParams.Length == Parameters.Length : false;
 

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
@@ -52,6 +53,20 @@ public class PersistentCallElement : LayoutElement
     {
         parentGroup.Panel.BackgroundColor = Style.Current.CollectionBackgroundColor;
         parentGroup.Panel.EnableContainmentLines = false;
+        parentGroup.Panel.ItemsMargin = new(16, 0, 0, 0);
+
+        var arrangeButton = new ButtonElement();
+        arrangeButton.Button.BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12);
+        arrangeButton.Control.AnchorPreset = AnchorPresets.TopLeft;
+        arrangeButton.Control.Size = new(12, 12);
+        arrangeButton.Control.Parent = parentGroup.Panel;
+
+        // var x = new Rectangle(2, 4, 12, 12);
+
+
+        // var image = parentGroup.Image(Editor.Instance.Icons.DragBar12);
+
+        // image.Control.Parent = parentGroup.Panel;
         // parentGroup.Panel.
         var propertyItem = parentGroup.AddPropertyItem("Target");
         var actorPicker = propertyItem.Custom<FlaxObjectRefPickerControl>();

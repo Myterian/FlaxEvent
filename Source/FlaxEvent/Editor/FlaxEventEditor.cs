@@ -25,7 +25,7 @@ public class FlaxEventEditor : GenericEditor
         layout.Label("This could be your ad!");
         layout.ContainerControl.ClipChildren = false;
         layout.ContainerControl.CullChildren = false;
-        layout.ContainerControl.Offsets = new Margin(7, 7, 0, 0);
+        layout.Control.Offsets = new Margin(7, 7, 0, 0);
         // layout.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
         // Debug.Log(layout.Control.Width);
         // (layout.Control as DropPanel).HeaderText = 
