@@ -18,6 +18,9 @@ public class PersistentCallElement : GroupElement
 {
     public FlaxEventEditor LinkedEditor;
 
+    private CustomElement<FlaxObjectRefPickerControl> objectPicker;
+    private ComboBoxElement methodPicker;
+
     private int callIndex = -1;
 
     public void Init(FlaxEventEditor editor, int index)
@@ -25,27 +28,13 @@ public class PersistentCallElement : GroupElement
         LinkedEditor = editor;
         callIndex = index;
 
-        // Pivot = Float2.Zero;
-        // HeaderHeight = 18;
-        // EnableDropDownIcon = true;
-        // var icons = FlaxEditor.Editor.Instance.Icons;
-        // ArrowImageClosed = new SpriteBrush(icons.ArrowRight12);
-        // ArrowImageOpened = new SpriteBrush(icons.ArrowDown12);
-        // HeaderText = "<null>";
-
-        // Offsets = new Margin(7, 7, 0, 0);
-
-        // HeaderTextMargin = new Margin(36, 0, 0, 0);
-        // _arrangeButtonRect = new Rectangle(16, 3, 12, 12);
-
-        // MouseButtonRightClicked += SetupContextMenu;
-        // IsClosedChanged += OnIsClosedChanged;
-
-        // var propertyList = new PropertiesListElement();
-        // this.
+        bool isCallEnabled = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].IsEnabled;
 
         Panel.HeaderText = "<null>";
         Panel.HeaderTextMargin = new(44, 0, 0, 0);
+        Panel.BackgroundColor = Style.Current.CollectionBackgroundColor;
+        Panel.HeaderTextColor = isCallEnabled ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
+        Panel.EnableContainmentLines = false;
 
         float height = Panel.HeaderHeight;
 
@@ -53,7 +42,7 @@ public class PersistentCallElement : GroupElement
         {
             TooltipText = "If checked, the target will be invoked",
             IsScrollable = false,
-            Checked = true, // Change to persistentcall.IsEnabled
+            Checked = isCallEnabled,
             Parent = Panel,
             Size = new(height),
             Bounds = new(height, 0, height, height),
@@ -74,10 +63,12 @@ public class PersistentCallElement : GroupElement
         };
 
         var propertyList = AddPropertyItem("Target", "The target of this event");
-        propertyList.Custom<FlaxObjectRefPickerControl>();
-        propertyList.ComboBox();
+        objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
+        methodPicker = propertyList.ComboBox();
 
         toggle.StateChanged += SetCallEnabledState;
+        // Drag state changed
+        objectPicker.CustomControl.ValueChanged += SetComboBoxItems;
     }
 
     /// <summary>Sets the enabled state of the linked <see cref="PersistentCall"/></summary>
@@ -86,6 +77,8 @@ public class PersistentCallElement : GroupElement
     {
         if (callIndex < 0 || LinkedEditor == null)
             return;
+
+        Panel.HeaderTextColor = box.Checked ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
 
         PersistentCall oldCall = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex];
 
@@ -97,7 +90,21 @@ public class PersistentCallElement : GroupElement
             IsEnabled = box.Checked
         };
 
-        (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex] = newCall;
+        List<PersistentCall> newPersistentCalls = [.. (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList];
+        newPersistentCalls[callIndex] = newCall;
+        // FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(LinkedEditor.Values[0].GetType());
+        // newEvent.SetPersistentCalls(newPersistentCalls);
+
+        LinkedEditor.SetValues(newPersistentCalls);
+
+        // (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex] = newCall;
+        // LinkedEditor.set
+    }
+
+    private void SetComboBoxItems()
+    {
+        // objectPicker.CustomControl.Value
+        // methodPicker.ComboBox.
     }
 
 

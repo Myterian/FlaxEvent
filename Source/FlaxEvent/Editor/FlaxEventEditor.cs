@@ -1,18 +1,16 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
-// using System;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using FlaxEditor;
-
-// using FlaxEditor;
-
 using FlaxEditor.CustomEditors;
-// using FlaxEditor.CustomEditors.Dedicated;
+using FlaxEditor.CustomEditors.Dedicated;
 using FlaxEditor.CustomEditors.Editors;
-// using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
-// using FlaxEditor.GUI.Drag;
+
 
 
 namespace FlaxEvent;
@@ -21,6 +19,8 @@ namespace FlaxEvent;
 [CustomEditor(typeof(FlaxEventBase)), DefaultEditor]
 public class FlaxEventEditor : GenericEditor
 {
+    private bool isClassNameSet = false;
+
     public override void Initialize(LayoutElementsContainer layout)
     {
         List<PersistentCall> activePersistentCalls = (Values[0] as FlaxEventBase).PersistentCallList;
@@ -34,6 +34,38 @@ public class FlaxEventEditor : GenericEditor
         // Debug.Log(layout.Control.Width);
         // (layout.Control as DropPanel).HeaderText = 
         // base.Initialize(layout);
+
+        // (layout as DropPanelElement).HeaderText += ""
+
+        // Show what kind of argument types are being passed by the event. This helps to select methods with the same signature.
+        DropPanel dropPanel = layout.Control as DropPanel;
+        Type[] argTypes = Values[0].GetType().GetGenericArguments();
+
+
+
+        if (!isClassNameSet && 0 < argTypes.Length)
+        {
+            isClassNameSet = true;
+            StringBuilder headerBuilder = new();
+            // headerBuilder.Append((Values[0] as FlaxEventBase).GetType().Name);
+            headerBuilder.Append(dropPanel.HeaderText);
+            // Valuety
+
+            headerBuilder.Append(" <");
+
+            for (int i = 0; i < argTypes.Length; i++)
+            {
+                headerBuilder.Append(argTypes[i].ToString());
+
+                if (i < argTypes.Length - 1)
+                    headerBuilder.Append(", ");
+            }
+
+            headerBuilder.Append(">");
+
+            dropPanel.HeaderText = headerBuilder.ToString();
+        }
+
 
 
         // var ListValueContainer = new ListValueContainer(new FlaxEditor.Scripting.ScriptType(typeof(PersistentCall)), )
@@ -143,9 +175,15 @@ public class FlaxEventEditor : GenericEditor
 
         var removeButton = buttonPanel.Button("-", "Remove last item");
         removeButton.Button.Size = new Float2(16, 16);
-        removeButton.Button.Enabled = true; // !IsSetBlocked && 0 < persistentcalls.count
+        removeButton.Button.Enabled = 0 < activePersistentCalls.Count; // !IsSetBlocked && 0 < persistentcalls.count
         removeButton.Button.AnchorPreset = AnchorPresets.TopRight;
-        // removeButton.Button.Clicked += () =>
+        removeButton.Button.Clicked += () =>
+        {
+            if (IsSetBlocked)
+                return;
+
+            ResizePeristentCallList(activePersistentCalls.Count - 1);
+        };
 
         var addButton = buttonPanel.Button("+", "Add new element");
         addButton.Button.Size = new Float2(16, 16);
@@ -156,11 +194,45 @@ public class FlaxEventEditor : GenericEditor
             if (IsSetBlocked)
                 return;
 
-            // List<PersistentCall> newList = [.. activePersistentCalls];
-            // newList.Add(new PersistentCall());
-
-            // FlaxEventBase
+            ResizePeristentCallList(activePersistentCalls.Count + 1);
         };
-        // IsSetBlocked
+    }
+
+    public void SetValues(FlaxEventBase flaxEvent)
+    {
+        SetValue(flaxEvent);
+    }
+
+    public void SetValues(List<PersistentCall> persistentCalls)
+    {
+        FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(Values[0].GetType());
+        newEvent.SetPersistentCalls(persistentCalls);
+        SetValue(newEvent);
+        // RebuildLayoutOnRefresh();
+    }
+
+    
+
+    private void ResizePeristentCallList(int newSize)
+    {
+        var oldList = (Values[0] as FlaxEventBase).PersistentCallList;
+        List<PersistentCall> newList = new();
+
+        for (int i = 0; i < newSize; i++)
+        {
+            PersistentCall element = new();
+
+            if (i < oldList.Count - 1)
+                element = oldList[i];
+
+            newList.Add(element);
+        }
+
+        // FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(Values[0].GetType());
+        // newEvent.SetPersistentCalls(newList);
+        // SetValue(newEvent);
+        SetValues(newList);
+        RebuildLayoutOnRefresh();
+
     }
 }

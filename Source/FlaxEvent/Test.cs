@@ -24,6 +24,8 @@ public class Test : Script
 
     public FlaxEvent OnSomething = new();
 
+    public FlaxEvent<string, decimal, float> OnEvent = new();
+
 
     /// <inheritdoc/>
     public override void OnEnable()

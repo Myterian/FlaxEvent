@@ -11,10 +11,13 @@ using Object = FlaxEngine.Object;
 namespace FlaxEvent;
 
 /// <summary>Base Class of all FlaxEvent types</summary>
+[Serializable]
 public abstract class FlaxEventBase
 {
     /// <summary>List of all editor-configured actions</summary>
-    public List<PersistentCall> PersistentCallList { get; private set; } = new();
+    public List<PersistentCall> PersistentCallList = new();
+
+    // [Serialize] private List<PersistentCall> persistentCallList = new();
 
     /// <summary>Add a new persistent call</summary>
     /// <param name="call">Call to add</param>
@@ -56,6 +59,7 @@ public abstract class FlaxEventBase
 
 }
 
+[Serializable]
 public class FlaxEvent : FlaxEventBase
 {
     private Action runtimeAction = delegate { };

@@ -49,7 +49,44 @@
 			"IsEnabled": false
 		}
 	],
-	"OnSomething": {}
+	"OnSomething": {
+		"PersistentCallList": [
+			{
+				"Parameters": [],
+				"TargetObject": null,
+				"MethodName": "",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [],
+				"TargetObject": null,
+				"MethodName": "",
+				"IsEnabled": false
+			}
+		]
+	},
+	"OnEvent": {
+		"PersistentCallList": [
+			{
+				"Parameters": [],
+				"TargetObject": null,
+				"MethodName": "",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [],
+				"TargetObject": null,
+				"MethodName": "",
+				"IsEnabled": false
+			},
+			{
+				"Parameters": [],
+				"TargetObject": null,
+				"MethodName": "",
+				"IsEnabled": true
+			}
+		]
+	}
 }
 		},
 		{
