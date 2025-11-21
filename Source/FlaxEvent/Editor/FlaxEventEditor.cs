@@ -208,7 +208,7 @@ public class FlaxEventEditor : GenericEditor
         FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(Values[0].GetType());
         newEvent.SetPersistentCalls(persistentCalls);
         SetValue(newEvent);
-        // RebuildLayoutOnRefresh();
+        RebuildLayoutOnRefresh();
     }
 
     
