@@ -1,6 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System.Reflection;
+using FlaxEngine;
 
 namespace FlaxEvent;
 
@@ -10,8 +11,11 @@ public record struct PersistentCall
     /// <summary>Editor-Configured invokation parameters</summary>
     public PersistentParameter[] Parameters = [];
 
+    /// <summary>The parent actor of the <see cref="TargetObject"/>. If the <see cref="TargetObject"/> is an actor, this will be null.</summary>
+    public Actor Parent = null;
+
     /// <summary>Editor-Configured invokation target</summary>
-    public FlaxEngine.Object TargetObject = null;
+    public Object TargetObject = null;
 
     /// <summary>Editor-Configured invokation method</summary>
     public string MethodName = string.Empty;

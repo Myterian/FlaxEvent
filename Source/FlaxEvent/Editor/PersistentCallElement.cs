@@ -2,13 +2,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEvent;
 
@@ -36,39 +40,196 @@ public class PersistentCallElement : GroupElement
         Panel.HeaderTextColor = isCallEnabled ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
         Panel.EnableContainmentLines = false;
 
-        float height = Panel.HeaderHeight;
+        float headerHeight = Panel.HeaderHeight;
 
+        // Checkbox with enable/disable logic
         var toggle = new CheckBox
         {
             TooltipText = "If checked, the target will be invoked",
             IsScrollable = false,
             Checked = isCallEnabled,
             Parent = Panel,
-            Size = new(height),
-            Bounds = new(height, 0, height, height),
-            BoxSize = height - 4
+            Size = new(headerHeight),
+            Bounds = new(headerHeight, 0, headerHeight, headerHeight),
+            BoxSize = headerHeight - 4
         };
 
+        toggle.StateChanged += SetCallEnabledState;
+
+        // Drag button with
         var dragButton = new Button
         {
             BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
             AutoFocus = true,
             IsScrollable = false,
-            BackgroundColor = FlaxEngine.GUI.Style.Current.ForegroundGrey,
-            BackgroundColorHighlighted = FlaxEngine.GUI.Style.Current.ForegroundGrey.RGBMultiplied(1.5f),
+            BackgroundColor = Style.Current.ForegroundGrey,
+            BackgroundColorHighlighted = Style.Current.ForegroundGrey.RGBMultiplied(1.5f),
             HasBorder = false,
             Parent = Panel,
-            Bounds = new(toggle.Right, 1, height, height),
+            Bounds = new(toggle.Right, 1, headerHeight, headerHeight),
             Scale = new(0.9f)
         };
 
+        // Property list with object picker and methodpicker and logic
         var propertyList = AddPropertyItem("Target", "The target of this event");
         objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
         methodPicker = propertyList.ComboBox();
 
-        toggle.StateChanged += SetCallEnabledState;
+        // var button = propertyList.Button("<null>");
+        // button.Button.Height = 18;
+
+        // button.Button.Clicked += () =>
+        // {
+        //     ContextMenu contextMenu = new();
+        //     contextMenu.AddChildMenu("Some");
+        //     contextMenu.AddChildMenu("Some more");
+
+        //     contextMenu.Show(button.Button, button.Control.Location);
+        // };
+
+        // Target Object Picker Logic
+        var targetObject = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].TargetObject;
+
+        if (targetObject != null)
+        {
+            objectPicker.CustomControl.Value = targetObject;
+
+            Guid guid = targetObject.ID;
+            Object uncastObject = FlaxEngine.Object.Find<Object>(ref guid);
+
+            Actor castActor = uncastObject as Actor;
+            Script castScript = uncastObject as Script;
+
+            Panel.HeaderText = castActor?.Name ?? castScript.GetType().Name ?? "<type not found>";
+        }
+
+        objectPicker.CustomControl.ValueChanged += SetTargetObject;
+
+        string savedMethodName = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].MethodName;
+
+        if (!string.IsNullOrEmpty(savedMethodName))
+        {
+
+        }
+
+        methodPicker.ComboBox.PopupShowing += SetComboBoxItems;
+        // methodPicker.ComboBox.PopupCreate += GetContextMenu;
+        methodPicker.ComboBox.SelectedIndexChanged += SetTargetMethod;
+
+        
         // Drag state changed
-        objectPicker.CustomControl.ValueChanged += SetComboBoxItems;
+
+    }
+
+    /// <summary>Sets the target object of a <see cref="PersistentCall"/></summary>
+    private void SetTargetObject()
+    {
+        if (callIndex < 0 || LinkedEditor == null)
+            return;
+
+        List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
+
+        if (Mathf.IsNotInRange(callIndex, 0, persistentCalls.Count - 1))
+            return;
+
+        PersistentCall call = persistentCalls[callIndex];
+        call.Parent = null;
+        // call.TargetObject = objectPicker.CustomControl.Value;
+
+        if (objectPicker.CustomControl.Value != null)
+            call.Parent = objectPicker.CustomControl.Value as Actor ?? (objectPicker.CustomControl.Value as Script).Actor ?? null;
+
+        List<PersistentCall> newPersistentCalls = [.. (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList];
+        newPersistentCalls[callIndex] = call;
+
+        LinkedEditor.SetValues(newPersistentCalls);
+    }
+
+    private void SetComboBoxItems(ComboBox box)
+    {
+        box.Items.Clear();
+
+        if (callIndex < 0 || LinkedEditor == null)
+            return;
+
+        List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
+
+        if (Mathf.IsNotInRange(callIndex, 0, persistentCalls.Count - 1))
+            return;
+
+        // PersistentCall call = persistentCalls[callIndex];
+        Actor parentActor = persistentCalls[callIndex].Parent;
+        BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Instance;
+
+        for (int i = -1; parentActor != null && i < parentActor.Scripts.Length; i++)
+        {
+            // string prefix = "";
+            // MethodInfo[] methods;
+
+            // if (i == -1)
+            // {
+            //     prefix = "Actor.";
+            //     methods = parentActor.GetType().GetMethods(flags);
+            // }
+            // else
+            // {
+            //     prefix = parentActor.Scripts[i].GetType().Name + ".";
+            //     methods = parentActor.Scripts[i].GetType().GetMethods(flags);
+            // }
+
+            // for (int x = 0; x < methods.Length; x++)
+            // {
+            //     box.AddItem(prefix + methods[x].Name);
+            // }
+
+            // box.Popup.AddSeparator();
+
+            // box.Popup.AddButton("")
+
+            if (i == -1)
+            {
+                // box.AddItem(parentActor.Name);
+                box.Popup.AddChildMenu(parentActor.Name);
+            }
+            else
+            {
+                // prefix = parentActor.Scripts[i].GetType().Name + ".";
+                // methods = parentActor.Scripts[i].GetType().GetMethods(flags);
+                // box.AddItem(parentActor.Scripts[i].GetType().Name);
+                box.Popup.AddChildMenu(parentActor.Scripts[i].GetType().Name);
+
+                // box.Popup.AddButton(parentActor.Scripts[i].GetType().Name);
+            }
+
+            
+        }
+        
+        
+    }
+
+    // private ContextMenu GetContextMenu(ComboBox box)
+    // {
+        
+    // }
+
+    private void SetTargetMethod(ComboBox box)
+    {
+        if (callIndex < 0 || LinkedEditor == null)
+            return;
+
+        List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
+
+        if (Mathf.IsNotInRange(callIndex, 0, persistentCalls.Count - 1))
+            return;
+
+        PersistentCall call = persistentCalls[callIndex];
+        // call.TargetObject = 
+        call.MethodName = box.Items[box.SelectedIndex].Split(".").Last();
+
+        List<PersistentCall> newPersistentCalls = [.. (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList];
+        newPersistentCalls[callIndex] = call;
+
+        LinkedEditor.SetValues(newPersistentCalls);
     }
 
     /// <summary>Sets the enabled state of the linked <see cref="PersistentCall"/></summary>
@@ -78,34 +239,22 @@ public class PersistentCallElement : GroupElement
         if (callIndex < 0 || LinkedEditor == null)
             return;
 
+        List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
+
+        if (Mathf.IsNotInRange(callIndex, 0, persistentCalls.Count - 1))
+            return;
+
+        PersistentCall call = persistentCalls[callIndex];
+        call.IsEnabled = box.Checked;
         Panel.HeaderTextColor = box.Checked ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
 
-        PersistentCall oldCall = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex];
-
-        PersistentCall newCall = new()
-        {
-            TargetObject = oldCall.TargetObject,
-            MethodName = oldCall.MethodName,
-            Parameters = oldCall.Parameters,
-            IsEnabled = box.Checked
-        };
-
         List<PersistentCall> newPersistentCalls = [.. (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList];
-        newPersistentCalls[callIndex] = newCall;
-        // FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(LinkedEditor.Values[0].GetType());
-        // newEvent.SetPersistentCalls(newPersistentCalls);
+        newPersistentCalls[callIndex] = call;
 
         LinkedEditor.SetValues(newPersistentCalls);
-
-        // (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex] = newCall;
-        // LinkedEditor.set
     }
 
-    private void SetComboBoxItems()
-    {
-        // objectPicker.CustomControl.Value
-        // methodPicker.ComboBox.
-    }
+    
 
 
     // private void SetupContextMenu(DropPanel dropPanel, Float2 mouseLocation)
