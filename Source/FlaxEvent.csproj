@@ -371,6 +371,7 @@
     <Compile Include="FlaxEvent.Gen.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventEditor.cs" />
     <Compile Include="FlaxEvent\Editor\PersistentCallElement.cs" />
+    <Compile Include="FlaxEvent\Editor\TypeToElementExtension.cs" />
     <Compile Include="FlaxEvent\FlaxEvent.cs" />
     <Compile Include="FlaxEvent\FlaxEventPlugin.cs" />
     <Compile Include="FlaxEvent\PersistentCall.cs" />

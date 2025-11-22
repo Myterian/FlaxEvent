@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using FlaxEditor;
 using FlaxEditor.CustomEditors;
@@ -55,13 +56,13 @@ public class FlaxEventEditor : GenericEditor
 
             for (int i = 0; i < argTypes.Length; i++)
             {
-                headerBuilder.Append(argTypes[i].ToString());
+                headerBuilder.Append(argTypes[i].ToString().Split('.').Last());
 
                 if (i < argTypes.Length - 1)
                     headerBuilder.Append(", ");
             }
 
-            headerBuilder.Append(">");
+            headerBuilder.Append('>');
 
             dropPanel.HeaderText = headerBuilder.ToString();
         }
@@ -89,11 +90,14 @@ public class FlaxEventEditor : GenericEditor
         List<ItemInfo> itemInfos = GetItemsForType(TypeUtils.GetObjectType(value)); // This needs to be the types in a method signature, instead of using value
         SpawnProperty(layout, itemInfos[0].GetValues(Values), itemInfos[0]); // This needs to be done for every PersistentCall Element on every element of itemInfos
         */
+        // GetItemsForType(TypeUtils.GetObjectType(value));
+        // SpawnProperty
 
         // for (int i = 0; i < activePersistentCalls.Count; i++)
         // {
         //     layout.AddElement(new PersistentCallElement());
         // }
+        // layout.ve
 
         // var dragArea = layout.CustomContainer<DragAreaControl>();
         // dragArea.CustomControl.E

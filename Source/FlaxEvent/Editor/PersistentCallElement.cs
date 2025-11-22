@@ -8,10 +8,13 @@ using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Utilities;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEvent;
@@ -21,6 +24,8 @@ public class PersistentCallElement : GroupElement
 {
     /// <summary>The parent editor that is currently in use. The link-back is needed to set values via <see cref="CustomEditor.SetValue"/>, the cleanest way to modify editor values.</summary>
     private FlaxEventEditor LinkedEditor;
+
+    // private List<Per>
 
     /// <summary> 
     /// <see cref="FlaxObjectRefPickerControl"/> for this <see cref="PersistentCallElement"/>. 
@@ -81,6 +86,8 @@ public class PersistentCallElement : GroupElement
 
         // Property list with object picker and methodpicker and logic
         var propertyList = AddPropertyItem("Target", "The target of this event");
+        // var parameterItemList = AddPropertyItem("Parameters", "The invokation parameters, when this method get called");
+        // propertyList.Control.Parent = Panel;
         objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
 
         // Method picker button
@@ -118,6 +125,93 @@ public class PersistentCallElement : GroupElement
         }
 
         // Drag state changed
+
+        if ((LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].MethodInfo == null)
+            return;
+
+        // var parameterItemList = AddPropertyItem("Parameters");
+        // parameterItemList.Control.Parent = Panel;
+        // Panel.Height = 100;
+        // var parameterItemList = AddPropertyItem("Parameters", "The invokation parameters, when this method get called");
+        // var parameterOverrideCheckbox = new CheckBoxElement();
+        // parameterOverrideCheckbox.CheckBox.
+        // AddElement(parameterOverrideCheckbox);
+
+        // Checkbox();
+        // var parameterItemList = AddPropertyItem("Parameters", "The invokation parameters, when this method get called");
+        PropertiesListElement propertiesListElement = new();
+        // propertiesListElement.OnAddProperty("Parameters", "The invokation parameters, when this method get called");
+        var nameLabel = new PropertyNameLabel("Parameters");
+        nameLabel.TooltipText = "The invokation parameters, when this method get called";
+        nameLabel.Parent = propertiesListElement.Properties;
+        // nameLabel.first
+        // propertiesListElement.la
+        // propertiesListElement.ContainerControl.
+        // propertiesListElement.ContainerControl.TooltipText = "The invokation parameters, when this method get called";
+        AddElement(propertiesListElement);
+
+        // propertyList.Space(10);
+        // propertyList.Label("Parameters", TextAlignment.Near);
+
+        // propertyList.Properties.
+        // OnAddElement(propertiesListElement);
+
+        var parameterInfos = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].MethodInfo.GetParameters();
+        var parameterTypes = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].MethodInfo.GetParameterTypes();
+
+        for (int i = 0; i < parameterTypes.Length; i++)
+        {
+            propertiesListElement.AddTypeElement(parameterTypes[i]);
+            /*
+        var value = Values[0]; // Temporary fix to have values. Remove for proper impl
+        List<ItemInfo> itemInfos = GetItemsForType(TypeUtils.GetObjectType(value)); // This needs to be the types in a method signature, instead of using value
+        SpawnProperty(layout, itemInfos[0].GetValues(Values), itemInfos[0]); // This needs to be done for every PersistentCall Element on every element of itemInfos
+        */
+            // ScriptType scriptType = new ScriptType(parameterTypes[i]);
+            // scriptType.
+            // // var itemInfos = GenericEditor.GetItemsForType(scriptType, scriptType.IsClass, true);
+            // MemberInfo member = new( typeof(List<object>));
+            // // Debug.Log
+            // ScriptMemberInfo memberInfo = new((LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].MethodInfo);
+            // memberInfo.vla
+
+            // // string tip = Editor.Instance.CodeDocs.GetTooltip(memberInfo);
+            // // Debug.Log("Found ToolTip:" +!string.IsNullOrEmpty(tip));
+            // // memberInfo.get
+            // List<object> defaults = new();
+            // ValueContainer fakeValues = new(memberInfo);
+
+            // for (int x = 0; x < parameterTypes.Length; x++)
+            // {
+            //     defaults.Add(Activator.CreateInstance(parameterTypes[x]));
+            //     // fakeValues.Add(Activator.CreateInstance(parameterTypes[x]));
+            // }
+
+            // ValueContainer fakeValues = new(memberInfo) { defaults };
+
+            // // CustomValueContainer fakeValues = new(scriptType, (instance, index) => (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList[callIndex].Parameters[i].GetValue());
+            // // LinkedEditor.ValuesTypes
+            // // fakeValues.SetDefaultValue()
+            // // propertiesListElement.Property(parameterTypes[i].Name, fakeValues);
+            // // SpawnProperty
+            // // Debug.Log(itemInfos.Count);
+            // // parameterItemList.Control
+            // // parameterTypes[i].getp
+            // var itemInfos = GenericEditor.GetItemsForType(scriptType, scriptType.IsClass, true);
+            // GenericEditor.ItemInfo itemInfo = new(memberInfo, []);
+            // var y = itemInfo.GetValues(fakeValues);
+            // // ValueContainer itemValues = new()
+
+            // Property(parameterTypes[i].Name, y, itemInfo.OverrideEditor);
+            // CustomEditor = (CustomEditorAttribute)attributes.FirstOrDefault((object x) => x is CustomEditorAttribute);
+            // SpawnP
+            // CustomEditorUtils
+
+            // GenericEditor genericEditor = new();
+            // Add
+        }
+
+
 
     }
 
