@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
@@ -52,6 +53,14 @@ public static class TypeToElementExtension
 
         // TypeCode typeCode = Type.GetTypeCode(type);
 
+        // element.Checkbox
+        // element.DoubleValue
+        // element.Enum
+        // element.FloatValue
+        // element.Image
+        // element.IntegerValue
+        // element.
+
         object x = type switch
         {
             // bool => element.Checkbox(),
@@ -64,7 +73,7 @@ public static class TypeToElementExtension
 
 
             // Type t when t == typeof(bool) => element.Checkbox(),
-            
+
             Type t when Type.GetTypeCode(t) is TypeCode.Boolean => element.Checkbox(),
 
             Type t when Type.GetTypeCode(t) is TypeCode.Int16 or TypeCode.Int32 or TypeCode.Int64 => element.SignedIntegerValue(),
@@ -77,17 +86,17 @@ public static class TypeToElementExtension
 
             Type t when typeof(FlaxEngine.Object).IsAssignableFrom(t) => new FlaxObjectRefPickerControl(),
 
-            
+
             // typeof(FlaxEngine.Object).IsAssignableFrom(t) => new FlaxObjectRefPickerControl(),
             _ => element.Label($"Editor for type {type} not foudn")
         };
 
         // return null;
-            
+
         // switch (value)
         // {
         //     case bool b: element.Checkbox(); break;
-            
+
         //     case short:
         //     case int: 
         //     case long: element.SignedIntegerValue(); break;
@@ -95,5 +104,43 @@ public static class TypeToElementExtension
         //     default: element.Label($"Editor for type {type} not foudn"); break;
         // }
 
+    }
+
+    public static CustomEditor FindEditorFromType(this Type type)
+    {
+
+        Type typeToProcess = type;
+
+        if (type.IsAssignableFrom(typeof(FlaxEngine.Object)))
+        {
+            return new FlaxObjectRefEditor();
+        }
+
+        List<Type> editorTypes = AppDomain.CurrentDomain.GetAssemblies()
+                                                .SelectMany(x =>
+                                                {
+                                                    Type[] types = null;
+                                                    try { types = x.GetTypes(); } catch { }
+                                                    return types ?? Enumerable.Empty<Type>();
+                                                })
+                                                .Where(t => typeof(CustomEditor).IsAssignableFrom(t) && !t.IsAbstract)
+                                                .ToList();
+
+        for (int i = 0; i < editorTypes.Count; i++)
+        {
+            Type editorType = editorTypes[i];
+
+            List<object> attributes = editorType.GetCustomAttributes(false).Where(x => x.GetType() == typeof(CustomEditorAttribute)).ToList();
+
+            for (int x = 0; x < attributes.Count; x++)
+            {
+                if (((CustomEditorAttribute)attributes[x]).Type != type)
+                    continue;
+
+                return (CustomEditor)Activator.CreateInstance(editorType);
+            }
+        }
+
+        return new GenericEditor();
     }
 }

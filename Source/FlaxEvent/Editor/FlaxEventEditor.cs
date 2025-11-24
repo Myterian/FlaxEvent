@@ -3,12 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Dedicated;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -67,7 +69,15 @@ public class FlaxEventEditor : GenericEditor
             dropPanel.HeaderText = headerBuilder.ToString();
         }
 
-
+        // var x = GetItemsForType(new ScriptType(Values[0].GetType()));
+        // var v = x[0].GetValues(Values);
+        // var v1 = x[1].GetValues(Values);
+        // var v2 = x[2].GetValues(Values);
+        // ScriptMemberInfo scriptType = new(typeof(LocalizedString));
+        // var tmpClass = new LocalizedString();
+        // ValueContainer fakeTypeValue = new(scriptType) { tmpClass };
+        // layout.Object(fakeTypeValue);
+        // return;
 
         // var ListValueContainer = new ListValueContainer(new FlaxEditor.Scripting.ScriptType(typeof(PersistentCall)), )
         // var listContainer = new ListEditor();
@@ -134,12 +144,28 @@ public class FlaxEventEditor : GenericEditor
 
         FlaxEventBase eventBase = Values[0] as FlaxEventBase;
 
+        MemberInfo memberInfo = typeof(FlaxEventBase).GetMember("PersistentCallList", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
+        ScriptMemberInfo scriptMember = new(memberInfo);
+        GenericEditor.ItemInfo itemInfo = new(scriptMember);
+
+        var vc = itemInfo.GetValues(Values);
+
         for (int i = 0; i < eventBase.PersistentCallList.Count; i++)
         {
-            var callElement = new PersistentCallElement();
-            callElement.Init(this, i);
-            layout.AddElement(callElement);
+            // var callElement = new PersistentCallElement();
+            // callElement.Init(this, i);
+            // layout.AddElement(callElement);
+            var editor = new PersistentCallListEditor();
+            editor.SetIndex(i);
+            // editor.Initialize(layout);
+
+            layout.Object(vc, editor);
+            // layout.
         }
+
+        // layout = new SpaceElement();
+
+        // layout.
 
         // var test = new PersistentCallElement();
         // test.SetTitle("Adam Splasher");
@@ -215,7 +241,7 @@ public class FlaxEventEditor : GenericEditor
         RebuildLayoutOnRefresh();
     }
 
-    
+
 
     private void ResizePeristentCallList(int newSize)
     {
@@ -238,5 +264,10 @@ public class FlaxEventEditor : GenericEditor
         SetValues(newList);
         RebuildLayoutOnRefresh();
 
+    }
+
+    public void GetSomething()
+    {
+        
     }
 }

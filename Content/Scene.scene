@@ -45,7 +45,16 @@
 			"IsEnabled": false
 		},
 		{
-			"Parameters": [],
+			"Parameters": [
+				{
+					"ParameterValue": null,
+					"ParameterType": null
+				},
+				{
+					"ParameterValue": null,
+					"ParameterType": null
+				}
+			],
 			"Parent": null,
 			"TargetObject": null,
 			"MethodName": "",
@@ -62,10 +71,15 @@
 				"IsEnabled": true
 			},
 			{
-				"Parameters": [],
-				"Parent": null,
-				"TargetObject": null,
-				"MethodName": "",
+				"Parameters": [
+					{
+						"ParameterValue": "namer",
+						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"Parent": "1f42623d4bff16bcf1fa94a03f78149c",
+				"TargetObject": "1f42623d4bff16bcf1fa94a03f78149c",
+				"MethodName": "set_Name",
 				"IsEnabled": false
 			}
 		]
@@ -73,18 +87,30 @@
 	"OnEvent": {
 		"PersistentCallList": [
 			{
-				"Parameters": [],
-				"Parent": "b0d72c3746caebca055e1f921ca21c7c",
-				"TargetObject": "9053ad38428b10594c741db78d7fcca5",
-				"MethodName": "set_Enabled",
+				"Parameters": [
+					{
+						"ParameterValue": true,
+						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"Parent": "4a9d87134ab42f4294db6bbcf1902bde",
+				"TargetObject": "4a9d87134ab42f4294db6bbcf1902bde",
+				"MethodName": "set_IsActive",
 				"IsEnabled": true
 			},
 			{
 				"Parameters": [],
-				"Parent": "4a9d87134ab42f4294db6bbcf1902bde",
-				"TargetObject": "4a9d87134ab42f4294db6bbcf1902bde",
-				"MethodName": "set_Name",
-				"IsEnabled": false
+				"Parent": null,
+				"TargetObject": null,
+				"MethodName": "",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [],
+				"Parent": null,
+				"TargetObject": null,
+				"MethodName": "",
+				"IsEnabled": true
 			},
 			{
 				"Parameters": [],
@@ -402,6 +428,13 @@
 			"TypeName": "FlaxEngine.UIControl",
 			"ParentID": "13bf72864509c7765f1bef8e858017ad",
 			"Name": "Button",
+			"Transform": {
+				"Translation": {
+					"X": 504.4444580078125,
+					"Y": 217.77777099609375,
+					"Z": 0.0
+				}
+			},
 			"Control": "FlaxEngine.GUI.Button",
 			"Data": {
 	"BackgroundColorHighlighted": {
@@ -486,18 +519,18 @@
 		"Y": 0.0
 	},
 	"Offsets": {
-		"Left": 0.0,
-		"Right": 120.0,
-		"Top": 0.0,
-		"Bottom": 24.0
+		"Left": 504.44446,
+		"Right": 130.0,
+		"Top": 217.77777,
+		"Bottom": 121.0
 	},
 	"Scale": {
 		"X": 1.0,
 		"Y": 1.0
 	},
 	"Pivot": {
-		"X": 0.5,
-		"Y": 0.5
+		"X": 0.0,
+		"Y": 0.0
 	},
 	"Shear": {
 		"X": 0.0,
@@ -515,6 +548,67 @@
 	"Visible": true,
 	"AutoFocus": true
 }
+		},
+		{
+			"ID": "55ab456243b047702d8c5a9cdb523ca5",
+			"TypeName": "FlaxEngine.UIControl",
+			"ParentID": "13bf72864509c7765f1bef8e858017ad",
+			"Name": "Spacer",
+			"Transform": {
+				"Translation": {
+					"X": 196.66668701171875,
+					"Y": 98.88890075683594,
+					"Z": 0.0
+				}
+			},
+			"Control": "FlaxEngine.GUI.Spacer",
+			"Data": {
+	"ClipChildren": true,
+	"CullChildren": true,
+	"AnchorMin": {
+		"X": 0.0,
+		"Y": 0.0
+	},
+	"AnchorMax": {
+		"X": 0.0,
+		"Y": 0.0
+	},
+	"Offsets": {
+		"Left": 196.66669,
+		"Right": 100.0,
+		"Top": 98.8889,
+		"Bottom": 100.0
+	},
+	"Scale": {
+		"X": 1.0,
+		"Y": 1.0
+	},
+	"Pivot": {
+		"X": 0.5,
+		"Y": 0.5
+	},
+	"Shear": {
+		"X": 0.0,
+		"Y": 0.0
+	},
+	"Rotation": 0.0,
+	"BackgroundColor": {
+		"R": 0.0,
+		"G": 0.0,
+		"B": 0.0,
+		"A": 0.0
+	},
+	"BackgroundBrush": null,
+	"Enabled": true,
+	"Visible": true,
+	"AutoFocus": false
+}
+		},
+		{
+			"ID": "b63bc8de47fbd92e2c30a8bacf91bada",
+			"TypeName": "FlaxEngine.UIControl",
+			"ParentID": "55ab456243b047702d8c5a9cdb523ca5",
+			"Name": "UIControl"
 		}
 	]
 }

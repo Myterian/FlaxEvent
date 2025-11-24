@@ -17,6 +17,12 @@ public abstract class FlaxEventBase
     /// <summary>List of all editor-configured actions</summary>
     public List<PersistentCall> PersistentCallList = new();
 
+    public bool someBool;
+
+    public Actor someActor;
+
+    public float someFloat;
+
     // [Serialize] private List<PersistentCall> persistentCallList = new();
 
     /// <summary>Add a new persistent call</summary>
