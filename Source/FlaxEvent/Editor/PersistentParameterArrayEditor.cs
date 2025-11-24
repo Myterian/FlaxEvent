@@ -35,13 +35,14 @@ public class PersistentParameterArrayEditor : CustomEditor
 
 
         var parameterList = layout.AddPropertyItem(((PersistentParameter)lvc[0]).ParameterType.Name, "The invokation parameter that is being used");
-        parameterList.ContainerControl.BackgroundColor = Color.BlueViolet;
-        var space = parameterList.Space(20f);
+        // parameterList.ContainerControl.BackgroundColor = Color.BlueViolet;
+        // var space = parameterList.Space(20f);
         // space.ContainerControl.Width *= 2;
-        space.ContainerControl.BackgroundColor = Color.Blue;
+        // space.ContainerControl.BackgroundColor = Color.Blue;
+        // var l = layout.ClickableLabel("Some Text");
 
 
-        space.Object(lvc, new PersistentParameterEditor());
-        space.ContainerControl.PerformLayout();
+        parameterList.Object(lvc, new PersistentParameterEditor());
+        // space.ContainerControl.PerformLayout();
     }
 }

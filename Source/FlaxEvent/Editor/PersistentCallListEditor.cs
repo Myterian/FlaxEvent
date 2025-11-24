@@ -23,7 +23,10 @@ public class PersistentCallListEditor : CustomEditor
     {
         // For each element in PersistentCallsList -> layout add new editor of PersistentCallEditor
         // layout.Label("Persistent Parameter");
-        var panel = layout.VerticalPanel();
+        // var panel = layout.VerticalPanel();
+        // panel.Control.Offsets = new(0);
+        // panel.ContainerControl.Offsets = new();
+        // layout.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
 
         // var call = (PersistentCall)Values[0];
 
@@ -31,7 +34,7 @@ public class PersistentCallListEditor : CustomEditor
         ScriptMemberInfo scriptMember1 = new(memberInfo1);
         GenericEditor.ItemInfo itemInfo1 = new(scriptMember1);
 
-
+        // layout.Space(20);
 
         // var vc1 = itemInfo1.GetValues(Values);
         // var group = panel.Group("Of you sex tape");
@@ -42,7 +45,7 @@ public class PersistentCallListEditor : CustomEditor
         var lvc = new ListValueContainer(new(memberInfo1.GetType()), callIndex, Values);
 
 
-        panel.Object(lvc, new PersistentCallEditor());
+        layout.Object(lvc, new PersistentCallEditor());
 
         // var vc = itemInfo1.GetValues(Values);
 

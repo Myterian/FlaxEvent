@@ -45,14 +45,45 @@ public class PersistentCallEditor : CustomEditor
 
 
         var group = layout.Group(headerText);
+        // group.Control.Offsets = new(7, 7, 0, 0);
 
         bool isCallEnabled = call.IsEnabled;
 
         // Panel.HeaderText = "<null>";
         group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
-        group.Panel.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
+        // group.Panel.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
         group.Panel.HeaderTextColor = isCallEnabled ? FlaxEngine.GUI.Style.Current.Foreground : FlaxEngine.GUI.Style.Current.ForegroundDisabled;
         group.Panel.EnableContainmentLines = false;
+
+
+        float headerHeight = group.Panel.HeaderHeight;
+
+        // Checkbox with enable/disable logic
+        var toggle = new CheckBox
+        {
+            TooltipText = "If checked, the target will be invoked",
+            IsScrollable = false,
+            Checked = isCallEnabled,
+            Parent = group.Panel,
+            Size = new(headerHeight),
+            Bounds = new(headerHeight, 0, headerHeight, headerHeight),
+            BoxSize = headerHeight - 4
+        };
+
+        toggle.StateChanged += SetCallEnabledState;
+        // Drag button with
+        var dragButton = new Button
+        {
+            BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
+            AutoFocus = true,
+            IsScrollable = false,
+            BackgroundColor = FlaxEngine.GUI.Style.Current.ForegroundGrey,
+            BackgroundColorHighlighted = FlaxEngine.GUI.Style.Current.ForegroundGrey.RGBMultiplied(1.5f),
+            HasBorder = false,
+            Parent = group.Panel,
+            Bounds = new(toggle.Right, 1, headerHeight, headerHeight),
+            Scale = new(0.9f)
+        };
 
 
 
@@ -83,6 +114,7 @@ public class PersistentCallEditor : CustomEditor
             call.TargetObject = objectPicker.CustomControl.Value;
 
             SetValue(call);
+            RebuildLayoutOnRefresh();
         };
 
         // if (!string.IsNullOrEmpty(((PersistentCall)Values[0]).MethodName))
@@ -111,8 +143,31 @@ public class PersistentCallEditor : CustomEditor
         if (call.MethodInfo == null)
             return;
 
-        var parameterList = group.AddPropertyItem("Parameters", "The invokation parameters that are being used");
-        parameterList.Space(20f);
+        // var parameterList = group.AddPropertyItem("Parameters", "The invokation parameters that are being used");
+        // parameterList.ContainerControl.ClipChildren = false;
+        // parameterList.ContainerControl.CullChildren = false;
+        // group.prop
+
+        // if(3 <= parameterList.Children.Count)
+        //     Debug.Log(parameterList.Children[2].GetType());
+        // var spacer = group.Space(20f);
+
+        var brush = new SolidColorBrush
+        {
+            Color = FlaxEngine.GUI.Style.Current.BorderNormal,
+
+        };
+        // var image = spacer.Image(brush);
+        // image.Image.KeepAspectRatio = false;
+        // image.Image.AnchorPreset = AnchorPresets.HorizontalStretchMiddle;
+        // image.Image.Width = 30;
+        // image.Image.LocalLocation = new(50, image.Image.LocalLocation.Y);
+        // image.Image.Margin = new(0, 0, 9f, 9f);
+        // image.Image.Bounds = new Rectangle(image.Image.Bounds.Location, image.Image.Bounds.X, image.Image.Bounds.Y - 1);
+        // image.Image.Scale = new(1, 0.05f);
+        // image.Image.DrawSelf();
+        // image.Control.Width = 20;
+        // Debug.Log(parameterList.ContainerControl.Size);
         // var parameterList = layout.VerticalPanel();
         // var label = layout.Label("Parameter(s)");
         // label.Label.Offsets = new(7, 0, 0, 0);
@@ -131,8 +186,8 @@ public class PersistentCallEditor : CustomEditor
         // Type[] methodParameterTypes = call.MethodInfo.GetParameterTypes();
         for (int i = 0; i < call.Parameters.Length; i++)
         {
-        //     // var lvc = new ListValueContainer(new(memberInfo1.GetType()), i, Values);
-        //     // CustomEditor editor = call.Parameters[i].ParameterType.FindEditorFromType();
+            //     // var lvc = new ListValueContainer(new(memberInfo1.GetType()), i, Values);
+            //     // CustomEditor editor = call.Parameters[i].ParameterType.FindEditorFromType();
             var editor = new PersistentParameterArrayEditor();
             editor.SetIndex(i);
 
@@ -198,9 +253,9 @@ public class PersistentCallEditor : CustomEditor
         {
             // Action<ContextMenuButton> action = (button) => SetCallTarget(target, button.Text);
             Action<ContextMenuButton> action = (button) =>
-            { 
+            {
                 PersistentCall call = (PersistentCall)Values[0];
-            
+
                 call.MethodName = button.Text;
 
                 if (call.MethodInfo != null)
@@ -218,8 +273,30 @@ public class PersistentCallEditor : CustomEditor
                 }
 
                 SetValue(call);
+                RebuildLayoutOnRefresh();
             };
             menu.AddButton(methods[x].Name, action);
         }
+    }
+
+    /// <summary>Sets the enabled state of the linked <see cref="PersistentCall"/></summary>
+    /// <param name="box">The checkbox to use for the enabled/checked state. Checkbox gets passed via action delegate</param>
+    private void SetCallEnabledState(CheckBox box)
+    {
+        // if (!IsSetupValid())
+        //     return;
+
+        // List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
+
+        PersistentCall call = (PersistentCall)Values[0];
+        call.IsEnabled = box.Checked;
+        // Panel.HeaderTextColor = box.Checked ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
+
+        SetValue(call);
+        RebuildLayoutOnRefresh();
+        // List<PersistentCall> newPersistentCalls = [.. (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList];
+        // newPersistentCalls[callIndex] = call;
+
+        // LinkedEditor.SetValues(newPersistentCalls);
     }
 }

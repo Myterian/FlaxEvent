@@ -80,7 +80,7 @@
 				"Parent": "1f42623d4bff16bcf1fa94a03f78149c",
 				"TargetObject": "1f42623d4bff16bcf1fa94a03f78149c",
 				"MethodName": "set_Name",
-				"IsEnabled": false
+				"IsEnabled": true
 			}
 		]
 	},
@@ -89,7 +89,7 @@
 			{
 				"Parameters": [
 					{
-						"ParameterValue": true,
+						"ParameterValue": false,
 						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
 					}
 				],
@@ -99,10 +99,20 @@
 				"IsEnabled": true
 			},
 			{
-				"Parameters": [],
-				"Parent": null,
-				"TargetObject": null,
-				"MethodName": "",
+				"Parameters": [
+					{
+						"ParameterValue": {
+							"$type": "FlaxEngine.Vector3, FlaxEngine.CSharp",
+							"X": 7.0,
+							"Y": 0.0,
+							"Z": 0.0
+						},
+						"ParameterType": "FlaxEngine.Vector3, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					}
+				],
+				"Parent": "74a68a984824b4510d12589f199ad68f",
+				"TargetObject": "a4e7a5e646ce5997033057bdf6f37fc7",
+				"MethodName": "MyMethod",
 				"IsEnabled": true
 			},
 			{
@@ -120,10 +130,15 @@
 				"IsEnabled": true
 			},
 			{
-				"Parameters": [],
-				"Parent": null,
-				"TargetObject": null,
-				"MethodName": "",
+				"Parameters": [
+					{
+						"ParameterValue": false,
+						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"Parent": "ad30553d4c8460ef2dd8c7bd92e1e88e",
+				"TargetObject": "ad30553d4c8460ef2dd8c7bd92e1e88e",
+				"MethodName": "set_IsActive",
 				"IsEnabled": true
 			}
 		]
@@ -605,10 +620,59 @@
 }
 		},
 		{
-			"ID": "b63bc8de47fbd92e2c30a8bacf91bada",
+			"ID": "ad30553d4c8460ef2dd8c7bd92e1e88e",
 			"TypeName": "FlaxEngine.UIControl",
 			"ParentID": "55ab456243b047702d8c5a9cdb523ca5",
-			"Name": "UIControl"
+			"Name": "Border",
+			"Control": "FlaxEngine.GUI.Border",
+			"Data": {
+	"BorderColor": {
+		"R": 0.32941177,
+		"G": 0.32941177,
+		"B": 0.36078432,
+		"A": 1.0
+	},
+	"BorderWidth": 2.0,
+	"ClipChildren": true,
+	"CullChildren": true,
+	"AnchorMin": {
+		"X": 0.0,
+		"Y": 0.0
+	},
+	"AnchorMax": {
+		"X": 1.0,
+		"Y": 1.0
+	},
+	"Offsets": {
+		"Left": 0.0,
+		"Right": 0.0,
+		"Top": 0.0,
+		"Bottom": 0.0
+	},
+	"Scale": {
+		"X": 1.0,
+		"Y": 1.0
+	},
+	"Pivot": {
+		"X": 0.5,
+		"Y": 0.5
+	},
+	"Shear": {
+		"X": 0.0,
+		"Y": 0.0
+	},
+	"Rotation": 0.0,
+	"BackgroundColor": {
+		"R": 0.0,
+		"G": 0.0,
+		"B": 0.0,
+		"A": 0.0
+	},
+	"BackgroundBrush": null,
+	"Enabled": true,
+	"Visible": true,
+	"AutoFocus": false
+}
 		}
 	]
 }

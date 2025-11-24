@@ -33,9 +33,16 @@ public class Test : Script
         // OnSomething?.Invoke();
     }
 
-    public void MyMethod()
+    public override void OnUpdate()
     {
-        Debug.Log("FlaxEvent Invoked!");
+        if (Input.GetKeyDown(KeyboardKeys.Spacebar))
+            OnEvent?.Invoke("123", 1, 2);
+    }
+
+
+    public void MyMethod(Vector3 vector3)
+    {
+        Debug.Log("FlaxEvent Invoked! " + vector3);
     }
 
     // [Button("Subscribe")]

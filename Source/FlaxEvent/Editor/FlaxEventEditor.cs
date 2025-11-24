@@ -150,6 +150,9 @@ public class FlaxEventEditor : GenericEditor
 
         var vc = itemInfo.GetValues(Values);
 
+        var panel = layout.VerticalPanel();
+        panel.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
+
         for (int i = 0; i < eventBase.PersistentCallList.Count; i++)
         {
             // var callElement = new PersistentCallElement();
@@ -159,7 +162,7 @@ public class FlaxEventEditor : GenericEditor
             editor.SetIndex(i);
             // editor.Initialize(layout);
 
-            layout.Object(vc, editor);
+            panel.Object(vc, editor);
             // layout.
         }
 
@@ -192,9 +195,10 @@ public class FlaxEventEditor : GenericEditor
         // var callPanel = layout.VerticalPanel();
         // callPanel.Panel.Offsets = new Margin(7, 7, 0, 0);
 
-        var buttonPanel = layout.HorizontalPanel();
+        var buttonPanel = panel.HorizontalPanel();
         buttonPanel.Panel.Size = new Float2(0, 18);
-        buttonPanel.Panel.BackgroundColor = Color.OrangeRed;
+        // buttonPanel.Panel.AnchorPreset = AnchorPresets.HorizontalStretchMiddle;
+        // buttonPanel.Panel.BackgroundColor = Color.OrangeRed;
         // buttonPanel.Panel.AnchorPreset = AnchorPresets.BottomRight;
         // Debug.Log(buttonPanel.Panel.Size);
 
@@ -228,10 +232,10 @@ public class FlaxEventEditor : GenericEditor
         };
     }
 
-    public void SetValues(FlaxEventBase flaxEvent)
-    {
-        SetValue(flaxEvent);
-    }
+    // public void SetValues(FlaxEventBase flaxEvent)
+    // {
+    //     SetValue(flaxEvent);
+    // }
 
     public void SetValues(List<PersistentCall> persistentCalls)
     {

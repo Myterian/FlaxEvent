@@ -1,7 +1,10 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using FlaxEngine;
 using Object = FlaxEngine.Object;
 
@@ -25,9 +28,11 @@ public record struct PersistentCall
     /// <summary>MethodInfo of the target method</summary>
     public MethodInfo MethodInfo => methodInfo ??= CacheMethodInfo();
 
+    public Delegate Delegate => cachedDelegate ??= GetDelegate();
+
     private MethodInfo methodInfo;
 
-    private Action action;
+    private Delegate cachedDelegate;
 
     /// <summary>Enables or disables the invokation of this call</summary>
     public bool IsEnabled = true;
@@ -41,13 +46,37 @@ public record struct PersistentCall
         return TargetObject.GetType().GetMethod(MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
     }
 
+    private Delegate GetDelegate()
+    {
+        if (MethodInfo == null)
+            return null;
+
+        Type[] parameterTypes = new Type[Parameters.Length];
+
+        for (int i = 0; i < parameterTypes.Length; i++)
+            parameterTypes[i] = Parameters[i].ParameterType;
+
+        Type delegateType = Expression.GetActionType(parameterTypes);
+
+        if (MethodInfo.ReturnType == typeof(void))
+            return MethodInfo.CreateDelegate(delegateType, TargetObject);
+
+        ParameterExpression[] paramsExpr = parameterTypes.Select(Expression.Parameter).ToArray();
+
+        MethodCallExpression call = TargetObject != null ? Expression.Call(Expression.Constant(TargetObject), MethodInfo, paramsExpr) : Expression.Call(MethodInfo, paramsExpr);
+
+        LambdaExpression ignoreReturn = Expression.Lambda(delegateType, Expression.Block(call, Expression.Empty()), paramsExpr);
+
+        return ignoreReturn.Compile();
+    }
+
     /// <summary>Invokes the stored persistent action, if <see cref="IsEnabled"/> is true</summary>
     /// <param name="eventParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>
     public void Invoke(object[] eventParams)
     {
         if (!IsEnabled || MethodInfo == null)
             return;
-        
+
         // Parameter signature matching check
         bool useRuntimeParams = eventParams != null ? eventParams.Length == Parameters.Length : false;
 
@@ -71,7 +100,8 @@ public record struct PersistentCall
         // Early exit, we don't need to convert the parameters if we use runtime params
         if (useRuntimeParams)
         {
-            MethodInfo?.Invoke(TargetObject, eventParams);
+            Delegate?.DynamicInvoke(eventParams);
+            // MethodInfo?.Invoke(TargetObject, eventParams);
             return;
         }
 
@@ -81,7 +111,9 @@ public record struct PersistentCall
         for (int i = 0; i < Parameters.Length; i++)
             runtimeParameter[i] = Parameters[i].GetValue();
 
-        MethodInfo?.Invoke(TargetObject, runtimeParameter);
+        Delegate?.DynamicInvoke(runtimeParameter);
+
+        // MethodInfo?.Invoke(TargetObject, runtimeParameter);
     }
 
     public PersistentCall()
