@@ -16,19 +16,25 @@ public record struct PersistentCall
     /// <summary>Editor-Configured invokation parameters</summary>
     public PersistentParameter[] Parameters = [];
 
-    /// <summary>The parent actor of the <see cref="TargetObject"/>. If the <see cref="TargetObject"/> is an actor, this will be null.</summary>
-    public Actor Parent = null;
+    /// <summary>The parent actor of the <see cref="TargetObject"/>. This is used for editor purposes, ie. listing all available scripts and methods.</summary>
+    public Actor Parent => parent;
 
     /// <summary>Editor-Configured invokation target</summary>
-    public Object TargetObject = null;
+    public Object TargetObject => targetObject;
 
     /// <summary>Editor-Configured invokation method</summary>
-    public string MethodName = string.Empty;
+    public string MethodName => methodName;
 
     /// <summary>MethodInfo of the target method</summary>
     public MethodInfo MethodInfo => methodInfo ??= CacheMethodInfo();
 
     public Delegate Delegate => cachedDelegate ??= GetDelegate();
+
+    [Serialize] private Actor parent = null;
+
+    [Serialize] private Object targetObject = null;
+
+    [Serialize] private string methodName = string.Empty;
 
     private MethodInfo methodInfo;
 
@@ -36,14 +42,75 @@ public record struct PersistentCall
 
     /// <summary>Enables or disables the invokation of this call</summary>
     public bool IsEnabled = true;
-    
+
+    /// <summary>Sets the parent of the call. For editor purposes, this also sets the target object, but that can be overriden.</summary>
+    /// <param name="newParent">The new parent actor, where the target of this call is.</param>
+    public void SetParent(Actor newParent)
+    {
+        parent = newParent;
+        targetObject = parent;
+        methodName = null;
+        methodInfo = null;
+    }
+
+    /// <summary>Sets the target of this call</summary>
+    /// <param name="newTarget">The target object (actor or script)</param>
+    public void SetTarget(Object newTarget)
+    {
+        targetObject = newTarget;
+        methodName = null;
+        methodInfo = null;
+    }
+
+    /// <summary>Sets the name of the target method</summary>
+    /// <param name="name">The method name</param>
+    public void SetMethodName(string name)
+    {
+        methodName = name;
+        methodInfo = null;
+    }
+
     /// <summary>Caches the method info for runtime, because flax doesn't serialize methodinfo types</summary>
     private MethodInfo CacheMethodInfo()
     {
         if (TargetObject == null || string.IsNullOrEmpty(MethodName))
             return null;
 
-        return TargetObject.GetType().GetMethod(MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
+        // This is the more compiclated version of TargetObject.GetType().GetMethod(MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);,
+        // but this allows a persistent call to use a specific method, even when overloads of said method exists.
+
+        // Basically we iterate over every method in a type and select the method with the matching name and parameters
+        var methodinfos = TargetObject.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
+
+        for (int i = 0; i < methodinfos.Length; i++)
+        {
+            if (methodinfos[i].Name != MethodName)
+                continue;
+
+            var types = methodinfos[i].GetParameterTypes();
+
+            if (types.Length != Parameters.Length)
+                continue;
+
+            bool isFound = true;
+
+            for (int x = 0; x < types.Length; x++)
+            {
+                if (types[x] != Parameters[x].ParameterType)
+                {
+                    isFound = false;
+                    break;
+                }
+            }
+
+            if (!isFound)
+                continue;
+
+            return methodinfos[i];
+        }
+
+        // This should never happen
+        return null;
     }
 
     private Delegate GetDelegate()
@@ -51,10 +118,7 @@ public record struct PersistentCall
         if (MethodInfo == null)
             return null;
 
-        Type[] parameterTypes = new Type[Parameters.Length];
-
-        for (int i = 0; i < parameterTypes.Length; i++)
-            parameterTypes[i] = Parameters[i].ParameterType;
+        Type[] parameterTypes = GetParameterTypes();
 
         Type delegateType = Expression.GetActionType(parameterTypes);
 
@@ -67,7 +131,21 @@ public record struct PersistentCall
 
         LambdaExpression ignoreReturn = Expression.Lambda(delegateType, Expression.Block(call, Expression.Empty()), paramsExpr);
 
+        // Expression.Lambda<TDelegate>
+
         return ignoreReturn.Compile();
+    }
+
+    /// <summary>Gets an array containing the types of the stored <see cref="PersistentParameter"/></summary>
+    /// <returns>Type[]</returns>
+    private Type[] GetParameterTypes()
+    {
+        Type[] parameterTypes = new Type[Parameters.Length];
+
+        for (int i = 0; i < parameterTypes.Length; i++)
+            parameterTypes[i] = Parameters[i].ParameterType;
+
+        return parameterTypes;
     }
 
     /// <summary>Invokes the stored persistent action, if <see cref="IsEnabled"/> is true</summary>
@@ -97,11 +175,14 @@ public record struct PersistentCall
         // delegate in the main event, but there isn't a proper pipeline for that right now.
         // Not sure if worth exploring.
 
+        // TODO: Stress test witch a lot of persistent calls. Current testen with ~5 calls yields same result
+        // both with MethodInfo.Invoke and Delegate.DynamicInvoke
+
         // Early exit, we don't need to convert the parameters if we use runtime params
         if (useRuntimeParams)
         {
-            Delegate?.DynamicInvoke(eventParams);
-            // MethodInfo?.Invoke(TargetObject, eventParams);
+            // Delegate?.DynamicInvoke(eventParams);
+            MethodInfo?.Invoke(TargetObject, eventParams);
             return;
         }
 
@@ -111,9 +192,8 @@ public record struct PersistentCall
         for (int i = 0; i < Parameters.Length; i++)
             runtimeParameter[i] = Parameters[i].GetValue();
 
-        Delegate?.DynamicInvoke(runtimeParameter);
-
-        // MethodInfo?.Invoke(TargetObject, runtimeParameter);
+        // Delegate?.DynamicInvoke(runtimeParameter);
+        MethodInfo?.Invoke(TargetObject, runtimeParameter);
     }
 
     public PersistentCall()

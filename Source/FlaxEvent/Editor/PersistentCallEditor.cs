@@ -11,6 +11,8 @@ using FlaxEditor;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
+using System.Text;
+using System.Linq;
 
 namespace FlaxEvent;
 
@@ -22,6 +24,9 @@ public class PersistentCallEditor : CustomEditor
     public override void Initialize(LayoutElementsContainer layout)
     {
         // layout.Label("PersistentParameter");
+        // if (Values[0] == null )
+        // return;
+
         PersistentCall call = (PersistentCall)Values[0];
 
         // string groupTitle = call.TargetObject == null ? "<No Target>" : call.TargetObject.
@@ -45,7 +50,7 @@ public class PersistentCallEditor : CustomEditor
 
 
         var group = layout.Group(headerText);
-        // group.Control.Offsets = new(7, 7, 0, 0);
+        // group.Panel.MouseButtonRightClicked += // TODO: Right-Click context menu
 
         bool isCallEnabled = call.IsEnabled;
 
@@ -110,8 +115,8 @@ public class PersistentCallEditor : CustomEditor
         objectPicker.CustomControl.ValueChanged += () =>
         {
             PersistentCall call = (PersistentCall)Values[0];
-            call.Parent = objectPicker.CustomControl.Value as Actor ?? (objectPicker.CustomControl.Value as Script).Actor ?? null;
-            call.TargetObject = objectPicker.CustomControl.Value;
+            call.SetParent(objectPicker.CustomControl.Value as Actor ?? (objectPicker.CustomControl.Value as Script)?.Actor ?? null);
+            // call.TargetObject = objectPicker.CustomControl.Value;
 
             SetValue(call);
             RebuildLayoutOnRefresh();
@@ -137,10 +142,11 @@ public class PersistentCallEditor : CustomEditor
         methodPicker.Button.Height = 18;
         methodPicker.Button.Margin = new(2, 0, 0, 0);
         methodPicker.Button.HorizontalAlignment = TextAlignment.Near;
-        methodPicker.Button.ButtonClicked += CreateAndShowContextMenu;
+        methodPicker.Button.ButtonClicked += CreateMethodSelectionMenu;
 
+        MethodInfo methodInfo = call.MethodInfo;
 
-        if (call.MethodInfo == null)
+        if (methodInfo == null)
             return;
 
         // var parameterList = group.AddPropertyItem("Parameters", "The invokation parameters that are being used");
@@ -152,11 +158,11 @@ public class PersistentCallEditor : CustomEditor
         //     Debug.Log(parameterList.Children[2].GetType());
         // var spacer = group.Space(20f);
 
-        var brush = new SolidColorBrush
-        {
-            Color = FlaxEngine.GUI.Style.Current.BorderNormal,
+        // var brush = new SolidColorBrush
+        // {
+        //     Color = FlaxEngine.GUI.Style.Current.BorderNormal,
 
-        };
+        // };
         // var image = spacer.Image(brush);
         // image.Image.KeepAspectRatio = false;
         // image.Image.AnchorPreset = AnchorPresets.HorizontalStretchMiddle;
@@ -195,7 +201,7 @@ public class PersistentCallEditor : CustomEditor
         }
     }
 
-    private void CreateAndShowContextMenu(Button button)
+    private void CreateMethodSelectionMenu(Button button)
     {
         // if (!IsSetupValid())
         //     return;
@@ -207,6 +213,8 @@ public class PersistentCallEditor : CustomEditor
             return;
 
         ContextMenu contextMenu = new();
+        // FlaxEditor.Utilities.Utils. ;
+
 
         for (int i = -1; parentActor != null && i < parentActor.Scripts.Length; i++)
         {
@@ -233,17 +241,13 @@ public class PersistentCallEditor : CustomEditor
         contextMenu.Show(button, button.PointFromScreen(Input.MouseScreenPosition));
     }
 
-    /// <summary>Populates a <see cref="ContextMenu"/> with available methods of a target</summary>
+    /// <summary>Populates a <see cref="ContextMenu"/> with buttons of available methods of a target</summary>
     /// <param name="menu">The menu to modify</param>
     /// <param name="target">The target to get the method from</param>
     private void SetMenuItems(ContextMenu menu, Object target)
     {
         menu.DisposeAllItems();
 
-        // if (!IsSetupValid())
-        //     return;
-
-        // List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
         Actor parentActor = ((PersistentCall)Values[0]).Parent;
         BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Instance;
 
@@ -251,31 +255,59 @@ public class PersistentCallEditor : CustomEditor
 
         for (int x = 0; x < methods.Length; x++)
         {
-            // Action<ContextMenuButton> action = (button) => SetCallTarget(target, button.Text);
-            Action<ContextMenuButton> action = (button) =>
-            {
-                PersistentCall call = (PersistentCall)Values[0];
+            // Action<ContextMenuButton> action = (button) =>
+            // {
+            //     PersistentCall call = (PersistentCall)Values[0];
 
-                call.MethodName = button.Text;
+            //     call.MethodName = button.ShortKeys;
+            //     call.Parameters = [];
 
-                if (call.MethodInfo != null)
-                {
-                    Type[] methodParameterTypes = call.MethodInfo.GetParameterTypes();
-                    PersistentParameter[] newParameters = new PersistentParameter[methodParameterTypes.Length];
+            //     // if (call.MethodInfo != null)
+            //     // {
+            //     //     Type[] methodParameterTypes = call.MethodInfo.GetParameterTypes();
+            //     //     PersistentParameter[] newParameters = new PersistentParameter[methodParameterTypes.Length];
 
-                    for (int i = 0; i < newParameters.Length; i++)
-                    {
-                        newParameters[i].ParameterValue = methodParameterTypes[i].IsValueType ? Activator.CreateInstance(methodParameterTypes[i]) : null;
-                        newParameters[i].ParameterType = methodParameterTypes[i];
-                    }
+            //     //     for (int i = 0; i < newParameters.Length; i++)
+            //     //     {
+            //     //         newParameters[i].ParameterValue = methodParameterTypes[i].IsValueType ? Activator.CreateInstance(methodParameterTypes[i]) : null;
+            //     //         newParameters[i].ParameterType = methodParameterTypes[i];
+            //     //     }
 
-                    call.Parameters = newParameters;
-                }
+            //     //     call.Parameters = newParameters;
+            //     // }
 
-                SetValue(call);
-                RebuildLayoutOnRefresh();
-            };
-            menu.AddButton(methods[x].Name, action);
+            //     SetValue(call);
+
+            //     // ClearDefaultValueAll();
+            //     // ChildrenEditors.Clear();
+            //     // Presenter.BuildLayout();
+            //     // RebuildLayout();
+
+            //     RebuildLayoutOnRefresh();
+            //     // Refresh();
+            // };
+
+            // Creates the display name for a button, which shows the method name and the parameter signature
+            StringBuilder methodNameBuilder = new(methods[x].Name);
+            methodNameBuilder.Append('(');
+
+            Type[] paraTypes = methods[x].GetParameterTypes();
+
+            for (int q = 0; q < paraTypes.Length; q++)
+                methodNameBuilder.Append(paraTypes[q]);
+
+            methodNameBuilder.Append(')');
+
+            // Create the button. The 'raw' method name, that is used to set the value for the persistent call
+            // is stored in ShortKeys. A bit hacky, but I can't be bothered right now. This entire thing is alredy
+            // pretty hacky
+            // var button = menu.AddButton(methodNameBuilder.ToString(), SetCall);
+            var button = menu.AddButton(methodNameBuilder.ToString(), methods[x].Name, paraTypes, SetCall);
+            // button.ShortKeys = methods[x].Name;
+
+            // menu.add
+            // menu.SortButtons();
+            // ContextMenuButton b = new(menu, "menu item", ""){ Parent = menu.ItemsContainer };
         }
     }
 
@@ -283,20 +315,39 @@ public class PersistentCallEditor : CustomEditor
     /// <param name="box">The checkbox to use for the enabled/checked state. Checkbox gets passed via action delegate</param>
     private void SetCallEnabledState(CheckBox box)
     {
-        // if (!IsSetupValid())
-        //     return;
-
-        // List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
-
         PersistentCall call = (PersistentCall)Values[0];
         call.IsEnabled = box.Checked;
-        // Panel.HeaderTextColor = box.Checked ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
 
         SetValue(call);
         RebuildLayoutOnRefresh();
-        // List<PersistentCall> newPersistentCalls = [.. (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList];
-        // newPersistentCalls[callIndex] = call;
+    }
 
-        // LinkedEditor.SetValues(newPersistentCalls);
+    /// <summary>Sets the call of this editor to a new call, with infos based in the button that was clicked</summary>
+    /// <param name="button">The button that was clicked</param>
+    private void SetCall(ContextMenuButton button)
+    {
+        var flaxEventButton = button as FlaxEventContextButton;
+        
+        PersistentCall call = (PersistentCall)Values[0];
+
+        call.SetMethodName(flaxEventButton.MethodName);
+        call.Parameters = [];
+
+        if (flaxEventButton.ParameterTypes != null && 0 < flaxEventButton.ParameterTypes.Length)
+        {
+            // Type[] methodParameterTypes = call.MethodInfo.GetParameterTypes();
+            PersistentParameter[] newParameters = new PersistentParameter[flaxEventButton.ParameterTypes.Length];
+
+            for (int i = 0; i < newParameters.Length; i++)
+            {
+                newParameters[i].ParameterValue = flaxEventButton.ParameterTypes[i].IsValueType ? Activator.CreateInstance(flaxEventButton.ParameterTypes[i]) : null;
+                newParameters[i].ParameterType = flaxEventButton.ParameterTypes[i];
+            }
+
+            call.Parameters = newParameters;
+        }
+
+        SetValue(call);
+        RebuildLayoutOnRefresh();
     }
 }

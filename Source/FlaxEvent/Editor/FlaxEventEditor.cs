@@ -5,144 +5,107 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using FlaxEditor;
 using FlaxEditor.CustomEditors;
-using FlaxEditor.CustomEditors.Dedicated;
 using FlaxEditor.CustomEditors.Editors;
-using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-
+//////////////////////////////////////////////////////////////////////////////////////
+//                How does this entire editor thing even work?
+//
+// There is next to no documentation about how the editor works and how get build for
+// presenting stuff in the inspector or in general. So, here is what I've figured out
+// based on pure observation and weeks of trial and error.
+//
+// A custom editor (the default editor "GenericEditor" is also a custom editor) is
+// always responsible for a set of values. Even if it has an empty Initialize method
+// or doesn't do anything in general: If an editor gets spawned, a subset of values
+// gets linked to that editor. When you call SetValue to modify anything, it's
+// hardcoded that an editor only sets the values it is responsible for. So, an editor
+// is specifically responisble for one property of a class/struct/whatever, but not
+// for the properties child or parent element.
+//
+// That means that this FlaxEventEditor is only responsible and can only replace the
+// entire flax event. If I wanted to modify only the PersistentCallList field in a
+// FlaxEventBase, then I have to create a new editor and pass only the 
+// PersistentCallList value to that editor (which it does in this class).
+//
+// This persistent call list editor then can only modify the entire list, but not an
+// individual element. If we wanted to modify a specifiy element only, guess what?
+// Another editor, where the values of that specific element are extracted from that
+// list and handed over to the new specific element editor. If we wanted to only
+// affect a specific element on there, new editor, and then new editor and so on
+// 
+// This is how the entire editor chain for a FlaxEventBase - derived class looks:
+// FlaxEventEditor ---for the persistencall List---> PersistentCallListEditor
+//     PersistentCallListEditor ---for every entry---> PersistentCallEditor
+//         PersistentCallEditor --for the parameter array--> PersistentParameterArrayEditor
+//             PersistentParameterArrayEditor --for every entry--> PersistentParameterEditor
+//////////////////////////////////////////////////////////////////////////////////////
 
 namespace FlaxEvent;
 
 /// <summary>Custom editor to make <see cref="FlaxEventBase"/> appear as a list in the inspector</summary>
 [CustomEditor(typeof(FlaxEventBase)), DefaultEditor]
-public class FlaxEventEditor : GenericEditor
+public class FlaxEventEditor : CustomEditor
 {
+    public int CallsCount { get; private set; } = -1;
     private bool isClassNameSet = false;
 
     public override void Initialize(LayoutElementsContainer layout)
     {
         List<PersistentCall> activePersistentCalls = (Values[0] as FlaxEventBase).PersistentCallList;
-        // throw new NotImplementedException();
-        // layout.Label("This could be your ad!");
-        // layout.ContainerControl.ClipChildren = false;
-        // layout.ContainerControl.CullChildren = false;
-        // layout.Control.Offsets = new Margin(7, 7, 0, 0);
-        // layout.ContainerControl.chil
-        // layout.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
-        // Debug.Log(layout.Control.Width);
-        // (layout.Control as DropPanel).HeaderText = 
-        // base.Initialize(layout);
+        CallsCount = activePersistentCalls.Count;
 
-        // (layout as DropPanelElement).HeaderText += ""
+        // if (activePersistentCalls.Count == 0)
+        //     return;
+
+        // ChildrenEditors[i].
+
+        // RevertValueWithChildren = true;
 
         // Show what kind of argument types are being passed by the event. This helps to select methods with the same signature.
         DropPanel dropPanel = layout.Control as DropPanel;
         Type[] argTypes = Values[0].GetType().GetGenericArguments();
 
 
-
-        if (!isClassNameSet && 0 < argTypes.Length)
+        if (!isClassNameSet)
         {
             isClassNameSet = true;
             StringBuilder headerBuilder = new();
-            // headerBuilder.Append((Values[0] as FlaxEventBase).GetType().Name);
             headerBuilder.Append(dropPanel.HeaderText);
-            // Valuety
 
-            headerBuilder.Append(" <");
-
-            for (int i = 0; i < argTypes.Length; i++)
+            if (0 < argTypes.Length)
             {
-                headerBuilder.Append(argTypes[i].ToString().Split('.').Last());
+                headerBuilder.Append(" <");
 
-                if (i < argTypes.Length - 1)
-                    headerBuilder.Append(", ");
+                for (int i = 0; i < argTypes.Length; i++)
+                {
+                    headerBuilder.Append(argTypes[i].ToString().Split('.').Last());
+
+                    if (i < argTypes.Length - 1)
+                        headerBuilder.Append(", ");
+                }
+
+                headerBuilder.Append(">");
             }
 
-            headerBuilder.Append('>');
-
+            headerBuilder.Append(" (");
+            headerBuilder.Append(activePersistentCalls.Count);
+            headerBuilder.Append(')');
             dropPanel.HeaderText = headerBuilder.ToString();
         }
 
-        // var x = GetItemsForType(new ScriptType(Values[0].GetType()));
-        // var v = x[0].GetValues(Values);
-        // var v1 = x[1].GetValues(Values);
-        // var v2 = x[2].GetValues(Values);
-        // ScriptMemberInfo scriptType = new(typeof(LocalizedString));
-        // var tmpClass = new LocalizedString();
-        // ValueContainer fakeTypeValue = new(scriptType) { tmpClass };
-        // layout.Object(fakeTypeValue);
-        // return;
-
-        // var ListValueContainer = new ListValueContainer(new FlaxEditor.Scripting.ScriptType(typeof(PersistentCall)), )
-        // var listContainer = new ListEditor();
-        // listContainer.
-        // listContainer.Initialize(layout);
-        // Debug.Log(layout.Control is DropPanel);
-
-        // TODO: Custom List layout
-
-        // Show every persistent listener in list style
-
-        // Add an remove listeners from list
-        // var eventObject = Values[0] as FlaxEventBase;
-        // var listValue = eventObject.PersistentCallList;
-
-        // layout.CustomContainer<ListValueContainer>();
-
-        /*
-        var value = Values[0]; // Temporary fix to have values. Remove for proper impl
-        List<ItemInfo> itemInfos = GetItemsForType(TypeUtils.GetObjectType(value)); // This needs to be the types in a method signature, instead of using value
-        SpawnProperty(layout, itemInfos[0].GetValues(Values), itemInfos[0]); // This needs to be done for every PersistentCall Element on every element of itemInfos
-        */
-        // GetItemsForType(TypeUtils.GetObjectType(value));
-        // SpawnProperty
-
-        // for (int i = 0; i < activePersistentCalls.Count; i++)
-        // {
-        //     layout.AddElement(new PersistentCallElement());
-        // }
-        // layout.ve
-
-        // var dragArea = layout.CustomContainer<DragAreaControl>();
-        // dragArea.CustomControl.E
-        // layout.AddPropertyItem
-
-        // var group = layout.Group("<null>");
-        // group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
-
-        // float height = group.Panel.HeaderHeight;
-
-        // var toggle = new CheckBox
-        // {
-        //     TooltipText = "If checked, the target will be invoked",
-        //     IsScrollable = false,
-        //     Checked = true, // Change to persistentcall.IsEnabled
-        //     Parent = group.Panel,
-        //     Size = new(height),
-        //     Bounds = new(height, 0, height, height),
-        //     BoxSize = height - 4
-        // };
-
-        // var dragButton = new Button
-        // {
-        //     BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
-        //     AutoFocus = true,
-        //     IsScrollable = false,
-        //     BackgroundColor = FlaxEngine.GUI.Style.Current.ForegroundGrey,
-        //     BackgroundColorHighlighted = FlaxEngine.GUI.Style.Current.ForegroundGrey.RGBMultiplied(1.5f),
-        //     HasBorder = false,
-        //     Parent = group.Panel,
-        //     Bounds = new(toggle.Right, 1, height, height),
-        //     Scale = new(0.9f)
-        // };
 
         FlaxEventBase eventBase = Values[0] as FlaxEventBase;
+        // if (eventBase.PersistentCallList.Count == 0)
+        //     return;
+
+
+        // Base panel contains a large panel for all persisten call editor elements and another panel for the buttons
+        // Yes, it is required, otherwise the buttons always jump around, when some ui changes
+        var basePanel = layout.VerticalPanel();
 
         MemberInfo memberInfo = typeof(FlaxEventBase).GetMember("PersistentCallList", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
         ScriptMemberInfo scriptMember = new(memberInfo);
@@ -150,57 +113,22 @@ public class FlaxEventEditor : GenericEditor
 
         var vc = itemInfo.GetValues(Values);
 
-        var panel = layout.VerticalPanel();
-        panel.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
+        // var elementsPanel = basePanel.VerticalPanel();
+        // basePanel.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
 
-        for (int i = 0; i < eventBase.PersistentCallList.Count; i++)
-        {
-            // var callElement = new PersistentCallElement();
-            // callElement.Init(this, i);
-            // layout.AddElement(callElement);
-            var editor = new PersistentCallListEditor();
-            editor.SetIndex(i);
-            // editor.Initialize(layout);
+        // for (int i = 0; i < eventBase.PersistentCallList.Count; i++)
+        // {
+        var editor = new PersistentCallListEditor();
+        // editor.SetIndex(i);
 
-            panel.Object(vc, editor);
-            // layout.
-        }
+        basePanel.Object(vc, editor);
+        // }
 
-        // layout = new SpaceElement();
+        return;
 
-        // layout.
-
-        // var test = new PersistentCallElement();
-        // test.SetTitle("Adam Splasher");
-        // var callElement = layout.Custom<PersistentCallElement>();
-        // callElement.CustomControl.Init(this, 0);
-        // layout.Custom<PersistentCallElement>();
-        // layout.VerticalPanel();
-        // layout.cu
-
-        // layout.AddPropertyItem("Label NAME", "Tooltip"); 
-        // layout.CustomContainer<PropertyNameLabel>();
-        // var panel = layout.VerticalPanel();
-        // var propertyItem = panel.AddPropertyItem("Yes", "This is tooltip, yes");
-        // propertyItem.Control.Height = 20;
-        // layout.AddPropertyItem();
-        // propertyItem
-        // test.Control.AnchorMin = new(0.1f, 0);
-        // test.Control.Offsets = new Margin(7, 7, 0, 0);
-
-        // var group = layout.Group("Yea", new PersistentCallEditor(), false);
-
-        // group.Control.Offsets = new Margin(7, 7, 0, 0);
-        // layout.Object(new PersistentCallEditor);
-        // var callPanel = layout.VerticalPanel();
-        // callPanel.Panel.Offsets = new Margin(7, 7, 0, 0);
-
-        var buttonPanel = panel.HorizontalPanel();
+        // Add and Remove Buttons
+        var buttonPanel = basePanel.HorizontalPanel();
         buttonPanel.Panel.Size = new Float2(0, 18);
-        // buttonPanel.Panel.AnchorPreset = AnchorPresets.HorizontalStretchMiddle;
-        // buttonPanel.Panel.BackgroundColor = Color.OrangeRed;
-        // buttonPanel.Panel.AnchorPreset = AnchorPresets.BottomRight;
-        // Debug.Log(buttonPanel.Panel.Size);
 
         // NOTE: Margin of 3 for top margin (3rd parameter) is taken from FlaxEditor.Utilities.Constants.UIMargin. 
         // Due to accessibility level, here it needs to be set manualy. If that value changes it needs to be updated here, too.
@@ -209,7 +137,7 @@ public class FlaxEventEditor : GenericEditor
 
         var removeButton = buttonPanel.Button("-", "Remove last item");
         removeButton.Button.Size = new Float2(16, 16);
-        removeButton.Button.Enabled = 0 < activePersistentCalls.Count; // !IsSetBlocked && 0 < persistentcalls.count
+        removeButton.Button.Enabled = 0 < activePersistentCalls.Count;
         removeButton.Button.AnchorPreset = AnchorPresets.TopRight;
         removeButton.Button.Clicked += () =>
         {
@@ -221,7 +149,7 @@ public class FlaxEventEditor : GenericEditor
 
         var addButton = buttonPanel.Button("+", "Add new element");
         addButton.Button.Size = new Float2(16, 16);
-        addButton.Button.Enabled = true; // !IsSetBlocked && persistencalls.count < int32.maxvalue
+        addButton.Button.Enabled = true;
         addButton.Button.AnchorPreset = AnchorPresets.TopRight;
         addButton.Button.Clicked += () =>
         {
@@ -231,20 +159,6 @@ public class FlaxEventEditor : GenericEditor
             ResizePeristentCallList(activePersistentCalls.Count + 1);
         };
     }
-
-    // public void SetValues(FlaxEventBase flaxEvent)
-    // {
-    //     SetValue(flaxEvent);
-    // }
-
-    public void SetValues(List<PersistentCall> persistentCalls)
-    {
-        FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(Values[0].GetType());
-        newEvent.SetPersistentCalls(persistentCalls);
-        SetValue(newEvent);
-        RebuildLayoutOnRefresh();
-    }
-
 
 
     private void ResizePeristentCallList(int newSize)
@@ -256,22 +170,25 @@ public class FlaxEventEditor : GenericEditor
         {
             PersistentCall element = new();
 
-            if (i < oldList.Count - 1)
+            if (i < oldList.Count)
                 element = oldList[i];
 
             newList.Add(element);
         }
 
-        // FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(Values[0].GetType());
-        // newEvent.SetPersistentCalls(newList);
-        // SetValue(newEvent);
-        SetValues(newList);
+        FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(Values[0].GetType());
+        newEvent.SetPersistentCalls(newList);
+
+        SetValue(newEvent);
         RebuildLayoutOnRefresh();
-
     }
 
-    public void GetSomething()
+    public override void Refresh()
     {
-        
+        // base.Refresh();
+        if(CallsCount != (Values[0] as FlaxEventBase).PersistentCallList.Count)
+            RebuildLayout();
     }
+
+
 }

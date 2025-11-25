@@ -32,16 +32,16 @@
 	"persistentCalls": [
 		{
 			"Parameters": [],
-			"Parent": null,
-			"TargetObject": null,
-			"MethodName": "",
+			"parent": null,
+			"targetObject": null,
+			"methodName": null,
 			"IsEnabled": false
 		},
 		{
 			"Parameters": [],
-			"Parent": null,
-			"TargetObject": null,
-			"MethodName": "",
+			"parent": null,
+			"targetObject": null,
+			"methodName": null,
 			"IsEnabled": false
 		},
 		{
@@ -55,35 +55,13 @@
 					"ParameterType": null
 				}
 			],
-			"Parent": null,
-			"TargetObject": null,
-			"MethodName": "",
+			"parent": null,
+			"targetObject": null,
+			"methodName": null,
 			"IsEnabled": false
 		}
 	],
-	"OnSomething": {
-		"PersistentCallList": [
-			{
-				"Parameters": [],
-				"Parent": "28553d634087c67c711ebd96080482aa",
-				"TargetObject": "28553d634087c67c711ebd96080482aa",
-				"MethodName": "",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": "namer",
-						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"Parent": "1f42623d4bff16bcf1fa94a03f78149c",
-				"TargetObject": "1f42623d4bff16bcf1fa94a03f78149c",
-				"MethodName": "set_Name",
-				"IsEnabled": true
-			}
-		]
-	},
+	"OnSomething": {},
 	"OnEvent": {
 		"PersistentCallList": [
 			{
@@ -93,9 +71,57 @@
 						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
 					}
 				],
-				"Parent": "4a9d87134ab42f4294db6bbcf1902bde",
-				"TargetObject": "4a9d87134ab42f4294db6bbcf1902bde",
-				"MethodName": "set_IsActive",
+				"parent": "b0d72c3746caebca055e1f921ca21c7c",
+				"targetObject": "b0d72c3746caebca055e1f921ca21c7c",
+				"methodName": "set_UsePerspective",
+				"IsEnabled": false
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": {
+							"$type": "FlaxEngine.Vector3, FlaxEngine.CSharp",
+							"X": 0.0,
+							"Y": 65.0,
+							"Z": -100.0
+						},
+						"ParameterType": "FlaxEngine.Vector3, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					}
+				],
+				"parent": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
+				"targetObject": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
+				"methodName": "set_LocalPosition",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": 0,
+						"ParameterType": "System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "ad30553d4c8460ef2dd8c7bd92e1e88e",
+				"targetObject": "ad30553d4c8460ef2dd8c7bd92e1e88e",
+				"methodName": "set_Layer",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [],
+				"parent": null,
+				"targetObject": null,
+				"methodName": "",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": 0,
+						"ParameterType": "System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "4a9d87134ab42f4294db6bbcf1902bde",
+				"targetObject": "4a9d87134ab42f4294db6bbcf1902bde",
+				"methodName": "set_LODBias",
 				"IsEnabled": true
 			},
 			{
@@ -103,30 +129,26 @@
 					{
 						"ParameterValue": {
 							"$type": "FlaxEngine.Vector3, FlaxEngine.CSharp",
-							"X": 7.0,
-							"Y": 0.0,
+							"X": 0.0,
+							"Y": -100.0,
 							"Z": 0.0
 						},
 						"ParameterType": "FlaxEngine.Vector3, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					},
+					{
+						"ParameterValue": {
+							"$type": "FlaxEngine.Quaternion, FlaxEngine.CSharp",
+							"X": 0.3007058,
+							"Y": 0.0,
+							"Z": 0.0,
+							"W": 0.95371693
+						},
+						"ParameterType": "FlaxEngine.Quaternion, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
 					}
 				],
-				"Parent": "74a68a984824b4510d12589f199ad68f",
-				"TargetObject": "a4e7a5e646ce5997033057bdf6f37fc7",
-				"MethodName": "MyMethod",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [],
-				"Parent": null,
-				"TargetObject": null,
-				"MethodName": "",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [],
-				"Parent": null,
-				"TargetObject": null,
-				"MethodName": "",
+				"parent": "4a9d87134ab42f4294db6bbcf1902bde",
+				"targetObject": "4a9d87134ab42f4294db6bbcf1902bde",
+				"methodName": "AddMovement",
 				"IsEnabled": true
 			},
 			{
@@ -136,9 +158,39 @@
 						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
 					}
 				],
-				"Parent": "ad30553d4c8460ef2dd8c7bd92e1e88e",
-				"TargetObject": "ad30553d4c8460ef2dd8c7bd92e1e88e",
-				"MethodName": "set_IsActive",
+				"parent": "ad30553d4c8460ef2dd8c7bd92e1e88e",
+				"targetObject": "ad30553d4c8460ef2dd8c7bd92e1e88e",
+				"methodName": "set_IsActive",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": {
+							"$type": "FlaxEngine.Transform, FlaxEngine.CSharp",
+							"Translation": {
+								"X": 100.0,
+								"Y": 0.0,
+								"Z": 100.0
+							},
+							"Orientation": {
+								"X": -0.52104473,
+								"Y": 0.36483946,
+								"Z": 0.4425857,
+								"W": 0.6320779
+							},
+							"Scale": {
+								"X": 1.0,
+								"Y": 0.5,
+								"Z": 2.0
+							}
+						},
+						"ParameterType": "FlaxEngine.Transform, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_Transform",
 				"IsEnabled": true
 			}
 		]
@@ -624,6 +676,7 @@
 			"TypeName": "FlaxEngine.UIControl",
 			"ParentID": "55ab456243b047702d8c5a9cdb523ca5",
 			"Name": "Border",
+			"Layer": 1,
 			"Control": "FlaxEngine.GUI.Border",
 			"Data": {
 	"BorderColor": {
@@ -673,6 +726,30 @@
 	"Visible": true,
 	"AutoFocus": false
 }
+		},
+		{
+			"ID": "20127b0f41990fcfa9afa683ded63114",
+			"TypeName": "FlaxEngine.StaticModel",
+			"ParentID": "74a68a984824b4510d12589f199ad68f",
+			"Name": "Capsule",
+			"Transform": {
+				"Translation": {
+					"X": -2.0,
+					"Y": 0.0,
+					"Z": 0.0
+				}
+			},
+			"Model": "3f82e57744f57c28285150b646ad2198",
+			"Buffer": {
+				"Entries": [
+					{
+						"Material": "00000000000000000000000000000000",
+						"ShadowsMode": 3,
+						"Visible": true,
+						"ReceiveDecals": true
+					}
+				]
+			}
 		}
 	]
 }

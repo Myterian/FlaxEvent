@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using FlaxEngine;
+using Debug = FlaxEngine.Debug;
 
 namespace FlaxEvent;
 
@@ -36,7 +38,14 @@ public class Test : Script
     public override void OnUpdate()
     {
         if (Input.GetKeyDown(KeyboardKeys.Spacebar))
+        {
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
             OnEvent?.Invoke("123", 1, 2);
+            stopwatch.Stop();
+            
+            Debug.Log($"{stopwatch.ElapsedTicks} ticks, which are {stopwatch.Elapsed.TotalMilliseconds} ms");
+        }
     }
 
 

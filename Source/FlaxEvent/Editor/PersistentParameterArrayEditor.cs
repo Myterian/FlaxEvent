@@ -24,6 +24,11 @@ public class PersistentParameterArrayEditor : CustomEditor
         // layout.Label("Hier könnte ihr array stehen");
 
         // ((PersistentParameter[])Values[0])
+        if (Mathf.IsNotInRange(index, 0, ((PersistentParameter[])Values[0]).Length))
+        {
+            layout.Label("PersistentParameter Not found");
+            return;
+        }
 
 
         MemberInfo memberInfo1 = typeof(PersistentParameter).GetMember("ParameterValue", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];

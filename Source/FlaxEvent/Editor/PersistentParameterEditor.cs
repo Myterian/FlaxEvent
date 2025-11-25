@@ -28,6 +28,11 @@ public class PersistentParameterEditor : CustomEditor
         PersistentParameter parameter = (PersistentParameter)Values[0];
         CustomEditor editor = parameter.ParameterType.FindEditorFromType();
 
+        // if (editor is GenericEditor)
+        //     layout.Label("Editor for type '" + parameter.ParameterType.ToString() + "' could not be found");
+
+
+
         MemberInfo memberInfo1 = typeof(PersistentParameter).GetMember("ParameterValue", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
         ScriptMemberInfo scriptMember1 = new(memberInfo1);
         GenericEditor.ItemInfo itemInfo1 = new(scriptMember1);

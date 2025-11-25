@@ -3,111 +3,32 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.Modules;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEvent;
 
 /// <summary>
-/// TypeToElementExtension class.
+/// The Flax-interal helper class <see cref="CustomEditorsUtil"/> for finding custom editors is not available due to the accesability level,
+/// this is the FlaxEvent version of that class.
 /// </summary>
 public static class TypeToElementExtension
 {
-    public static void AddTypeElement(this LayoutElementsContainer element, Type type)
-    {
-        // if(type == typeof(bool))
-        //     return
-        // 
-        //      FlaxEditor.CustomEditors.Elements.CheckBoxElement
-        // FlaxEditor.CustomEditors.Elements.DoubleValueElement
-        //      FlaxEditor.CustomEditors.Elements.FloatValueElement
-        // FlaxEditor.CustomEditors.Elements.EnumElement
-        // FlaxEditor.CustomEditors.Elements.ImageElement
-        //      FlaxEditor.CustomEditors.Elements.IntegerValueElement
-        // FlaxEditor.CustomEditors.Elements.SignedIntegerValueElement
-        // switch(type)
-        // {
-        //     case bool Bool: new CheckBoxElement(); break;
-        //     _ => LabelElement();
-        // };
-        // object value = type.IsValueType ? Activator.CreateInstance(type) : null;
+    private static List<Type> editorTypes = null;
 
-        // if (type == typeof(bool))
-        // {
-        //     element.Checkbox();
-        // }
-
-        // return value switch
-        // {
-        //     bool b => new CheckBoxElement().Control,
-        //     int i => new SignedIntegerValueElement().Control,
-        //     float f => new FloatValueElement().Control,
-        //     string s => new TextBoxElement().Control,
-        //     FlaxEngine.Object o => new FlaxObjectRefPickerControl(),
-        //     _ => new LabelElement().Control
-        // };
-        // Debug.Log(Type.GetTypeCode(typeof(Actor)));
-
-        // TypeCode typeCode = Type.GetTypeCode(type);
-
-        // element.Checkbox
-        // element.DoubleValue
-        // element.Enum
-        // element.FloatValue
-        // element.Image
-        // element.IntegerValue
-        // element.
-
-        object x = type switch
-        {
-            // bool => element.Checkbox(),
-            // byte or short or int or long => element.IntegerValue(),
-            // float or double => element.FloatValue(),
-            // string => element.TextBox(),
-            // FlaxEngine.Object => new FlaxObjectRefPickerControl(),
-            // _ => element.Label($"Editor for type {type} not foudn")
-
-
-
-            // Type t when t == typeof(bool) => element.Checkbox(),
-
-            Type t when Type.GetTypeCode(t) is TypeCode.Boolean => element.Checkbox(),
-
-            Type t when Type.GetTypeCode(t) is TypeCode.Int16 or TypeCode.Int32 or TypeCode.Int64 => element.SignedIntegerValue(),
-
-            Type t when Type.GetTypeCode(t) is TypeCode.Byte or TypeCode.UInt16 or TypeCode.UInt32 or TypeCode.UInt64 => element.IntegerValue(),
-
-            Type t when Type.GetTypeCode(t) is TypeCode.Single or TypeCode.Double => element.FloatValue(),
-
-            Type t when Type.GetTypeCode(t) is TypeCode.String => element.TextBox(),
-
-            Type t when typeof(FlaxEngine.Object).IsAssignableFrom(t) => new FlaxObjectRefPickerControl(),
-
-
-            // typeof(FlaxEngine.Object).IsAssignableFrom(t) => new FlaxObjectRefPickerControl(),
-            _ => element.Label($"Editor for type {type} not foudn")
-        };
-
-        // return null;
-
-        // switch (value)
-        // {
-        //     case bool b: element.Checkbox(); break;
-
-        //     case short:
-        //     case int: 
-        //     case long: element.SignedIntegerValue(); break;
-
-        //     default: element.Label($"Editor for type {type} not foudn"); break;
-        // }
-
-    }
+    public static void Invalidate() => editorTypes = null;
 
     public static CustomEditor FindEditorFromType(this Type type)
     {
+        ScriptsBuilder.ScriptsReloadEnd -= Invalidate;
+        ScriptsBuilder.ScriptsReloadEnd += Invalidate;
+
+
 
         Type typeToProcess = type;
 
@@ -116,7 +37,7 @@ public static class TypeToElementExtension
             return new FlaxObjectRefEditor();
         }
 
-        List<Type> editorTypes = AppDomain.CurrentDomain.GetAssemblies()
+        editorTypes ??= AppDomain.CurrentDomain.GetAssemblies()
                                                 .SelectMany(x =>
                                                 {
                                                     Type[] types = null;
@@ -125,6 +46,7 @@ public static class TypeToElementExtension
                                                 })
                                                 .Where(t => typeof(CustomEditor).IsAssignableFrom(t) && !t.IsAbstract)
                                                 .ToList();
+
 
         for (int i = 0; i < editorTypes.Count; i++)
         {
