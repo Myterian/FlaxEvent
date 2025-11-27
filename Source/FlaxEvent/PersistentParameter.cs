@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>Data container for parameters of a <see cref="PersistentCall"/></summary>
 public record struct PersistentParameter

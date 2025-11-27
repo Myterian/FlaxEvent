@@ -371,9 +371,7 @@
     <Compile Include="FlaxEvent.Gen.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventContextButton.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventEditor.cs" />
-    <Compile Include="FlaxEvent\Editor\MethodParameterEditor.cs" />
     <Compile Include="FlaxEvent\Editor\PersistentCallEditor.cs" />
-    <Compile Include="FlaxEvent\Editor\PersistentCallElement.cs" />
     <Compile Include="FlaxEvent\Editor\PersistentCallListEditor.cs" />
     <Compile Include="FlaxEvent\Editor\PersistentParameterArrayEditor.cs" />
     <Compile Include="FlaxEvent\Editor\PersistentParameterEditor.cs" />

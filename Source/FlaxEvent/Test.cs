@@ -7,7 +7,7 @@ using System.Reflection;
 using FlaxEngine;
 using Debug = FlaxEngine.Debug;
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>
 /// Test Script.
@@ -22,7 +22,7 @@ public class Test : Script
     // // [Serialize] public MethodInfo methodInfo;
     // [Serialize] public Type type;
     // public List<Vector3> Vectors = new();
-    public List<PersistentCall> persistentCalls = [new PersistentCall()];
+    // public List<PersistentCall> persistentCalls = [new PersistentCall()];
 
     public FlaxEvent OnSomething = new();
 
@@ -58,6 +58,7 @@ public class Test : Script
     public void Subscribe()
     {
         // OnSomething?.AddListener(MyMethod);
+        // OnSomething.PersistentCallList = new();
         
     }
 }

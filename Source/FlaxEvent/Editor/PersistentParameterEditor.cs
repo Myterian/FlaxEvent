@@ -6,7 +6,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.Scripting;
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>PersistentParameterEditor class.</summary>
 public class PersistentParameterEditor : CustomEditor

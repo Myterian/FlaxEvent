@@ -11,17 +11,29 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 using System.Text;
+using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.GUI;
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>PersistentParameterEditor class.</summary>
 public class PersistentCallEditor : CustomEditor
 {
+    private PersistentCallListEditor parentEditor;
+    private int index = -1;
+    private bool isDragging = false;
+
+    public void Setup(PersistentCallListEditor editor, int elementIndex)
+    {
+        parentEditor = editor;
+        index = elementIndex;
+    }
+
     public override void Initialize(LayoutElementsContainer layout)
     {
-        // layout.Label("PersistentParameter");
-        if (Values[0] == null || Values.Count == 0)
-            return;
+        // var dragIndicator = layout.VerticalPanel();
+        // dragIndicator.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
+        // dragIndicator.ContainerControl.Offsets = new(0);
 
         PersistentCall call = (PersistentCall)Values[0];
 
@@ -29,14 +41,25 @@ public class PersistentCallEditor : CustomEditor
         Script castScript = null;
         string headerText = "<null>";
 
+        // PropertyNameLabel x = new PropertyNameLabel("Some label");
+        // PropertiesListElement y = layout.AddPropertyItem(x);
+        // var group = (LayoutElementsContainer)y;
+
         var group = layout.Group(headerText);
-        // group.Panel.MouseButtonRightClicked += // TODO: Right-Click context menu
+        group.Panel.MouseButtonRightClicked += RightClickContextMenu;
         bool isCallEnabled = call.IsEnabled;
 
 
         group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
         group.Panel.HeaderTextColor = isCallEnabled ? FlaxEngine.GUI.Style.Current.Foreground : FlaxEngine.GUI.Style.Current.ForegroundDisabled;
         group.Panel.EnableContainmentLines = false;
+
+        if (isDragging)
+        {
+            // group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.Selection;
+            // group.Panel.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
+
+        }
 
         float headerHeight = group.Panel.HeaderHeight;
 
@@ -54,7 +77,7 @@ public class PersistentCallEditor : CustomEditor
 
         toggle.StateChanged += SetCallEnabledState;
 
-        // Drag button. TODO: Drag Reorder
+        // Drag and Drop button. TODO: Drag Reorder
         var dragButton = new Button
         {
             BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
@@ -68,9 +91,13 @@ public class PersistentCallEditor : CustomEditor
             Scale = new(0.9f)
         };
 
+        // dragButton.ButtonClicked +=
+        // RootControl.GameRoot.StartMouseCapture()
+
         // Object picker
         var propertyList = group.AddPropertyItem("Target", "The target of this event call");
         var objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
+
 
         if (call.TargetObject != null)
         {
@@ -82,7 +109,27 @@ public class PersistentCallEditor : CustomEditor
             castActor = uncastObject as Actor;
             castScript = uncastObject as Script;
 
-            group.Panel.HeaderText = castActor?.Name ?? castScript.GetType().Name ?? "<target not found>";
+            StringBuilder headerBuilder = new("<null>");
+
+            if (call.Parent != null)
+            {
+                headerBuilder.Clear();
+                headerBuilder.Append(call.Parent.Name);
+            }
+
+            if (uncastObject != null && call.Parent != call.TargetObject)
+            {
+                headerBuilder.Append('.');
+                headerBuilder.Append(castActor?.Name ?? castScript?.GetType().Name ?? "<target name not found>");
+            }
+
+            if (!string.IsNullOrEmpty(call.MethodName))
+            {
+                headerBuilder.Append('.');
+                headerBuilder.Append(call.MethodName);
+            }
+
+            group.Panel.HeaderText = headerBuilder.ToString();
         }
 
         objectPicker.CustomControl.ValueChanged += () =>
@@ -94,14 +141,11 @@ public class PersistentCallEditor : CustomEditor
             RebuildLayoutOnRefresh();
         };
 
-        // Method picker button & context menu
+        // Method picker button
         string buttonText = "<null>";
 
         if (!string.IsNullOrEmpty(call.MethodName))
-        {
-            group.Panel.HeaderText += "." + call.MethodName;
             buttonText = call.MethodName;
-        }
 
         var methodPicker = propertyList.Button(buttonText);
         methodPicker.Button.Height = 18;
@@ -130,7 +174,8 @@ public class PersistentCallEditor : CustomEditor
         }
     }
 
-    
+    #region Editor-UI Setup
+
     /// <summary>Creates and show the context menu with buttons for the actor and attached scripts, which contain child menus of the available methods</summary>
     /// <param name="button">The button that was clicked. Should be a button for method selection. If not, dafuq is going on then.</param>
     private void CreateMethodSelectionMenu(Button button)
@@ -193,9 +238,35 @@ public class PersistentCallEditor : CustomEditor
                 methodNameBuilder.Append(paraTypes[q]);
 
             methodNameBuilder.Append(')');
-            var button = menu.AddButton(methodNameBuilder.ToString(), methods[x].Name, paraTypes, SetCall);
+            var button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, paraTypes, SetCall);
         }
     }
+
+    /// <summary>Creates and show the right click context menu for a peristent call element</summary>
+    /// <param name="dropPanel">The parent drop panel</param>
+    /// <param name="location">The mouse location</param>
+    private void RightClickContextMenu(DropPanel dropPanel, Float2 location)
+    {
+        ContextMenu menu = new();
+
+        menu.AddButton("Copy", Copy);
+        menu.AddButton("Duplicate", () => parentEditor.DuplicatePersistentCall(index));
+        menu.AddButton("Paste", () => parentEditor.PastePersistentCall(index));
+
+        menu.AddSeparator();
+
+        menu.AddButton("Move up", () => parentEditor.MovePersistentCall(index, index - 1));
+        menu.AddButton("Move down", () => parentEditor.MovePersistentCall(index, index + 1));
+        menu.AddButton("Remove", () => parentEditor.RemovePersistentCall(index));
+
+        menu.Show(dropPanel, location);
+    }
+
+    // override 
+
+    #endregion
+
+    #region Peristent Call Values Setter
 
     /// <summary>Sets the enabled state of the linked <see cref="PersistentCall"/></summary>
     /// <param name="box">The checkbox to use for the enabled/checked state. Checkbox gets passed via action delegate</param>
@@ -213,9 +284,10 @@ public class PersistentCallEditor : CustomEditor
     private void SetCall(ContextMenuButton button)
     {
         var flaxEventButton = button as FlaxEventContextButton;
-        
+
         PersistentCall call = (PersistentCall)Values[0];
 
+        call.SetTarget(flaxEventButton.TargetObject);
         call.SetMethodName(flaxEventButton.MethodName);
         call.Parameters = [];
 
@@ -236,4 +308,6 @@ public class PersistentCallEditor : CustomEditor
         SetValue(call);
         RebuildLayoutOnRefresh();
     }
+    
+    #endregion
 }

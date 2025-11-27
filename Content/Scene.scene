@@ -8,7 +8,7 @@
 			"TypeName": "FlaxEngine.Scene",
 			"Transform": {
 				"Translation": {
-					"X": 2.0,
+					"X": 5.0,
 					"Y": 0.0,
 					"Z": 0.0
 				}
@@ -25,43 +25,27 @@
 			}
 		},
 		{
-			"ID": "a4e7a5e646ce5997033057bdf6f37fc7",
-			"TypeName": "FlaxEvent.Test",
+			"ID": "6ff0581d474c84230b3d0fa9f17e0972",
+			"TypeName": "ExitOnEsc",
+			"ParentID": "74a68a984824b4510d12589f199ad68f",
+			"V": {}
+		},
+		{
+			"ID": "5ffe40614d2e2c6f45cb6fa304a8e6ad",
+			"TypeName": "FlaxEvents.Test",
 			"ParentID": "74a68a984824b4510d12589f199ad68f",
 			"V": {
-	"persistentCalls": [
-		{
-			"Parameters": [],
-			"parent": null,
-			"targetObject": null,
-			"methodName": null,
-			"IsEnabled": false
-		},
-		{
-			"Parameters": [],
-			"parent": null,
-			"targetObject": null,
-			"methodName": null,
-			"IsEnabled": false
-		},
-		{
-			"Parameters": [
-				{
-					"ParameterValue": null,
-					"ParameterType": null
-				},
-				{
-					"ParameterValue": null,
-					"ParameterType": null
-				}
-			],
-			"parent": null,
-			"targetObject": null,
-			"methodName": null,
-			"IsEnabled": false
-		}
-	],
-	"OnSomething": {},
+	"OnSomething": {
+		"PersistentCallList": [
+			{
+				"Parameters": [],
+				"parent": null,
+				"targetObject": null,
+				"methodName": "",
+				"IsEnabled": true
+			}
+		]
+	},
 	"OnEvent": {
 		"PersistentCallList": [
 			{
@@ -180,7 +164,7 @@
 								"W": 0.6320779
 							},
 							"Scale": {
-								"X": 1.0,
+								"X": 4.0,
 								"Y": 0.5,
 								"Z": 2.0
 							}
@@ -208,7 +192,135 @@
 			{
 				"Parameters": [
 					{
+						"ParameterValue": true,
+						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_IsActive",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": null,
+						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					},
+					{
+						"ParameterValue": null,
+						"ParameterType": "FlaxEngine.Actor, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					},
+					{
+						"ParameterValue": 0.0,
+						"ParameterType": "System.Single, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
+				"targetObject": "8879c65d4fbdf8a39246b88c63f094be",
+				"methodName": "MyMethod",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
 						"ParameterValue": false,
+						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "10bbe79f454801a32880fcbf69f1bdac",
+				"methodName": "set_Enabled",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": null,
+						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_LayerName",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": {
+							"$type": "FlaxEngine.Transform, FlaxEngine.CSharp",
+							"Translation": {
+								"X": 100.0,
+								"Y": 0.0,
+								"Z": 100.0
+							},
+							"Orientation": {
+								"X": -0.52104473,
+								"Y": 0.36483946,
+								"Z": 0.4425857,
+								"W": 0.6320779
+							},
+							"Scale": {
+								"X": 1.0,
+								"Y": 0.5,
+								"Z": 2.0
+							}
+						},
+						"ParameterType": "FlaxEngine.Transform, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_Transform",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": true,
+						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_IsActive",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": {
+							"$type": "FlaxEngine.Transform, FlaxEngine.CSharp",
+							"Translation": {
+								"X": 100.0,
+								"Y": 0.0,
+								"Z": 100.0
+							},
+							"Orientation": {
+								"X": -0.52104473,
+								"Y": 0.36483946,
+								"Z": 0.4425857,
+								"W": 0.6320779
+							},
+							"Scale": {
+								"X": 3.0,
+								"Y": 0.5,
+								"Z": 2.0
+							}
+						},
+						"ParameterType": "FlaxEngine.Transform, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_Transform",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": true,
 						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
 					}
 				],
@@ -220,12 +332,6 @@
 		]
 	}
 }
-		},
-		{
-			"ID": "6ff0581d474c84230b3d0fa9f17e0972",
-			"TypeName": "ExitOnEsc",
-			"ParentID": "74a68a984824b4510d12589f199ad68f",
-			"V": {}
 		},
 		{
 			"ID": "28553d634087c67c711ebd96080482aa",
@@ -756,13 +862,6 @@
 			"TypeName": "FlaxEngine.StaticModel",
 			"ParentID": "74a68a984824b4510d12589f199ad68f",
 			"Name": "Capsule",
-			"Transform": {
-				"Translation": {
-					"X": -2.0,
-					"Y": 0.0,
-					"Z": 0.0
-				}
-			},
 			"Model": "3f82e57744f57c28285150b646ad2198",
 			"Buffer": {
 				"Entries": [
@@ -774,6 +873,29 @@
 					}
 				]
 			}
+		},
+		{
+			"ID": "10bbe79f454801a32880fcbf69f1bdac",
+			"TypeName": "Game.SomeTests",
+			"ParentID": "20127b0f41990fcfa9afa683ded63114",
+			"V": {
+	"Event": {
+		"PersistentCallList": [
+			{
+				"Parameters": [
+					{
+						"ParameterValue": 2,
+						"ParameterType": "FlaxEngine.StaticFlags, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_StaticFlags",
+				"IsEnabled": true
+			}
+		]
+	}
+}
 		}
 	]
 }

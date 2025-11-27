@@ -5,13 +5,14 @@ using System.Reflection;
 using FlaxEditor.CustomEditors;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Json;
+using FlaxEngine.Utilities;
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>PersistentParameterListEditor class.</summary>
 public class PersistentCallListEditor : CustomEditor
 {
-
     private int persistentCallsCount = -1;
 
     public override void Initialize(LayoutElementsContainer layout)
@@ -25,8 +26,6 @@ public class PersistentCallListEditor : CustomEditor
         var elementsPanel = layout.VerticalPanel();
         elementsPanel.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
 
-        elementsPanel.Label("This is label");
-
         for (int i = 0; i < list.Count; i++)
         {
             var lvc = new ListValueContainer(new(memberInfo.GetType()), i, Values);
@@ -34,7 +33,8 @@ public class PersistentCallListEditor : CustomEditor
             if (lvc[0] == null || lvc.Count == 0)
                 return;
 
-            elementsPanel.Object(lvc, new PersistentCallEditor());
+            var newEditor = elementsPanel.Object(lvc, new PersistentCallEditor());
+            (newEditor as PersistentCallEditor).Setup(this, i);
         }
 
 
@@ -73,6 +73,7 @@ public class PersistentCallListEditor : CustomEditor
         };
     }
 
+    #region This Editor Methods
 
     private void ResizePeristentCallList(int newSize)
     {
@@ -101,5 +102,83 @@ public class PersistentCallListEditor : CustomEditor
         if (((List<PersistentCall>)Values[0]).Count != persistentCallsCount)
             RebuildLayout();
     }
+
+    #endregion
+
+    #region Child Editor Methods
+
+    /// <summary>Duplicates a persistent call and adds it to the end of a persistent calls list</summary>
+    /// <param name="index">The index of the element, that gets duplicated</param>
+    public void DuplicatePersistentCall(int index)
+    {
+        var oldList = (List<PersistentCall>)Values[0];
+
+        if (Mathf.IsNotInRange(index, 0, oldList.Count - 1))
+            return;
+
+        PersistentCall newCall = oldList[index].DeepClone();
+        oldList.Add(newCall);
+
+        SetValue(oldList);
+        RebuildLayoutOnRefresh();
+    }
+
+    /// <summary>Removes an element from the persistent call list</summary>
+    /// <param name="index">The index of the element to remove</param>
+    public void RemovePersistentCall(int index)
+    {
+        var oldList = (List<PersistentCall>)Values[0];
+        List<PersistentCall> newList = new();
+
+        for (int i = 0; i < index; i++)
+        {
+            newList.Add(oldList[i]);
+        }
+
+        for (int i = index + 1; i < oldList.Count; i++)
+        {
+            newList.Add(oldList[i]);
+        }
+
+        SetValue(newList);
+        RebuildLayoutOnRefresh();
+    }
+
+    /// <summary>Pastes an element to a persistent call list element</summary>
+    /// <param name="index">The index to paste the persistent call to</param>
+    public void PastePersistentCall(int index)
+    {
+        PersistentCall newCall = JsonSerializer.Deserialize<PersistentCall>(Clipboard.Text);
+
+        if (newCall == null)
+            return;
+
+        var calls = (List<PersistentCall>)Values[0];
+        calls[index] = newCall;
+
+        SetValue(calls);
+        RebuildLayoutOnRefresh();
+    }
+
+    /// <summary>Swaps a persistent call to a different index of the persistent call list</summary>
+    /// <param name="fromIndex">The current index of the element</param>
+    /// <param name="toIndex">The new index of the element after the swap</param>
+    public void MovePersistentCall(int fromIndex, int toIndex)
+    {
+        var calls = (List<PersistentCall>)Values[0];
+
+        if (Mathf.IsNotInRange(toIndex, 0, calls.Count - 1))
+            return;
+
+        PersistentCall tmp = calls[fromIndex];
+
+        calls[fromIndex] = calls[toIndex];
+        calls[toIndex] = tmp;
+
+        SetValue(calls);
+        RebuildLayoutOnRefresh();
+    }
+
+    #endregion
 
 }

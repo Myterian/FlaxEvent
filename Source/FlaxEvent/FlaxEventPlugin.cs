@@ -3,7 +3,7 @@
 using System;
 using FlaxEngine;
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>FlaxEventPlugin GamePlugin.</summary>
 public class FlaxEventPlugin : GamePlugin

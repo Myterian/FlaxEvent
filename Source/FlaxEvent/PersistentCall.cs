@@ -5,11 +5,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using FlaxEditor.Surface.Archetypes;
 using FlaxEngine;
 using Object = FlaxEngine.Object;
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>Stores infos about object and method/member, that will be dynamically invoked by a <see cref="FlaxEventBase"/></summary>
 public record struct PersistentCall
@@ -113,6 +112,8 @@ public record struct PersistentCall
         return null;
     }
 
+    /// <summary>Creates a delegate, that can be invoked</summary>
+    /// <returns>Delegate</returns>
     private Delegate GetDelegate()
     {
         if (MethodInfo == null)
@@ -120,34 +121,14 @@ public record struct PersistentCall
 
         Type[] parameterTypes = GetParameterTypes();
 
-        Type delegateType = Expression.GetActionType(parameterTypes); // <- Sollte ich damit nicht einfach eine action<t0> o.ä. erstellen können?
+        Type delegateType = Expression.GetActionType(parameterTypes);
 
         if (MethodInfo.ReturnType == typeof(void))
             return MethodInfo.CreateDelegate(delegateType, TargetObject);
 
         ParameterExpression[] paramsExpr = parameterTypes.Select(Expression.Parameter).ToArray();
-
         MethodCallExpression call = TargetObject != null ? Expression.Call(Expression.Constant(TargetObject), MethodInfo, paramsExpr) : Expression.Call(MethodInfo, paramsExpr);
-
         LambdaExpression ignoreReturn = Expression.Lambda(delegateType, Expression.Block(call, Expression.Empty()), paramsExpr);
-
-        // Type actionType = parameterTypes.Length switch
-        // {
-        //     0 => typeof(Action),
-        //     1 => typeof(Action<>).MakeGenericType(parameterTypes),
-        //     2 => typeof(Action<,>).MakeGenericType(parameterTypes),
-        //     3 => typeof(Action<,,>).MakeGenericType(parameterTypes),
-        //     4 => typeof(Action<,,,>).MakeGenericType(parameterTypes),
-        //     _ => throw new NotSupportedException("PersistentCall only supports up to 4 parameters")
-        // };
-
-        // Action<Parameters[0].ParameterType> my = delegate {};
-
-        // dynamic c = Delegate.CreateDelegate(actionType, TargetObject, MethodInfo);
-        // c(1);
-        // (c as delegateType).Invoke
-
-        // Expression.Lambda<TDelegate>
 
         return ignoreReturn.Compile();
     }

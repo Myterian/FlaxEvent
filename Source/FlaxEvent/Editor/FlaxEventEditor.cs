@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -61,7 +63,7 @@ using FlaxEngine.GUI;
 // rebuild on a failed type / count comparison.
 //////////////////////////////////////////////////////////////////////////////////////
 
-namespace FlaxEvent;
+namespace FlaxEvents;
 
 /// <summary>Custom editor to make <see cref="FlaxEventBase"/> appear as a list in the inspector</summary>
 [CustomEditor(typeof(FlaxEventBase)), DefaultEditor]
@@ -117,5 +119,13 @@ public class FlaxEventEditor : CustomEditor
         var editor = new PersistentCallListEditor();
         basePanel.Object(vc, editor);
 
+        // (layout as GroupElement).SetupContextMenu += (ContextMenu menu, DropPanel panel) =>
+        // {
+        //     menu.AddSeparator();
+        //     menu.AddButton("Open All");
+        //     menu.AddButton("Close All");
+        // };
+
     }
+
 }
