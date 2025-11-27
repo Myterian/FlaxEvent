@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
+using FlaxEditor.Surface.Archetypes;
 using FlaxEngine;
 using Object = FlaxEngine.Object;
 
@@ -78,8 +79,7 @@ public record struct PersistentCall
 
         // This is the more compiclated version of TargetObject.GetType().GetMethod(MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);,
         // but this allows a persistent call to use a specific method, even when overloads of said method exists.
-
-        // Basically we iterate over every method in a type and select the method with the matching name and parameters
+        // Basically, we iterate over every method in a type and select the method with the matching name and parameters
         var methodinfos = TargetObject.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
 
         for (int i = 0; i < methodinfos.Length; i++)
@@ -120,7 +120,7 @@ public record struct PersistentCall
 
         Type[] parameterTypes = GetParameterTypes();
 
-        Type delegateType = Expression.GetActionType(parameterTypes);
+        Type delegateType = Expression.GetActionType(parameterTypes); // <- Sollte ich damit nicht einfach eine action<t0> o.ä. erstellen können?
 
         if (MethodInfo.ReturnType == typeof(void))
             return MethodInfo.CreateDelegate(delegateType, TargetObject);
@@ -130,6 +130,22 @@ public record struct PersistentCall
         MethodCallExpression call = TargetObject != null ? Expression.Call(Expression.Constant(TargetObject), MethodInfo, paramsExpr) : Expression.Call(MethodInfo, paramsExpr);
 
         LambdaExpression ignoreReturn = Expression.Lambda(delegateType, Expression.Block(call, Expression.Empty()), paramsExpr);
+
+        // Type actionType = parameterTypes.Length switch
+        // {
+        //     0 => typeof(Action),
+        //     1 => typeof(Action<>).MakeGenericType(parameterTypes),
+        //     2 => typeof(Action<,>).MakeGenericType(parameterTypes),
+        //     3 => typeof(Action<,,>).MakeGenericType(parameterTypes),
+        //     4 => typeof(Action<,,,>).MakeGenericType(parameterTypes),
+        //     _ => throw new NotSupportedException("PersistentCall only supports up to 4 parameters")
+        // };
+
+        // Action<Parameters[0].ParameterType> my = delegate {};
+
+        // dynamic c = Delegate.CreateDelegate(actionType, TargetObject, MethodInfo);
+        // c(1);
+        // (c as delegateType).Invoke
 
         // Expression.Lambda<TDelegate>
 

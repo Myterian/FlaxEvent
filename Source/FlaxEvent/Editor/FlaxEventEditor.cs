@@ -14,17 +14,26 @@ using FlaxEngine.GUI;
 //////////////////////////////////////////////////////////////////////////////////////
 //                How does this entire editor thing even work?
 //
-// There is next to no documentation about how the editor works and how get build for
+// There is next to no documentation about how the editor works and how it builds for
 // presenting stuff in the inspector or in general. So, here is what I've figured out
 // based on pure observation and weeks of trial and error.
-//
+// 
 // A custom editor (the default editor "GenericEditor" is also a custom editor) is
-// always responsible for a set of values. Even if it has an empty Initialize method
-// or doesn't do anything in general: If an editor gets spawned, a subset of values
-// gets linked to that editor. When you call SetValue to modify anything, it's
-// hardcoded that an editor only sets the values it is responsible for. So, an editor
-// is specifically responisble for one property of a class/struct/whatever, but not
-// for the properties child or parent element.
+// always responsible for one specific value. Even if it has an empty Initialize method
+// and doesn't display or do anything: When an editor get spawned, it get handed a
+// Value, that the editor is responsible for. That can be an actor, a script, a field,
+// a property or an entire class or struct, that is a field or property of an actor
+// or a script. But the editor never cares the parent or child(ren) value.
+// 
+// Meaning, an editor responisble for an actor will only set the value 'actor'.
+// Yes, an actor has a string for a name, a bool for enabled and an array for tags.
+// But the editor doesn't care about that, it only sets the value 'actor'. 
+// Everything is bundeled as one data value.
+// 
+// When you call SetValue to modify anything, it's hardcoded that an editor only sets 
+// the values it is responsible for. So, an editor is specifically responisble for 
+// one property of a class/struct/whatever, but not for the properties child
+// or parent element.
 //
 // That means that this FlaxEventEditor is only responsible and can only replace the
 // entire flax event. If I wanted to modify only the PersistentCallList field in a
@@ -33,15 +42,23 @@ using FlaxEngine.GUI;
 //
 // This persistent call list editor then can only modify the entire list, but not an
 // individual element. If we wanted to modify a specifiy element only, guess what?
-// Another editor, where the values of that specific element are extracted from that
-// list and handed over to the new specific element editor. If we wanted to only
-// affect a specific element on there, new editor, and then new editor and so on
+// Another editor, where the value of the individual element is extracted from the
+// list and handed over to the new element editor. If we wanted to affect a 
+// specific element within again, new editor, and then new editor and so on.
 // 
 // This is how the entire editor chain for a FlaxEventBase - derived class looks:
 // FlaxEventEditor ---for the persistencall List---> PersistentCallListEditor
 //     PersistentCallListEditor ---for every entry---> PersistentCallEditor
 //         PersistentCallEditor --for the parameter array--> PersistentParameterArrayEditor
 //             PersistentParameterArrayEditor --for every entry--> PersistentParameterEditor
+//
+// As far as I can tell, SetValues are done from bottom to root editor, but Refresh
+// is done from root to bottom. So a child editor will communicate upwards that
+// a value has changed and the root will do a refresh based on that. The refresh then
+// tries to apply the values to the existing editors. This caused trouble for the
+// parameter editing, because the parameter types may have changed and now the root
+// editor tries to apply a bool to a float editor. The solution here is to force a
+// rebuild on a failed type / count comparison.
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace FlaxEvent;
@@ -50,25 +67,15 @@ namespace FlaxEvent;
 [CustomEditor(typeof(FlaxEventBase)), DefaultEditor]
 public class FlaxEventEditor : CustomEditor
 {
-    public int CallsCount { get; private set; } = -1;
     private bool isClassNameSet = false;
 
     public override void Initialize(LayoutElementsContainer layout)
     {
         List<PersistentCall> activePersistentCalls = (Values[0] as FlaxEventBase).PersistentCallList;
-        CallsCount = activePersistentCalls.Count;
 
-        // if (activePersistentCalls.Count == 0)
-        //     return;
-
-        // ChildrenEditors[i].
-
-        // RevertValueWithChildren = true;
-
-        // Show what kind of argument types are being passed by the event. This helps to select methods with the same signature.
+        // Show what kind of argument types are being passed by the event in the header name
         DropPanel dropPanel = layout.Control as DropPanel;
         Type[] argTypes = Values[0].GetType().GetGenericArguments();
-
 
         if (!isClassNameSet)
         {
@@ -98,12 +105,7 @@ public class FlaxEventEditor : CustomEditor
         }
 
 
-        FlaxEventBase eventBase = Values[0] as FlaxEventBase;
-        // if (eventBase.PersistentCallList.Count == 0)
-        //     return;
-
-
-        // Base panel contains a large panel for all persisten call editor elements and another panel for the buttons
+        // Base panel contains a large panel for all persistent call editor elements and another panel for the buttons
         // Yes, it is required, otherwise the buttons always jump around, when some ui changes
         var basePanel = layout.VerticalPanel();
 
@@ -112,83 +114,8 @@ public class FlaxEventEditor : CustomEditor
         GenericEditor.ItemInfo itemInfo = new(scriptMember);
 
         var vc = itemInfo.GetValues(Values);
-
-        // var elementsPanel = basePanel.VerticalPanel();
-        // basePanel.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
-
-        // for (int i = 0; i < eventBase.PersistentCallList.Count; i++)
-        // {
         var editor = new PersistentCallListEditor();
-        // editor.SetIndex(i);
-
         basePanel.Object(vc, editor);
-        // }
 
-        return;
-
-        // Add and Remove Buttons
-        var buttonPanel = basePanel.HorizontalPanel();
-        buttonPanel.Panel.Size = new Float2(0, 18);
-
-        // NOTE: Margin of 3 for top margin (3rd parameter) is taken from FlaxEditor.Utilities.Constants.UIMargin. 
-        // Due to accessibility level, here it needs to be set manualy. If that value changes it needs to be updated here, too.
-        buttonPanel.Panel.Margin = new Margin(0, 0, 3, 0);
-
-
-        var removeButton = buttonPanel.Button("-", "Remove last item");
-        removeButton.Button.Size = new Float2(16, 16);
-        removeButton.Button.Enabled = 0 < activePersistentCalls.Count;
-        removeButton.Button.AnchorPreset = AnchorPresets.TopRight;
-        removeButton.Button.Clicked += () =>
-        {
-            if (IsSetBlocked)
-                return;
-
-            ResizePeristentCallList(activePersistentCalls.Count - 1);
-        };
-
-        var addButton = buttonPanel.Button("+", "Add new element");
-        addButton.Button.Size = new Float2(16, 16);
-        addButton.Button.Enabled = true;
-        addButton.Button.AnchorPreset = AnchorPresets.TopRight;
-        addButton.Button.Clicked += () =>
-        {
-            if (IsSetBlocked)
-                return;
-
-            ResizePeristentCallList(activePersistentCalls.Count + 1);
-        };
     }
-
-
-    private void ResizePeristentCallList(int newSize)
-    {
-        var oldList = (Values[0] as FlaxEventBase).PersistentCallList;
-        List<PersistentCall> newList = new();
-
-        for (int i = 0; i < newSize; i++)
-        {
-            PersistentCall element = new();
-
-            if (i < oldList.Count)
-                element = oldList[i];
-
-            newList.Add(element);
-        }
-
-        FlaxEventBase newEvent = (FlaxEventBase)Activator.CreateInstance(Values[0].GetType());
-        newEvent.SetPersistentCalls(newList);
-
-        SetValue(newEvent);
-        RebuildLayoutOnRefresh();
-    }
-
-    public override void Refresh()
-    {
-        // base.Refresh();
-        if(CallsCount != (Values[0] as FlaxEventBase).PersistentCallList.Count)
-            RebuildLayout();
-    }
-
-
 }

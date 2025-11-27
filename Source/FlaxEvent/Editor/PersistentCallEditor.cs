@@ -1,7 +1,6 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
@@ -12,54 +11,32 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 using System.Text;
-using System.Linq;
 
 namespace FlaxEvent;
 
-/// <summary>
-/// PersistentParameterEditor class.
-/// </summary>
+/// <summary>PersistentParameterEditor class.</summary>
 public class PersistentCallEditor : CustomEditor
 {
     public override void Initialize(LayoutElementsContainer layout)
     {
         // layout.Label("PersistentParameter");
-        // if (Values[0] == null )
-        // return;
+        if (Values[0] == null || Values.Count == 0)
+            return;
 
         PersistentCall call = (PersistentCall)Values[0];
-
-        // string groupTitle = call.TargetObject == null ? "<No Target>" : call.TargetObject.
 
         Actor castActor = null;
         Script castScript = null;
         string headerText = "<null>";
 
-        // if (call.TargetObject != null)
-        // {
-        //     Guid guid = call.TargetObject.ID;
-        //     Object uncastObject = Object.Find<Object>(ref guid);
-
-        //     castActor = uncastObject as Actor;
-        //     castScript = uncastObject as Script;
-
-        //     headerText = castActor?.Name ?? castScript.GetType().Name ?? "<target not found>";
-        // }
-
-
-
-
         var group = layout.Group(headerText);
         // group.Panel.MouseButtonRightClicked += // TODO: Right-Click context menu
-
         bool isCallEnabled = call.IsEnabled;
 
-        // Panel.HeaderText = "<null>";
+
         group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
-        // group.Panel.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
         group.Panel.HeaderTextColor = isCallEnabled ? FlaxEngine.GUI.Style.Current.Foreground : FlaxEngine.GUI.Style.Current.ForegroundDisabled;
         group.Panel.EnableContainmentLines = false;
-
 
         float headerHeight = group.Panel.HeaderHeight;
 
@@ -76,7 +53,8 @@ public class PersistentCallEditor : CustomEditor
         };
 
         toggle.StateChanged += SetCallEnabledState;
-        // Drag button with
+
+        // Drag button. TODO: Drag Reorder
         var dragButton = new Button
         {
             BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
@@ -90,13 +68,10 @@ public class PersistentCallEditor : CustomEditor
             Scale = new(0.9f)
         };
 
-
-
+        // Object picker
         var propertyList = group.AddPropertyItem("Target", "The target of this event call");
-
-        // var targetObject = ((PersistentCall)Values[0]).TargetObject;
-
         var objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
+
         if (call.TargetObject != null)
         {
             objectPicker.CustomControl.Value = call.TargetObject;
@@ -110,24 +85,16 @@ public class PersistentCallEditor : CustomEditor
             group.Panel.HeaderText = castActor?.Name ?? castScript.GetType().Name ?? "<target not found>";
         }
 
-        // objectPicker.CustomControl.ValueChanged += SetCallParentObject;
-
         objectPicker.CustomControl.ValueChanged += () =>
         {
             PersistentCall call = (PersistentCall)Values[0];
             call.SetParent(objectPicker.CustomControl.Value as Actor ?? (objectPicker.CustomControl.Value as Script)?.Actor ?? null);
-            // call.TargetObject = objectPicker.CustomControl.Value;
 
             SetValue(call);
             RebuildLayoutOnRefresh();
         };
 
-        // if (!string.IsNullOrEmpty(((PersistentCall)Values[0]).MethodName))
-        // {
-        //     methodPicker.Button.Text = savedMethodName;
-        //     Panel.HeaderText += "." + savedMethodName;
-        // }
-
+        // Method picker button & context menu
         string buttonText = "<null>";
 
         if (!string.IsNullOrEmpty(call.MethodName))
@@ -136,64 +103,26 @@ public class PersistentCallEditor : CustomEditor
             buttonText = call.MethodName;
         }
 
-        // buttonText ??= "<null>";
-
         var methodPicker = propertyList.Button(buttonText);
         methodPicker.Button.Height = 18;
         methodPicker.Button.Margin = new(2, 0, 0, 0);
         methodPicker.Button.HorizontalAlignment = TextAlignment.Near;
         methodPicker.Button.ButtonClicked += CreateMethodSelectionMenu;
 
+        // Parameter controls
         MethodInfo methodInfo = call.MethodInfo;
 
         if (methodInfo == null)
             return;
 
-        // var parameterList = group.AddPropertyItem("Parameters", "The invokation parameters that are being used");
-        // parameterList.ContainerControl.ClipChildren = false;
-        // parameterList.ContainerControl.CullChildren = false;
-        // group.prop
+        MemberInfo memberInfo = typeof(PersistentCall).GetMember("Parameters", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
+        ScriptMemberInfo scriptMember = new(memberInfo);
+        GenericEditor.ItemInfo itemInfo = new(scriptMember);
 
-        // if(3 <= parameterList.Children.Count)
-        //     Debug.Log(parameterList.Children[2].GetType());
-        // var spacer = group.Space(20f);
+        var vc = itemInfo.GetValues(Values);
 
-        // var brush = new SolidColorBrush
-        // {
-        //     Color = FlaxEngine.GUI.Style.Current.BorderNormal,
-
-        // };
-        // var image = spacer.Image(brush);
-        // image.Image.KeepAspectRatio = false;
-        // image.Image.AnchorPreset = AnchorPresets.HorizontalStretchMiddle;
-        // image.Image.Width = 30;
-        // image.Image.LocalLocation = new(50, image.Image.LocalLocation.Y);
-        // image.Image.Margin = new(0, 0, 9f, 9f);
-        // image.Image.Bounds = new Rectangle(image.Image.Bounds.Location, image.Image.Bounds.X, image.Image.Bounds.Y - 1);
-        // image.Image.Scale = new(1, 0.05f);
-        // image.Image.DrawSelf();
-        // image.Control.Width = 20;
-        // Debug.Log(parameterList.ContainerControl.Size);
-        // var parameterList = layout.VerticalPanel();
-        // var label = layout.Label("Parameter(s)");
-        // label.Label.Offsets = new(7, 0, 0, 0);
-
-        MemberInfo memberInfo1 = typeof(PersistentCall).GetMember("Parameters", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
-        ScriptMemberInfo scriptMember1 = new(memberInfo1);
-        GenericEditor.ItemInfo itemInfo1 = new(scriptMember1);
-
-        var vc = itemInfo1.GetValues(Values);
-
-        // var editor = new PersistentParameterArrayEditor();
-        // editor
-
-        // parameterList.Object()
-
-        // Type[] methodParameterTypes = call.MethodInfo.GetParameterTypes();
         for (int i = 0; i < call.Parameters.Length; i++)
         {
-            //     // var lvc = new ListValueContainer(new(memberInfo1.GetType()), i, Values);
-            //     // CustomEditor editor = call.Parameters[i].ParameterType.FindEditorFromType();
             var editor = new PersistentParameterArrayEditor();
             editor.SetIndex(i);
 
@@ -201,21 +130,20 @@ public class PersistentCallEditor : CustomEditor
         }
     }
 
+    
+    /// <summary>Creates and show the context menu with buttons for the actor and attached scripts, which contain child menus of the available methods</summary>
+    /// <param name="button">The button that was clicked. Should be a button for method selection. If not, dafuq is going on then.</param>
     private void CreateMethodSelectionMenu(Button button)
     {
-        // if (!IsSetupValid())
-        //     return;
-
-        // List<PersistentCall> persistentCalls = (LinkedEditor.Values[0] as FlaxEventBase).PersistentCallList;
+        // Parent actor is used to figure out what scripts and methods are available in total, because the call target
+        // might be a script, which doens't have access to the entire actors script hierarchy
+        // NOTE: Yes, it does via Script.Actor. This works completly fine, but could be removed
         Actor parentActor = ((PersistentCall)Values[0]).Parent;
 
         if (parentActor == null)
             return;
 
         ContextMenu contextMenu = new();
-        // FlaxEditor.Utilities.Utils. ;
-
-
         for (int i = -1; parentActor != null && i < parentActor.Scripts.Length; i++)
         {
             Object target;
@@ -255,38 +183,6 @@ public class PersistentCallEditor : CustomEditor
 
         for (int x = 0; x < methods.Length; x++)
         {
-            // Action<ContextMenuButton> action = (button) =>
-            // {
-            //     PersistentCall call = (PersistentCall)Values[0];
-
-            //     call.MethodName = button.ShortKeys;
-            //     call.Parameters = [];
-
-            //     // if (call.MethodInfo != null)
-            //     // {
-            //     //     Type[] methodParameterTypes = call.MethodInfo.GetParameterTypes();
-            //     //     PersistentParameter[] newParameters = new PersistentParameter[methodParameterTypes.Length];
-
-            //     //     for (int i = 0; i < newParameters.Length; i++)
-            //     //     {
-            //     //         newParameters[i].ParameterValue = methodParameterTypes[i].IsValueType ? Activator.CreateInstance(methodParameterTypes[i]) : null;
-            //     //         newParameters[i].ParameterType = methodParameterTypes[i];
-            //     //     }
-
-            //     //     call.Parameters = newParameters;
-            //     // }
-
-            //     SetValue(call);
-
-            //     // ClearDefaultValueAll();
-            //     // ChildrenEditors.Clear();
-            //     // Presenter.BuildLayout();
-            //     // RebuildLayout();
-
-            //     RebuildLayoutOnRefresh();
-            //     // Refresh();
-            // };
-
             // Creates the display name for a button, which shows the method name and the parameter signature
             StringBuilder methodNameBuilder = new(methods[x].Name);
             methodNameBuilder.Append('(');
@@ -297,17 +193,7 @@ public class PersistentCallEditor : CustomEditor
                 methodNameBuilder.Append(paraTypes[q]);
 
             methodNameBuilder.Append(')');
-
-            // Create the button. The 'raw' method name, that is used to set the value for the persistent call
-            // is stored in ShortKeys. A bit hacky, but I can't be bothered right now. This entire thing is alredy
-            // pretty hacky
-            // var button = menu.AddButton(methodNameBuilder.ToString(), SetCall);
             var button = menu.AddButton(methodNameBuilder.ToString(), methods[x].Name, paraTypes, SetCall);
-            // button.ShortKeys = methods[x].Name;
-
-            // menu.add
-            // menu.SortButtons();
-            // ContextMenuButton b = new(menu, "menu item", ""){ Parent = menu.ItemsContainer };
         }
     }
 

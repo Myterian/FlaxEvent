@@ -1,45 +1,45 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.Scripting;
-using FlaxEngine;
 
 namespace FlaxEvent;
 
-/// <summary>
-/// PersistentParameterEditor class.
-/// </summary>
+/// <summary>PersistentParameterEditor class.</summary>
 public class PersistentParameterEditor : CustomEditor
 {
-    // private int index = -1;
-
-    // public void SetIndex(int newIndex) => index = newIndex;
-
+    private Type type;
     public override void Initialize(LayoutElementsContainer layout)
     {
-        // TypeToElementExtension.FindEditorFromType(((PersistentParameter)Values[0]).ParameterType);
-        // layout.Object()
-        // layout.Label("Some Parameter");
-
         PersistentParameter parameter = (PersistentParameter)Values[0];
-        CustomEditor editor = parameter.ParameterType.FindEditorFromType();
+        type = parameter.ParameterType;
+
+        CustomEditor editor = type.FindEditorFromType();
 
         // if (editor is GenericEditor)
         //     layout.Label("Editor for type '" + parameter.ParameterType.ToString() + "' could not be found");
 
+        MemberInfo memberInfo = typeof(PersistentParameter).GetMember("ParameterValue", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
+        ScriptMemberInfo scriptMember = new(memberInfo);
+        GenericEditor.ItemInfo itemInfo = new(scriptMember);
 
-
-        MemberInfo memberInfo1 = typeof(PersistentParameter).GetMember("ParameterValue", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
-        ScriptMemberInfo scriptMember1 = new(memberInfo1);
-        GenericEditor.ItemInfo itemInfo1 = new(scriptMember1);
-
-        var vc = itemInfo1.GetValues(Values);
-        // var lvc = new ListValueContainer(new(memberInfo1.GetType()), index, Values);
-
+        var vc = itemInfo.GetValues(Values);
         layout.Object(vc, editor);
     }
+
+    // This prevents a warning, where a stored value of a parameter cannot be cast to the current parameter editor.
+    // It usually happens, when the target method changes and the new method parameter has a different type 
+    // (and therefore editor) then the last method parameter displayed. The warning would be "cannot cast bool to float".
+    // This just rebuilds the editor in case of type difference of the parameter.
+    public override void Refresh()
+    {
+        base.Refresh();
+
+        if (type != ((PersistentParameter)Values[0]).ParameterType)
+            RebuildLayout();
+    }
+
 }

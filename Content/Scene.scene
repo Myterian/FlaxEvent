@@ -192,6 +192,30 @@
 				"targetObject": "20127b0f41990fcfa9afa683ded63114",
 				"methodName": "set_Transform",
 				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": "New Name or Something",
+						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_Name",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterValue": false,
+						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+					}
+				],
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"methodName": "set_IsActive",
+				"IsEnabled": true
 			}
 		]
 	}
