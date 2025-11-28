@@ -1,5 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using System;
 using System.Reflection;
 using FlaxEditor.CustomEditors;
@@ -11,8 +13,6 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 using System.Text;
-using FlaxEditor.CustomEditors.Elements;
-using FlaxEditor.CustomEditors.GUI;
 
 namespace FlaxEvents;
 
@@ -235,7 +235,12 @@ public class PersistentCallEditor : CustomEditor
             Type[] paraTypes = methods[x].GetParameterTypes();
 
             for (int q = 0; q < paraTypes.Length; q++)
+            {
                 methodNameBuilder.Append(paraTypes[q]);
+
+                if (q != paraTypes.Length - 1)
+                    methodNameBuilder.Append(", ");
+            }
 
             methodNameBuilder.Append(')');
             var button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, paraTypes, SetCall);
@@ -261,8 +266,6 @@ public class PersistentCallEditor : CustomEditor
 
         menu.Show(dropPanel, location);
     }
-
-    // override 
 
     #endregion
 
@@ -293,7 +296,6 @@ public class PersistentCallEditor : CustomEditor
 
         if (flaxEventButton.ParameterTypes != null && 0 < flaxEventButton.ParameterTypes.Length)
         {
-            // Type[] methodParameterTypes = call.MethodInfo.GetParameterTypes();
             PersistentParameter[] newParameters = new PersistentParameter[flaxEventButton.ParameterTypes.Length];
 
             for (int i = 0; i < newParameters.Length; i++)
@@ -308,6 +310,8 @@ public class PersistentCallEditor : CustomEditor
         SetValue(call);
         RebuildLayoutOnRefresh();
     }
-    
+
     #endregion
 }
+
+#endif

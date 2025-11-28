@@ -1,5 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using System;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
@@ -51,3 +53,5 @@ public static class ContextMenuExtension
         return new FlaxEventContextButton(menu, buttonDisplayText, target, methodName, parameters, action, shortKeys);
     }
 }
+
+#endif

@@ -1,5 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor.CustomEditors;
@@ -182,3 +184,5 @@ public class PersistentCallListEditor : CustomEditor
     #endregion
 
 }
+
+#endif

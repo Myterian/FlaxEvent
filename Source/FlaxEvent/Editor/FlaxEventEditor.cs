@@ -1,10 +1,13 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
@@ -73,6 +76,9 @@ public class FlaxEventEditor : CustomEditor
 
     public override void Initialize(LayoutElementsContainer layout)
     {
+
+        var x = Editor.Instance.Undo.UndoOperationsStack.PeekReverse();
+
         List<PersistentCall> activePersistentCalls = (Values[0] as FlaxEventBase).PersistentCallList;
 
         // Show what kind of argument types are being passed by the event in the header name
@@ -129,3 +135,5 @@ public class FlaxEventEditor : CustomEditor
     }
 
 }
+
+#endif

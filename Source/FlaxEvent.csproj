@@ -380,6 +380,7 @@
     <Compile Include="FlaxEvent\FlaxEventPlugin.cs" />
     <Compile Include="FlaxEvent\PersistentCall.cs" />
     <Compile Include="FlaxEvent\PersistentParameter.cs" />
+    <Compile Include="FlaxEvent\PersistentParameterConverter.cs" />
     <Compile Include="FlaxEvent\Test.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Debug|x64' " >

@@ -31,157 +31,18 @@
 			"V": {}
 		},
 		{
-			"ID": "5ffe40614d2e2c6f45cb6fa304a8e6ad",
+			"ID": "89c7e52b45ff34968e0e3daf60cf834a",
 			"TypeName": "FlaxEvents.Test",
 			"ParentID": "74a68a984824b4510d12589f199ad68f",
 			"V": {
-	"OnSomething": {
-		"PersistentCallList": [
-			{
-				"Parameters": [],
-				"parent": null,
-				"targetObject": null,
-				"methodName": "",
-				"IsEnabled": true
-			}
-		]
-	},
+	"OnSomething": {},
 	"OnEvent": {
 		"PersistentCallList": [
 			{
 				"Parameters": [
 					{
-						"ParameterValue": false,
-						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"parent": "b0d72c3746caebca055e1f921ca21c7c",
-				"targetObject": "b0d72c3746caebca055e1f921ca21c7c",
-				"methodName": "set_UsePerspective",
-				"IsEnabled": false
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": {
-							"$type": "FlaxEngine.Vector3, FlaxEngine.CSharp",
-							"X": 0.0,
-							"Y": 65.0,
-							"Z": -100.0
-						},
-						"ParameterType": "FlaxEngine.Vector3, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					}
-				],
-				"parent": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
-				"targetObject": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
-				"methodName": "set_LocalPosition",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": 0,
-						"ParameterType": "System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"parent": "ad30553d4c8460ef2dd8c7bd92e1e88e",
-				"targetObject": "ad30553d4c8460ef2dd8c7bd92e1e88e",
-				"methodName": "set_Layer",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [],
-				"parent": null,
-				"targetObject": null,
-				"methodName": "",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": 0,
-						"ParameterType": "System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"parent": "4a9d87134ab42f4294db6bbcf1902bde",
-				"targetObject": "4a9d87134ab42f4294db6bbcf1902bde",
-				"methodName": "set_LODBias",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": {
-							"$type": "FlaxEngine.Vector3, FlaxEngine.CSharp",
-							"X": 0.0,
-							"Y": -100.0,
-							"Z": 0.0
-						},
-						"ParameterType": "FlaxEngine.Vector3, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					},
-					{
-						"ParameterValue": {
-							"$type": "FlaxEngine.Quaternion, FlaxEngine.CSharp",
-							"X": 0.3007058,
-							"Y": 0.0,
-							"Z": 0.0,
-							"W": 0.95371693
-						},
-						"ParameterType": "FlaxEngine.Quaternion, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					}
-				],
-				"parent": "4a9d87134ab42f4294db6bbcf1902bde",
-				"targetObject": "4a9d87134ab42f4294db6bbcf1902bde",
-				"methodName": "AddMovement",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": false,
-						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"parent": "ad30553d4c8460ef2dd8c7bd92e1e88e",
-				"targetObject": "ad30553d4c8460ef2dd8c7bd92e1e88e",
-				"methodName": "set_IsActive",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": {
-							"$type": "FlaxEngine.Transform, FlaxEngine.CSharp",
-							"Translation": {
-								"X": 100.0,
-								"Y": 0.0,
-								"Z": 100.0
-							},
-							"Orientation": {
-								"X": -0.52104473,
-								"Y": 0.36483946,
-								"Z": 0.4425857,
-								"W": 0.6320779
-							},
-							"Scale": {
-								"X": 4.0,
-								"Y": 0.5,
-								"Z": 2.0
-							}
-						},
-						"ParameterType": "FlaxEngine.Transform, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					}
-				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_Transform",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": "New Name or Something",
-						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterValue": "Some name"
 					}
 				],
 				"parent": "20127b0f41990fcfa9afa683ded63114",
@@ -192,145 +53,49 @@
 			{
 				"Parameters": [
 					{
-						"ParameterValue": true,
-						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+						"ParameterType": "FlaxEngine.JsonAssetReference`1[[FlaxEngine.LocalizedString, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null]], FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null",
+						"ParameterValue": "18c202534d363b43237213803f3fa667"
 					}
 				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_IsActive",
+				"parent": "74a68a984824b4510d12589f199ad68f",
+				"targetObject": "08644c2445321ede2fde80bc5a22417d",
+				"methodName": "AssetMethod",
 				"IsEnabled": true
 			},
 			{
 				"Parameters": [
 					{
-						"ParameterValue": null,
-						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					},
-					{
-						"ParameterValue": null,
-						"ParameterType": "FlaxEngine.Actor, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					},
-					{
-						"ParameterValue": 0.0,
-						"ParameterType": "System.Single, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+						"ParameterType": "Game.TestEnum, Game.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+						"ParameterValue": 1
 					}
 				],
-				"parent": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
-				"targetObject": "8879c65d4fbdf8a39246b88c63f094be",
-				"methodName": "MyMethod",
+				"parent": "74a68a984824b4510d12589f199ad68f",
+				"targetObject": "08644c2445321ede2fde80bc5a22417d",
+				"methodName": "EnumMethod",
 				"IsEnabled": true
 			},
 			{
 				"Parameters": [
 					{
-						"ParameterValue": false,
-						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+						"ParameterType": "System.Collections.Generic.List`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterValue": null
 					}
 				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "10bbe79f454801a32880fcbf69f1bdac",
-				"methodName": "set_Enabled",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": null,
-						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_LayerName",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": {
-							"$type": "FlaxEngine.Transform, FlaxEngine.CSharp",
-							"Translation": {
-								"X": 100.0,
-								"Y": 0.0,
-								"Z": 100.0
-							},
-							"Orientation": {
-								"X": -0.52104473,
-								"Y": 0.36483946,
-								"Z": 0.4425857,
-								"W": 0.6320779
-							},
-							"Scale": {
-								"X": 1.0,
-								"Y": 0.5,
-								"Z": 2.0
-							}
-						},
-						"ParameterType": "FlaxEngine.Transform, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					}
-				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_Transform",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": true,
-						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_IsActive",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": {
-							"$type": "FlaxEngine.Transform, FlaxEngine.CSharp",
-							"Translation": {
-								"X": 100.0,
-								"Y": 0.0,
-								"Z": 100.0
-							},
-							"Orientation": {
-								"X": -0.52104473,
-								"Y": 0.36483946,
-								"Z": 0.4425857,
-								"W": 0.6320779
-							},
-							"Scale": {
-								"X": 3.0,
-								"Y": 0.5,
-								"Z": 2.0
-							}
-						},
-						"ParameterType": "FlaxEngine.Transform, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					}
-				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_Transform",
-				"IsEnabled": true
-			},
-			{
-				"Parameters": [
-					{
-						"ParameterValue": true,
-						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-					}
-				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_IsActive",
+				"parent": "74a68a984824b4510d12589f199ad68f",
+				"targetObject": "08644c2445321ede2fde80bc5a22417d",
+				"methodName": "ListMethod",
 				"IsEnabled": true
 			}
 		]
 	}
+}
+		},
+		{
+			"ID": "08644c2445321ede2fde80bc5a22417d",
+			"TypeName": "Game.SomeTests",
+			"ParentID": "74a68a984824b4510d12589f199ad68f",
+			"V": {
+	"button": "1f42623d4bff16bcf1fa94a03f78149c"
 }
 		},
 		{
@@ -489,10 +254,12 @@
 			}
 		},
 		{
-			"ID": "8879c65d4fbdf8a39246b88c63f094be",
-			"TypeName": "ExitOnEsc",
+			"ID": "d1f05a604167a6368ee29d81caaed20f",
+			"TypeName": "Game.ListTest",
 			"ParentID": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
-			"V": {}
+			"V": {
+	"SomeClass": {}
+}
 		},
 		{
 			"ID": "f05185004d85b1695fc5b1ae710ba373",
@@ -873,29 +640,6 @@
 					}
 				]
 			}
-		},
-		{
-			"ID": "10bbe79f454801a32880fcbf69f1bdac",
-			"TypeName": "Game.SomeTests",
-			"ParentID": "20127b0f41990fcfa9afa683ded63114",
-			"V": {
-	"Event": {
-		"PersistentCallList": [
-			{
-				"Parameters": [
-					{
-						"ParameterValue": 2,
-						"ParameterType": "FlaxEngine.StaticFlags, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null"
-					}
-				],
-				"parent": "20127b0f41990fcfa9afa683ded63114",
-				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_StaticFlags",
-				"IsEnabled": true
-			}
-		]
-	}
-}
 		}
 	]
 }

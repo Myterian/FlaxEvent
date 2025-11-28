@@ -1,17 +1,14 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
-using FlaxEditor.CustomEditors.Elements;
-using FlaxEditor.Modules;
 using FlaxEngine;
-using FlaxEngine.GUI;
 
 namespace FlaxEvents;
 
@@ -25,6 +22,9 @@ public static class TypeToElementExtension
 
     public static void Invalidate() => editorTypes = null;
 
+    /// <summary>Gets a built-in or project-level custom editor for a specific type</summary>
+    /// <param name="type">The value type to get an editor for</param>
+    /// <returns>Custom Editor. Return <see cref="GenericEditor"/> if no custom editor was found.</returns>
     public static CustomEditor FindEditorFromType(this Type type)
     {
         ScriptsBuilder.ScriptsReloadEnd -= Invalidate;
@@ -48,6 +48,7 @@ public static class TypeToElementExtension
         if (type.IsEnum)
             return new EnumEditor();
         
+
         // Get all custom editors, built in and on project level
         editorTypes ??= AppDomain.CurrentDomain.GetAssemblies()
                                                 .SelectMany(x =>
@@ -78,3 +79,5 @@ public static class TypeToElementExtension
         return new GenericEditor();
     }
 }
+
+#endif

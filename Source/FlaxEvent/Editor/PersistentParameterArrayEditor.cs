@@ -1,5 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using System.Reflection;
 using FlaxEditor.CustomEditors;
 using FlaxEngine;
@@ -23,3 +25,5 @@ public class PersistentParameterArrayEditor : CustomEditor
 
     }
 }
+
+#endif

@@ -1,11 +1,15 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace FlaxEvents;
 
 /// <summary>Data container for parameters of a <see cref="PersistentCall"/></summary>
-public record struct PersistentParameter
+[JsonConverter(typeof(PersistentParameterConverter))]
+public record struct PersistentParameter// : IJsonSerializable
 {
     /// <summary>Value of the parameter</summary>
     public object ParameterValue;
@@ -20,6 +24,42 @@ public record struct PersistentParameter
         if (ParameterValue == null || ParameterType == null)
             return null;
 
+        // Arrays
+        if (ParameterType.IsArray)
+        {
+            IList storedArray = ParameterValue as IList;
+            Type elementType = ParameterType.GetElementType();
+            int count = 0;
+
+            if (storedArray != null)
+                count = storedArray.Count;
+
+            Array newArray = Array.CreateInstance(elementType, count);
+
+            for (int i = 0; storedArray != null && i < count; i++)
+                newArray.SetValue(Convert.ChangeType(storedArray[i], elementType), i);
+
+            return newArray;
+        }
+
+        // Lists
+        if (ParameterType.IsGenericType && ParameterType.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            IList storedList = ParameterValue as IList;
+            Type elementType = ParameterType.GetElementType();
+            IList newList = (IList)Activator.CreateInstance(ParameterType);
+            int count = 0;
+
+            if (storedList != null)
+                count = storedList.Count;
+
+            for (int i = 0; storedList != null && i < count; i++)
+                newList.Add(Convert.ChangeType(storedList[i], elementType));
+
+            return newList;
+        }
+
+        // Default
         return Convert.ChangeType(ParameterValue, ParameterType);
     }
 }
