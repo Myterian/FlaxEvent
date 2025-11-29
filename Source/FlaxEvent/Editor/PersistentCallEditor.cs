@@ -13,6 +13,7 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 using System.Text;
+using System.Collections.Generic;
 
 namespace FlaxEvents;
 
@@ -222,17 +223,20 @@ public class PersistentCallEditor : CustomEditor
         menu.DisposeAllItems();
 
         Actor parentActor = ((PersistentCall)Values[0]).Parent;
-        BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Instance;
+        string callMethodName = ((PersistentCall)Values[0]).MethodName;
 
+        BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Instance;
         MethodInfo[] methods = target.GetType().GetMethods(flags);
 
         for (int x = 0; x < methods.Length; x++)
         {
-            // Creates the display name for a button, which shows the method name and the parameter signature
+            // Creates the display name for a button, which shows the method name, the parameter signature and selection indicator
             StringBuilder methodNameBuilder = new(methods[x].Name);
             methodNameBuilder.Append('(');
 
             Type[] paraTypes = methods[x].GetParameterTypes();
+            string shortKeys = null;
+            bool enabled = true;
 
             for (int q = 0; q < paraTypes.Length; q++)
             {
@@ -240,10 +244,28 @@ public class PersistentCallEditor : CustomEditor
 
                 if (q != paraTypes.Length - 1)
                     methodNameBuilder.Append(", ");
+
+                // Arrays and Lists are not supported and would lead to data loss, so these method buttons get disabled
+                if (paraTypes[q].IsArray || (paraTypes[q].IsGenericType && paraTypes[q].GetGenericTypeDefinition() == typeof(List<>)))
+                {
+                    shortKeys = "Array/Lists are not supported";
+                    enabled = false;
+                }
             }
 
             methodNameBuilder.Append(')');
-            var button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, paraTypes, SetCall);
+            
+            ContextMenuButton button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, paraTypes, SetCall);
+            button.ShortKeys = shortKeys;
+            button.Enabled = enabled;
+
+            // Selection indicator. Highlight this button, when the stored method name matches this method
+            if (!string.IsNullOrEmpty(callMethodName) && callMethodName.Equals(methods[x].Name))
+            {
+                button.Icon = Editor.Instance.Icons.ArrowRight12;
+                button.ShortKeys = "(active)";
+                (button as FlaxEventContextButton).IsActiveMethod = true;
+            }
         }
     }
 
