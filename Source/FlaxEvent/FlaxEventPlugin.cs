@@ -29,7 +29,7 @@ public class FlaxEventPlugin : GamePlugin
         _description = new()
         {
             Name = "FlaxEvent 3.0",
-            Description = "Editor-Configureable Events for the Flax Engine",
+            Description = "Editor-Configurable Events for the Flax Engine",
             Category = "FlaxEvent",
             RepositoryUrl = "https://github.com/Myterian/ExtensionMethods.git",
             Author = "Thomas Jungclaus",

@@ -222,6 +222,7 @@ public class PersistentCallEditor : CustomEditor
     {
         menu.DisposeAllItems();
 
+        PersistentCall call = (PersistentCall)Values[0];
         Actor parentActor = ((PersistentCall)Values[0]).Parent;
         string callMethodName = ((PersistentCall)Values[0]).MethodName;
 
@@ -236,7 +237,7 @@ public class PersistentCallEditor : CustomEditor
 
             Type[] paraTypes = methods[x].GetParameterTypes();
             string shortKeys = null;
-            bool enabled = true;
+            bool sameOverloadMethod = true;
 
             for (int q = 0; q < paraTypes.Length; q++)
             {
@@ -245,22 +246,17 @@ public class PersistentCallEditor : CustomEditor
                 if (q != paraTypes.Length - 1)
                     methodNameBuilder.Append(", ");
 
-                // Arrays and Lists are not supported and would lead to data loss, so these method buttons get disabled
-                if (paraTypes[q].IsArray || (paraTypes[q].IsGenericType && paraTypes[q].GetGenericTypeDefinition() == typeof(List<>)))
-                {
-                    shortKeys = "Array/Lists are not supported";
-                    enabled = false;
-                }
+                if (call.Parameters == null || call.Parameters.Length != paraTypes.Length || call.Parameters[q].ParameterType != paraTypes[q])
+                    sameOverloadMethod = false;
             }
 
             methodNameBuilder.Append(')');
             
             ContextMenuButton button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, paraTypes, SetCall);
             button.ShortKeys = shortKeys;
-            button.Enabled = enabled;
 
             // Selection indicator. Highlight this button, when the stored method name matches this method
-            if (!string.IsNullOrEmpty(callMethodName) && callMethodName.Equals(methods[x].Name))
+            if (!string.IsNullOrEmpty(callMethodName) && callMethodName.Equals(methods[x].Name) && sameOverloadMethod)
             {
                 button.Icon = Editor.Instance.Icons.ArrowRight12;
                 button.ShortKeys = "(active)";
@@ -322,7 +318,7 @@ public class PersistentCallEditor : CustomEditor
 
             for (int i = 0; i < newParameters.Length; i++)
             {
-                newParameters[i].ParameterValue = flaxEventButton.ParameterTypes[i].IsValueType ? Activator.CreateInstance(flaxEventButton.ParameterTypes[i]) : null;
+                newParameters[i].ParameterValue = flaxEventButton.ParameterTypes[i].GetDefault();
                 newParameters[i].ParameterType = flaxEventButton.ParameterTypes[i];
             }
 

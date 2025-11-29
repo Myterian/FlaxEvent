@@ -26,40 +26,40 @@ public record struct PersistentParameter// : IJsonSerializable
         if (ParameterValue == null || ParameterType == null)
             return null;
 
-        // // Arrays
-        // if (ParameterType.IsArray)
-        // {
-        //     IList storedArray = ParameterValue as IList;
-        //     Type elementType = ParameterType.GetElementType();
-        //     int count = 0;
+        // Convert ParameterValue to Arrays, because Convert.ChangeType can't
+        if (ParameterType.IsArray)
+        {
+            IList storedArray = ParameterValue as IList;
+            Type elementType = ParameterType.GetElementType();
+            int count = 0;
 
-        //     if (storedArray != null)
-        //         count = storedArray.Count;
+            if (storedArray != null)
+                count = storedArray.Count;
 
-        //     Array newArray = Array.CreateInstance(elementType, count);
+            Array newArray = Array.CreateInstance(elementType, count);
 
-        //     for (int i = 0; storedArray != null && i < count; i++)
-        //         newArray.SetValue(Convert.ChangeType(storedArray[i], elementType), i);
+            for (int i = 0; storedArray != null && i < count; i++)
+                newArray.SetValue(Convert.ChangeType(storedArray[i], elementType), i);
 
-        //     return newArray;
-        // }
+            return newArray;
+        }
 
-        // // Lists
-        // if (ParameterType.IsGenericType && ParameterType.GetGenericTypeDefinition() == typeof(List<>))
-        // {
-        //     IList storedList = ParameterValue as IList;
-        //     Type elementType = ParameterType.GetElementType();
-        //     IList newList = (IList)Activator.CreateInstance(ParameterType);
-        //     int count = 0;
+        // Convert ParameterValue to Lists, because Convert.ChangeType can't
+        if (ParameterType.IsGenericType && ParameterType.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            IList storedList = ParameterValue as IList;
+            Type elementType = ParameterType.GetGenericArguments()[0];
+            IList newList = (IList)Activator.CreateInstance(ParameterType);
+            int count = 0;
 
-        //     if (storedList != null)
-        //         count = storedList.Count;
+            if (storedList != null)
+                count = storedList.Count;
 
-        //     for (int i = 0; storedList != null && i < count; i++)
-        //         newList.Add(Convert.ChangeType(storedList[i], elementType));
+            for (int i = 0; storedList != null && i < count; i++)
+                newList.Add(Convert.ChangeType(storedList[i], elementType));
 
-        //     return newList;
-        // }
+            return newList;
+        }
 
         // cachedValue ??= Convert.ChangeType(ParameterValue, ParameterType);
 

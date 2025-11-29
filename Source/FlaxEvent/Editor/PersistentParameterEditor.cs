@@ -19,7 +19,7 @@ public class PersistentParameterEditor : CustomEditor
         PersistentParameter parameter = (PersistentParameter)Values[0];
         type = parameter.ParameterType;
 
-        CustomEditor editor = type.FindEditorFromType();
+        CustomEditor editor = type.GetTypeEditor();
 
         // if (editor is GenericEditor)
         //     layout.Label("Editor for type '" + parameter.ParameterType.ToString() + "' could not be found");
@@ -29,6 +29,9 @@ public class PersistentParameterEditor : CustomEditor
         GenericEditor.ItemInfo itemInfo = new(scriptMember);
 
         var vc = itemInfo.GetValues(Values);
+        vc.SetType(new ScriptType(type));
+
+        // vc[0] = parameter.GetValue();
 
         layout.Object(vc, editor);
     }

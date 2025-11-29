@@ -66,7 +66,7 @@
 				"Parameters": [
 					{
 						"ParameterType": "Game.TestEnum, Game.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-						"ParameterValue": 1
+						"ParameterValue": 3
 					}
 				],
 				"parent": "74a68a984824b4510d12589f199ad68f",
@@ -88,6 +88,36 @@
 				"parent": "74a68a984824b4510d12589f199ad68f",
 				"targetObject": "74a68a984824b4510d12589f199ad68f",
 				"methodName": "AddMovement",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterValue": [
+							0,
+							0
+						]
+					}
+				],
+				"parent": "74a68a984824b4510d12589f199ad68f",
+				"targetObject": "08644c2445321ede2fde80bc5a22417d",
+				"methodName": "ArrayMethod",
+				"IsEnabled": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "System.Collections.Generic.List`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterValue": [
+							false,
+							false
+						]
+					}
+				],
+				"parent": "74a68a984824b4510d12589f199ad68f",
+				"targetObject": "08644c2445321ede2fde80bc5a22417d",
+				"methodName": "ListMethod",
 				"IsEnabled": true
 			}
 		]
@@ -275,6 +305,7 @@
 			"ID": "be54518e48d7f49bd203b196185cebf6",
 			"TypeName": "FlaxEngine.UICanvas",
 			"ParentID": "74a68a984824b4510d12589f199ad68f",
+			"IsActive": false,
 			"Name": "UICanvas",
 			"Transform": {
 				"Orientation": {

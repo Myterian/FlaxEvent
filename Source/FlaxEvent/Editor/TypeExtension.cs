@@ -3,6 +3,7 @@
 #if FLAX_EDITOR
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor;
@@ -16,7 +17,7 @@ namespace FlaxEvents;
 /// The Flax-interal helper class <see cref="CustomEditorsUtil"/> for finding custom editors is not available due to the accesability level,
 /// this is the FlaxEvent version of that class.
 /// </summary>
-public static class TypeToElementExtension
+public static class TypeExtension
 {
     private static List<Type> editorTypes = null;
 
@@ -25,8 +26,9 @@ public static class TypeToElementExtension
     /// <summary>Gets a built-in or project-level custom editor for a specific type</summary>
     /// <param name="type">The value type to get an editor for</param>
     /// <returns>Custom Editor. Return <see cref="GenericEditor"/> if no custom editor was found.</returns>
-    public static CustomEditor FindEditorFromType(this Type type)
+    public static CustomEditor GetTypeEditor(this Type type)
     {
+        // Invalidates the cached editor types, when scripts are reloaded/recompile
         ScriptsBuilder.ScriptsReloadEnd -= Invalidate;
         ScriptsBuilder.ScriptsReloadEnd += Invalidate;
 
@@ -44,10 +46,18 @@ public static class TypeToElementExtension
         // if (typeof(Asset).IsAssignableFrom(type))
         //     return new AssetRefEditor();
 
+        // Arrays
+        if (type.IsArray)
+            return new ArrayEditor();
+
+        // Lists
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            return new ListEditor();
+
         // Enums are being displayed as integers by default
         if (type.IsEnum)
             return new EnumEditor();
-        
+
 
         // Get all custom editors, built in and on project level
         editorTypes ??= AppDomain.CurrentDomain.GetAssemblies()
@@ -77,6 +87,46 @@ public static class TypeToElementExtension
 
         // Fallback, when no editor was found
         return new GenericEditor();
+    }
+
+    /// <summary>Gets a usable instance or value of a type</summary>
+    /// <param name="type">The type to get a default for</param>
+    /// <returns>A value, a instance or null</returns>
+    public static object GetDefault(this Type type)
+    {
+        if (type == null)
+            return null;
+            
+        if (type.IsArray)
+        {
+            Type elementType = type.GetElementType();
+            int count = 0;
+
+            Array newArray = Array.CreateInstance(elementType, 1);
+
+            for (int i = 0; i < count; i++)
+                newArray.SetValue(elementType.GetDefault(), i);
+
+            return newArray;
+        }
+
+        // Convert ParameterValue to Lists, because Convert.ChangeType can't
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            Type elementType = type.GetGenericArguments()[0];
+            IList newList = (IList)Activator.CreateInstance(type);
+            int count = 1;
+
+            for (int i = 0; i < count; i++)
+                newList.Add(elementType.GetDefault());
+
+            return newList;
+        }
+
+        if (type.IsValueType)
+            return Activator.CreateInstance(type);
+
+        return null;
     }
 }
 
