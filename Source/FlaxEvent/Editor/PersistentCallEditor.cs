@@ -47,6 +47,7 @@ public class PersistentCallEditor : CustomEditor
         // var group = (LayoutElementsContainer)y;
 
         var group = layout.Group(headerText);
+        group.ContainerControl.Height = 45;
         group.Panel.MouseButtonRightClicked += RightClickContextMenu;
         bool isCallEnabled = call.IsEnabled;
 
@@ -184,31 +185,50 @@ public class PersistentCallEditor : CustomEditor
         // Parent actor is used to figure out what scripts and methods are available in total, because the call target
         // might be a script, which doens't have access to the entire actors script hierarchy
         // NOTE: Yes, it does via Script.Actor. This works completly fine, but could be removed
-        Actor parentActor = ((PersistentCall)Values[0]).Parent;
+        PersistentCall call = (PersistentCall)Values[0];
+        // Actor parentActor = ((PersistentCall)Values[0]).Parent;
 
-        if (parentActor == null)
+        if (call.Parent == null)
             return;
 
         ContextMenu contextMenu = new();
-        for (int i = -1; parentActor != null && i < parentActor.Scripts.Length; i++)
+        for (int i = -1; call.Parent != null && i < call.Parent.Scripts.Length; i++)
         {
             Object target;
-            ContextMenuChildMenu childMenu;
+            FlaxEventContextChildMenu childMenu;
+            bool isCallTarget = false;
 
             if (i == -1)
             {
-                target = parentActor;
-                childMenu = contextMenu.AddChildMenu(parentActor.Name);
+                target = call.Parent;
+                childMenu = contextMenu.AddChildMenu(call.Parent.Name, isCallTarget);
+
+                if (call.TargetObject == call.Parent)
+                    isCallTarget = true;
             }
             else
             {
-                target = parentActor.Scripts[i];
-                childMenu = contextMenu.AddChildMenu(parentActor.Scripts[i].GetType().Name);
+                target = call.Parent.Scripts[i];
+                childMenu = contextMenu.AddChildMenu(call.Parent.Scripts[i].GetType().Name, isCallTarget);
+
+                if (call.TargetObject == call.Parent.Scripts[i])
+                    isCallTarget = true;
             }
+
+            if (string.IsNullOrEmpty(call.MethodName))
+                isCallTarget = false;
+
+            if (isCallTarget)
+            {
+                childMenu.Icon = Editor.Instance.Icons.ArrowRight12;
+                childMenu.ExtraAdjustmentAmount = -20;
+                childMenu.IsActiveTarget = true;
+            }
+
 
             SetMenuItems(childMenu.ContextMenu, target);
 
-            if (i != parentActor.Scripts.Length - 1)
+            if (i != call.Parent.Scripts.Length - 1)
                 contextMenu.AddSeparator();
         }
 
@@ -260,7 +280,7 @@ public class PersistentCallEditor : CustomEditor
             {
                 button.Icon = Editor.Instance.Icons.ArrowRight12;
                 button.ShortKeys = "(active)";
-                (button as FlaxEventContextButton).IsActiveMethod = true;
+                (button as FlaxEventContextButton).IsActiveTarget = true;
             }
         }
     }

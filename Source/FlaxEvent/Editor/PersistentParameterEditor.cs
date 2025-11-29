@@ -29,9 +29,9 @@ public class PersistentParameterEditor : CustomEditor
         GenericEditor.ItemInfo itemInfo = new(scriptMember);
 
         var vc = itemInfo.GetValues(Values);
-        vc.SetType(new ScriptType(type));
 
-        // vc[0] = parameter.GetValue();
+        // Type has to be set manually, because arrays and lists would default back to type of System.Object and this causes editor issues
+        vc.SetType(new ScriptType(type));
 
         layout.Object(vc, editor);
     }

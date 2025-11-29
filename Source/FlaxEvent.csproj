@@ -370,6 +370,7 @@
   <ItemGroup>
     <Compile Include="FlaxEvent.Gen.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventContextButton.cs" />
+    <Compile Include="FlaxEvent\Editor\FlaxEventContextChildMenu.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventEditor.cs" />
     <Compile Include="FlaxEvent\Editor\PersistentCallEditor.cs" />
     <Compile Include="FlaxEvent\Editor\PersistentCallListEditor.cs" />

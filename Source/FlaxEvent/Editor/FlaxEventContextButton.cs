@@ -27,7 +27,7 @@ public class FlaxEventContextButton : ContextMenuButton
 
     private FlaxEngine.Object targetObject;
 
-    public bool IsActiveMethod = false;
+    public bool IsActiveTarget = false;
 
     [Obsolete("Don't you dare use this!")]
     public FlaxEventContextButton(ContextMenu parent, string text, string shortKeys = "") : base(parent, text, shortKeys)
@@ -56,7 +56,7 @@ public class FlaxEventContextButton : ContextMenuButton
 
         Color color = Color.OrangeRed;
 
-        if(IsActiveMethod)
+        if(IsActiveTarget)
             color = Enabled ? current.BorderSelected : current.BorderSelected.RGBMultiplied(0.8f);
         else
             color = Enabled ? current.Foreground : current.ForegroundDisabled;
@@ -89,6 +89,11 @@ public static class ContextMenuExtension
     public static ContextMenuButton AddButton(this ContextMenu menu, string buttonDisplayText, FlaxEngine.Object target, string methodName, Type[] parameters, Action<ContextMenuButton> action, string shortKeys = "")
     {
         return new FlaxEventContextButton(menu, buttonDisplayText, target, methodName, parameters, action, shortKeys);
+    }
+
+    public static FlaxEventContextChildMenu AddChildMenu(this ContextMenu menu, string text, bool isActiveTarget, string shortKeys = "")
+    {
+        return new FlaxEventContextChildMenu(menu, text, isActiveTarget, shortKeys);
     }
 }
 

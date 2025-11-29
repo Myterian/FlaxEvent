@@ -4,6 +4,7 @@
 
 using System.Reflection;
 using FlaxEditor.CustomEditors;
+using FlaxEngine;
 
 namespace FlaxEvents;
 
@@ -17,6 +18,10 @@ public class PersistentParameterArrayEditor : CustomEditor
 
     public override void Initialize(LayoutElementsContainer layout)
     {
+
+        // if (Mathf.IsNotInRange(index, 0, Values.Count - 1))
+        //     return;
+        
         MemberInfo memberInfo = typeof(PersistentParameter);
         var lvc = new ListValueContainer(new(memberInfo.GetType()), index, Values);
 
