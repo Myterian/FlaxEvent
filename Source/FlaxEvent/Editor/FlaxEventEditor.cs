@@ -76,9 +76,23 @@ public class FlaxEventEditor : CustomEditor
 
     public override void Initialize(LayoutElementsContainer layout)
     {
+        // Ui to create a new instance, when somebody forgets to add a default value
+        FlaxEventBase flaxEvent = Values[0] as FlaxEventBase;
 
-        var x = Editor.Instance.Undo.UndoOperationsStack.PeekReverse();
+        if (flaxEvent == null)
+        {
+            var newButton = layout.Button("New", "Create a new flax event");
+            newButton.Button.ButtonClicked += (Button button) =>
+            {
+                FlaxEventBase newInstance = (FlaxEventBase)Activator.CreateInstance(Values.Type.Type);
+                SetValue(newInstance);
+                RebuildLayoutOnRefresh();
+            };
 
+            return;
+        }
+
+        // Create a header name for the event
         List<PersistentCall> activePersistentCalls = (Values[0] as FlaxEventBase).PersistentCallList;
 
         // Show what kind of argument types are being passed by the event in the header name

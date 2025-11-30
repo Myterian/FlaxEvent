@@ -35,7 +35,7 @@ public class FlaxEventPlugin : GamePlugin
             Author = "Thomas Jungclaus",
             AuthorUrl = "https://github.com/Myterian",
             IsAlpha = false,
-            IsBeta = true,
+            IsBeta = false,
             Version = PluginVersion
         };
     }
