@@ -1,4 +1,5 @@
 # FlaxEvent 3
+Editor-Configureable Events for the Flax Engine
 
 ![image](Images/Preview_3.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
 ![image](Images/Parameter_Preview.jpg "Type integration for event parameters")
@@ -82,12 +83,13 @@ Test setup:
 - The test events invoke three method on each actor, making a single invoke to 15.000 listeners total
 - 20 iterations of invokes, amounting to 300.000 invokes total
 
+Note: Take these values with a grain of salt, as I only tested this on my old FX-8350 Cpu.
 
-|Invokation Source|Avg. time first Invoke|Avg. time per Invoke  |Total Time|
-|-----------------|---------------------|-----------------|----------|
-|C# Action Delegate |???| ???             | ???      |
-|FlaxEvent Persistent Call|???|0.018ms - 0.019ms | ~5580ms  |
-|FlaxEvent Runtime Call|???|???| ??? |
+|Invokation Source        |(Editor) Avg. time first Invoke|(Editor) Avg. time per Invoke  |(Game) Avg. time first Invoke|(Game) Avg. time per Invoke |
+|-------------------------|-------------------------------|-------------------------------|-----------------------------|----------------------------|
+|C# Action Delegate       |???                            | ???                           | ???                         |                            |
+|FlaxEvent Persistent Call| 0,0121ms                      | 0,0105ms                      | 0,0104ms                    | 0,0097ms                   |
+|FlaxEvent Runtime Call   |???                            |???                            | ???                         |                            |
 
 \
 Benchmark script
@@ -96,28 +98,46 @@ public class Benchmark : Script
 {
     public FlaxEvent<int> OnBenchmarkEvent = new();
 
-    private void BenchmarkTest()
+    public void BenchmarkTest()
     {
-        // Warm up
-        for (int i = 0; i < 2; i++)
-            OnBenchmarkEvent?.Invoke(7);
-
         // Cleanup
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        // 20 iterations of 15.000 listener invokes
         Stopwatch stopwatch = new();
         stopwatch.Start();
 
-        for (int i = 0; i < 20; i++)
+        // Cold call 15.000 listeners
+        OnBenchmarkEvent?.Invoke(7);
+
+        stopwatch.Stop();
+
+        string timeString = $"Cold invoke took on average {stopwatch.Elapsed.TotalMilliseconds / 15_000}ms\n In a total time of: {stopwatch.Elapsed.TotalMilliseconds}ms";
+        Label.Control.Text = timeString;
+
+        #if FLAX_EDITOR
+        FlaxEngine.Debug.Log(timeString);
+        #endif
+
+
+        // 20 iterations of 15.000 listener invokes
+        stopwatch.Restart();
+
+        int interations = 20;
+
+        for (int i = 0; i < interations; i++)
             OnBenchmarkEvent?.Invoke(7);
         
         stopwatch.Stop();
 
-        FlaxEngine.Debug.Log($"ms per invoke: {stopwatch.Elapsed.TotalMilliseconds / 300_000}"); // 20 iterations * 15k listeners
-        FlaxEngine.Debug.Log($"Total benchmark time: {stopwatch.Elapsed.TotalMilliseconds}");
+        int totalIterations = interations * OnBenchmarkEvent.PersistentCallList.Count;
+        timeString = $"Warm invoke too on average: {stopwatch.Elapsed.TotalMilliseconds / totalIterations}\n In a total time of: {stopwatch.Elapsed.TotalMilliseconds}ms";
+        Label.Control.Text += "\n" + timeString;
+        
+        #if FLAX_EDITOR
+        FlaxEngine.Debug.Log(timeString);
+        #endif
     }
 }
 
@@ -166,5 +186,6 @@ Alternatively, you can manually add this plugin:
 
 ## Known Issues
 - None, but bug reports are open
+- Tested on Flax v. 1.11
 
 ![image](Images/Preview.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
