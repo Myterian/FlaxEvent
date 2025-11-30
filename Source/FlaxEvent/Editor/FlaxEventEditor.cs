@@ -138,12 +138,12 @@ public class FlaxEventEditor : CustomEditor
         var editor = new PersistentCallListEditor();
         basePanel.Object(vc, editor);
 
-        // (layout as GroupElement).SetupContextMenu += (ContextMenu menu, DropPanel panel) =>
-        // {
-        //     menu.AddSeparator();
-        //     menu.AddButton("Open All");
-        //     menu.AddButton("Close All");
-        // };
+        (layout as GroupElement).SetupContextMenu += (ContextMenu menu, DropPanel panel) =>
+        {
+            menu.AddSeparator();
+            menu.AddButton("Open All", () => editor.SetChildrenOpen(true));
+            menu.AddButton("Close All", () => editor.SetChildrenOpen(false));
+        };
 
     }
 }

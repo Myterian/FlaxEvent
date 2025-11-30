@@ -13,6 +13,7 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 using System.Text;
+using FlaxEditor.CustomEditors.Elements;
 
 namespace FlaxEvents;
 
@@ -20,6 +21,7 @@ namespace FlaxEvents;
 public class PersistentCallEditor : CustomEditor
 {
     private PersistentCallListEditor parentEditor;
+    private GroupElement group;
     private int index = -1;
     private bool isDragging = false;
 
@@ -27,6 +29,16 @@ public class PersistentCallEditor : CustomEditor
     {
         parentEditor = editor;
         index = elementIndex;
+    }
+
+    /// <summary>Sets the open state of the group element</summary>
+    /// <param name="open">open if true, close if false</param>
+    public void SetOpen(bool open = true)
+    {
+        if (open)
+            group.Panel.Open(false);
+        else
+            group.Panel.Close(false);
     }
 
     public override void Initialize(LayoutElementsContainer layout)
@@ -45,14 +57,15 @@ public class PersistentCallEditor : CustomEditor
         // PropertiesListElement y = layout.AddPropertyItem(x);
         // var group = (LayoutElementsContainer)y;
 
-        var group = layout.Group(headerText);
+        group = layout.Group(headerText);
         group.Panel.MouseButtonRightClicked += RightClickContextMenu;
         bool isCallEnabled = call.IsEnabled;
-
 
         group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
         group.Panel.HeaderTextColor = isCallEnabled ? FlaxEngine.GUI.Style.Current.Foreground : FlaxEngine.GUI.Style.Current.ForegroundDisabled;
         group.Panel.EnableContainmentLines = false;
+
+
 
         if (isDragging)
         {

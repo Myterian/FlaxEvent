@@ -16,6 +16,7 @@ namespace FlaxEvents;
 /// <summary>PersistentParameterListEditor class.</summary>
 public class PersistentCallListEditor : CustomEditor
 {
+    private List<PersistentCallEditor> callEditors = new();
     private int persistentCallsCount = -1;
 
     public override void Initialize(LayoutElementsContainer layout)
@@ -36,8 +37,11 @@ public class PersistentCallListEditor : CustomEditor
             if (lvc[0] == null || lvc.Count == 0)
                 return;
 
-            var newEditor = elementsPanel.Object(lvc, new PersistentCallEditor());
-            (newEditor as PersistentCallEditor).Setup(this, i);
+            var customEditor = elementsPanel.Object(lvc, new PersistentCallEditor());
+            PersistentCallEditor newEditor = customEditor as PersistentCallEditor;
+
+            newEditor.Setup(this, i);
+            callEditors.Add(newEditor);
         }
 
 
@@ -92,6 +96,15 @@ public class PersistentCallListEditor : CustomEditor
         
         SetValue(newList);
         RebuildLayoutOnRefresh();
+    }
+
+    /// <summary> Open or closes all child editors</summary>
+    /// <param name="open">open all if true, close all if false</param>
+    public void SetChildrenOpen(bool open = true)
+    {
+        for (int i = 0; i < callEditors.Count; i++)
+            if (callEditors[i] != null)
+                callEditors[i].SetOpen(open);
     }
 
     // This prevents a warning, that gets thrown that a ListValueContainer could not
