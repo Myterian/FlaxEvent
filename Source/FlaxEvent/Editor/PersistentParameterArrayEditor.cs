@@ -17,11 +17,7 @@ public class PersistentParameterArrayEditor : CustomEditor
     public void SetIndex(int newIndex) => index = newIndex;
 
     public override void Initialize(LayoutElementsContainer layout)
-    {
-
-        // if (Mathf.IsNotInRange(index, 0, Values.Count - 1))
-        //     return;
-        
+    {   
         MemberInfo memberInfo = typeof(PersistentParameter);
         var lvc = new ListValueContainer(new(memberInfo.GetType()), index, Values);
 

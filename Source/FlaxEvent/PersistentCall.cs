@@ -26,15 +26,17 @@ public record struct PersistentCall
     public string MethodName => methodName;
 
     /// <summary>MethodInfo of the target method</summary>
-    public MethodInfo MethodInfo => methodInfo ??= CacheMethodInfo();
+    public MethodInfo MethodInfo => CacheMethodInfo();
 
-    public Delegate Delegate => cachedDelegate ??= GetDelegate();
+    public Delegate Delegate => GetDelegate();
+
+    [Serialize] private string methodName = string.Empty;
 
     [Serialize] private Actor parent = null;
 
     [Serialize] private Object targetObject = null;
 
-    [Serialize] private string methodName = string.Empty;
+    
 
     private MethodInfo methodInfo;
 
@@ -42,6 +44,9 @@ public record struct PersistentCall
 
     /// <summary>Enables or disables the invokation of this call</summary>
     public bool IsEnabled = true;
+
+    /// <summary>if true, the call tries to use the invokation parameters if true, otherwise only uses the editor configured parameters</summary>
+    public bool UseRuntimeParameters = true;
 
     /// <summary>Sets the parent of the call. For editor purposes, this also sets the target object, but that can be overriden.</summary>
     /// <param name="newParent">The new parent actor, where the target of this call is.</param>
@@ -152,20 +157,23 @@ public record struct PersistentCall
         if (!IsEnabled || MethodInfo == null)
             return;
 
+
         // Parameter signature matching check
-        bool useRuntimeParams = eventParams != null ? eventParams.Length == Parameters.Length : false;
+        bool canUseRuntimeParams = UseRuntimeParameters && eventParams != null ? eventParams.Length == Parameters.Length : false;
 
+        if (UseRuntimeParameters)
+        {
+            // TODO: Instead of instantly returning false when parameter types dont match, the types could be checked
+            // for assignability, like with ints and floats, where an int gets automatically converted to a float.
+            // useRuntimeParams = Parameters[i].ParameterType.IsAssignableFrom(eventParams[i].GetType());
+            // Q: Will there be a noticable performance difference, when checking for 100 invokes?
 
-        // TODO: Instead of instantly returning false when parameter types dont match, the types could be checked
-        // for assignability, like with ints and floats, where an int gets automatically converted to a float.
-        // useRuntimeParams = Parameters[i].ParameterType.IsAssignableFrom(eventParams[i].GetType());
-        // Q: Will there be a noticable performance difference, when checking for 100 invokes?
-
-        for (int i = 0; useRuntimeParams && i < eventParams.Length; i++)
-            if (Parameters[i].ParameterType == null || eventParams[i].GetType() != Parameters[i].ParameterType)
-                useRuntimeParams = false;
-
-        // TODO: Make sure the saved parameters match the parameter types of the target method
+            for (int i = 0; canUseRuntimeParams && i < eventParams.Length; i++)
+                if (Parameters[i].ParameterType == null || eventParams[i].GetType() != Parameters[i].ParameterType)
+                    canUseRuntimeParams = false;
+        }
+        
+        // TODO: Check that saved parameters match the parameter types of the target method
 
         // TODO: useRuntimeParams can probably be cached, since the event signature and this call signature won't
         // change at runtime. Also, for micro-optimization, the target method could be susbscribed to the action
@@ -176,10 +184,10 @@ public record struct PersistentCall
         // both with MethodInfo.Invoke and Delegate.DynamicInvoke
 
         // Early exit, we don't need to convert the parameters if we use runtime params
-        if (useRuntimeParams)
+        if (canUseRuntimeParams)
         {
-            // Delegate?.DynamicInvoke(eventParams);
-            MethodInfo?.Invoke(TargetObject, eventParams);
+            Delegate?.DynamicInvoke(eventParams);
+            // MethodInfo?.Invoke(TargetObject, eventParams);
             return;
         }
 
@@ -189,8 +197,8 @@ public record struct PersistentCall
         for (int i = 0; i < Parameters.Length; i++)
             runtimeParameter[i] = Parameters[i].GetValue();
 
-        // Delegate?.DynamicInvoke(runtimeParameter);
-        MethodInfo?.Invoke(TargetObject, runtimeParameter);
+        Delegate?.DynamicInvoke(runtimeParameter);
+        // MethodInfo?.Invoke(TargetObject, runtimeParameter);
     }
 
     public PersistentCall()

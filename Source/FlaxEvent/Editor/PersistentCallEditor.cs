@@ -13,7 +13,6 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 using System.Text;
-using System.Collections.Generic;
 
 namespace FlaxEvents;
 
@@ -47,7 +46,6 @@ public class PersistentCallEditor : CustomEditor
         // var group = (LayoutElementsContainer)y;
 
         var group = layout.Group(headerText);
-        group.ContainerControl.Height = 45;
         group.Panel.MouseButtonRightClicked += RightClickContextMenu;
         bool isCallEnabled = call.IsEnabled;
 
@@ -99,6 +97,18 @@ public class PersistentCallEditor : CustomEditor
         // Object picker
         var propertyList = group.AddPropertyItem("Target", "The target of this event call");
         var objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
+
+        // var runtimeParameterCheckbox = layout.Checkbox("Use Event Inputs",
+        //                 "If checked, the event will try to pass the runtime parameters instead of the editor-configured parameters to the target method. Will only work, if the event signature and method signature match.");
+        // runtimeParameterCheckbox.CheckBox.Checked = call.UseRuntimeParameters;
+        // runtimeParameterCheckbox.CheckBox.StateChanged += (CheckBox box) =>
+        // {
+        //     PersistentCall call = (PersistentCall)Values[0];
+        //     call.UseRuntimeParameters = box.Checked;
+
+        //     SetValue(call);
+        //     RebuildLayoutOnRefresh();
+        // };
 
 
         if (call.TargetObject != null)
@@ -172,7 +182,7 @@ public class PersistentCallEditor : CustomEditor
             var editor = new PersistentParameterArrayEditor();
             editor.SetIndex(i);
 
-            group.Object(vc, editor);
+            layout.Object(vc, editor);
         }
     }
 

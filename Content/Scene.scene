@@ -45,10 +45,11 @@
 						"ParameterValue": "Some name"
 					}
 				],
+				"methodName": "set_Name",
 				"parent": "20127b0f41990fcfa9afa683ded63114",
 				"targetObject": "20127b0f41990fcfa9afa683ded63114",
-				"methodName": "set_Name",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -57,10 +58,11 @@
 						"ParameterValue": "18c202534d363b43237213803f3fa667"
 					}
 				],
+				"methodName": "AssetMethod",
 				"parent": "74a68a984824b4510d12589f199ad68f",
 				"targetObject": "08644c2445321ede2fde80bc5a22417d",
-				"methodName": "AssetMethod",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -69,10 +71,11 @@
 						"ParameterValue": 3
 					}
 				],
+				"methodName": "EnumMethod",
 				"parent": "74a68a984824b4510d12589f199ad68f",
 				"targetObject": "08644c2445321ede2fde80bc5a22417d",
-				"methodName": "EnumMethod",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -85,10 +88,11 @@
 						}
 					}
 				],
+				"methodName": "AddMovement",
 				"parent": "74a68a984824b4510d12589f199ad68f",
 				"targetObject": "74a68a984824b4510d12589f199ad68f",
-				"methodName": "AddMovement",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -96,15 +100,17 @@
 						"ParameterType": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
 						"ParameterValue": [
 							0,
+							19,
 							8,
-							19
+							-30
 						]
 					}
 				],
+				"methodName": "ArrayMethod",
 				"parent": "74a68a984824b4510d12589f199ad68f",
 				"targetObject": "08644c2445321ede2fde80bc5a22417d",
-				"methodName": "ArrayMethod",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -114,14 +120,16 @@
 							false,
 							true,
 							false,
-							false
+							false,
+							true
 						]
 					}
 				],
+				"methodName": "ListMethod",
 				"parent": "74a68a984824b4510d12589f199ad68f",
 				"targetObject": "08644c2445321ede2fde80bc5a22417d",
-				"methodName": "ListMethod",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -143,10 +151,11 @@
 						}
 					}
 				],
+				"methodName": "AddMovement",
 				"parent": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
 				"targetObject": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
-				"methodName": "AddMovement",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -155,10 +164,11 @@
 						"ParameterValue": "18c202534d363b43237213803f3fa667"
 					}
 				],
+				"methodName": "AssetMethod",
 				"parent": "74a68a984824b4510d12589f199ad68f",
 				"targetObject": "08644c2445321ede2fde80bc5a22417d",
-				"methodName": "AssetMethod",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
@@ -167,38 +177,248 @@
 						"ParameterValue": "Flying cube"
 					}
 				],
+				"methodName": "set_Name",
 				"parent": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
 				"targetObject": "e1c92bcc4eb069c29f0a5e9c605ec5ef",
-				"methodName": "set_Name",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
 					{
-						"ParameterType": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterType": "FlaxEngine.Tag[], FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null",
 						"ParameterValue": [
-							0,
-							8,
-							19
+							"Bullet",
+							"Player"
 						]
 					}
 				],
+				"methodName": "set_Tags",
 				"parent": "74a68a984824b4510d12589f199ad68f",
-				"targetObject": "08644c2445321ede2fde80bc5a22417d",
-				"methodName": "ArrayMethod",
-				"IsEnabled": true
+				"targetObject": "74a68a984824b4510d12589f199ad68f",
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
 			},
 			{
 				"Parameters": [
 					{
 						"ParameterType": "System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
-						"ParameterValue": false
+						"ParameterValue": true
 					}
 				],
+				"methodName": "set_UsePerspective",
 				"parent": "b0d72c3746caebca055e1f921ca21c7c",
 				"targetObject": "b0d72c3746caebca055e1f921ca21c7c",
-				"methodName": "set_UsePerspective",
-				"IsEnabled": true
+				"IsEnabled": true,
+				"UseRuntimeParameters": false
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "System.Single, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterValue": 1.0
+					}
+				],
+				"methodName": "set_CustomAspectRatio",
+				"parent": "b0d72c3746caebca055e1f921ca21c7c",
+				"targetObject": "b0d72c3746caebca055e1f921ca21c7c",
+				"IsEnabled": true,
+				"UseRuntimeParameters": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "FlaxEngine.Transform, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null",
+						"ParameterValue": {
+							"Translation": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0
+							},
+							"Orientation": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Scale": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0
+							}
+						}
+					}
+				],
+				"methodName": "set_Transform",
+				"parent": "b74d8a144445130fdbd74ebb50a41041",
+				"targetObject": "b74d8a144445130fdbd74ebb50a41041",
+				"IsEnabled": true,
+				"UseRuntimeParameters": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "FlaxEngine.Matrix, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null",
+						"ParameterValue": {
+							"M11": 0.0,
+							"M12": 0.0,
+							"M13": 0.0,
+							"M14": 0.0,
+							"M21": 0.0,
+							"M22": 0.0,
+							"M23": 0.0,
+							"M24": 0.0,
+							"M31": 0.0,
+							"M32": 0.0,
+							"M33": 0.0,
+							"M34": 0.0,
+							"M41": 0.0,
+							"M42": 0.0,
+							"M43": 0.0,
+							"M44": 0.0,
+							"Up": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0
+							},
+							"Down": {
+								"X": -0.0,
+								"Y": -0.0,
+								"Z": -0.0
+							},
+							"Right": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0
+							},
+							"Left": {
+								"X": -0.0,
+								"Y": -0.0,
+								"Z": -0.0
+							},
+							"Forward": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0
+							},
+							"Backward": {
+								"X": -0.0,
+								"Y": -0.0,
+								"Z": -0.0
+							},
+							"Row1": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Row2": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Row3": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Row4": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Column1": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Column2": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Column3": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"Column4": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0,
+								"W": 0.0
+							},
+							"TranslationVector": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0
+							},
+							"ScaleVector": {
+								"X": 0.0,
+								"Y": 0.0,
+								"Z": 0.0
+							}
+						}
+					}
+				],
+				"methodName": "set_Rotation",
+				"parent": "20127b0f41990fcfa9afa683ded63114",
+				"targetObject": "20127b0f41990fcfa9afa683ded63114",
+				"IsEnabled": true,
+				"UseRuntimeParameters": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterValue": 0
+					}
+				],
+				"methodName": "set_LODBias",
+				"parent": "4a9d87134ab42f4294db6bbcf1902bde",
+				"targetObject": "4a9d87134ab42f4294db6bbcf1902bde",
+				"IsEnabled": true,
+				"UseRuntimeParameters": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "FlaxEngine.ViewMode, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null",
+						"ParameterValue": 6
+					}
+				],
+				"methodName": "set_RenderMode",
+				"parent": "b0d72c3746caebca055e1f921ca21c7c",
+				"targetObject": "b0d72c3746caebca055e1f921ca21c7c",
+				"IsEnabled": true,
+				"UseRuntimeParameters": true
+			},
+			{
+				"Parameters": [
+					{
+						"ParameterType": "FlaxEngine.AmbientOcclusionSettings, FlaxEngine.CSharp, Version=1.11.6802.0, Culture=neutral, PublicKeyToken=null",
+						"ParameterValue": {
+							"OverrideFlags": 15,
+							"Enabled": true,
+							"Intensity": 5.0,
+							"Power": 1.0,
+							"Radius": 1.0,
+							"FadeOutDistance": 0.0,
+							"FadeDistance": 0.0
+						}
+					}
+				],
+				"methodName": "set_AmbientOcclusion",
+				"parent": "12e2aa0941e0f0c5110b1bbcaa46880f",
+				"targetObject": "12e2aa0941e0f0c5110b1bbcaa46880f",
+				"IsEnabled": true,
+				"UseRuntimeParameters": true
 			}
 		]
 	}
@@ -286,6 +506,27 @@
 			},
 			"BakedProbe": "1c0e10484ff57d402275289550564b9f",
 			"Mode": 0
+		},
+		{
+			"ID": "12e2aa0941e0f0c5110b1bbcaa46880f",
+			"TypeName": "FlaxEngine.PostFxVolume",
+			"ParentID": "28553d634087c67c711ebd96080482aa",
+			"Name": "PostFxVolume",
+			"Settings": {
+				"AO": {},
+				"GI": {},
+				"Bloom": {},
+				"ToneMapping": {},
+				"ColorGrading": {},
+				"EyeAdaptation": {},
+				"CameraArtifacts": {},
+				"LensFlares": {},
+				"DepthOfField": {},
+				"MotionBlur": {},
+				"SSR": {},
+				"AA": {},
+				"PostFxMaterials": {}
+			}
 		},
 		{
 			"ID": "b0d72c3746caebca055e1f921ca21c7c",
@@ -755,6 +996,36 @@
 					}
 				]
 			}
+		},
+		{
+			"ID": "b74d8a144445130fdbd74ebb50a41041",
+			"TypeName": "FlaxEngine.EmptyActor",
+			"ParentID": "74a68a984824b4510d12589f199ad68f",
+			"Name": "EmptyActor"
+		},
+		{
+			"ID": "58ac63214afb445ce36ab2a687cd7555",
+			"TypeName": "Game.TestScript",
+			"ParentID": "b74d8a144445130fdbd74ebb50a41041",
+			"V": {
+	"OnMyEvent": {
+		"PersistentCallList": [
+			{
+				"Parameters": [
+					{
+						"ParameterType": "System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+						"ParameterValue": "New Name"
+					}
+				],
+				"methodName": "set_Name",
+				"parent": "b0d72c3746caebca055e1f921ca21c7c",
+				"targetObject": "b0d72c3746caebca055e1f921ca21c7c",
+				"IsEnabled": true,
+				"UseRuntimeParameters": true
+			}
+		]
+	}
+}
 		}
 	]
 }

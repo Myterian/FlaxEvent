@@ -84,17 +84,4 @@ public class FlaxEventContextButton : ContextMenuButton
     }
 }
 
-public static class ContextMenuExtension
-{
-    public static ContextMenuButton AddButton(this ContextMenu menu, string buttonDisplayText, FlaxEngine.Object target, string methodName, Type[] parameters, Action<ContextMenuButton> action, string shortKeys = "")
-    {
-        return new FlaxEventContextButton(menu, buttonDisplayText, target, methodName, parameters, action, shortKeys);
-    }
-
-    public static FlaxEventContextChildMenu AddChildMenu(this ContextMenu menu, string text, bool isActiveTarget, string shortKeys = "")
-    {
-        return new FlaxEventContextChildMenu(menu, text, isActiveTarget, shortKeys);
-    }
-}
-
 #endif

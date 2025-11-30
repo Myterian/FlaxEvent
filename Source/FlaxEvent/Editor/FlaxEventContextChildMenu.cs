@@ -1,5 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using System;
 using System.Collections.Generic;
 using FlaxEditor.GUI.ContextMenu;
@@ -9,6 +11,7 @@ using FlaxEngine.GUI;
 namespace FlaxEvents;
 
 /// <summary>FlaxEventContextChildMenu class.</summary>
+[HideInEditor]
 public class FlaxEventContextChildMenu : FlaxEventContextButton
 {
     public readonly ContextMenu ContextMenu = new ContextMenu();
@@ -30,13 +33,13 @@ public class FlaxEventContextChildMenu : FlaxEventContextButton
 
         if (isOpened)
             Render2D.FillRectangle(rect, current.LightBackground);
-        
+
 
         base.Draw();
 
         if (ContextMenu.HasChildren)
             Render2D.DrawSprite(current.ArrowRight, new Rectangle(Width - 15f, (Height - 12f) / 2f, 12f, 12f), (!Enabled) ? current.ForegroundDisabled : (isOpened ? current.BackgroundSelected : current.Foreground));
-        
+
     }
 
     public override void OnMouseEnter(Float2 location)
@@ -60,7 +63,7 @@ public class FlaxEventContextChildMenu : FlaxEventContextButton
 
         if (ContextMenu.IsOpened)
             return true;
-        
+
         ShowChild(parentContextMenu);
         return base.OnMouseUp(location, button);
     }
@@ -80,3 +83,5 @@ public class FlaxEventContextChildMenu : FlaxEventContextButton
         IsActiveTarget = isActiveTarget;
     }
 }
+
+#endif

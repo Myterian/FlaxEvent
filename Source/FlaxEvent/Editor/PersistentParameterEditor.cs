@@ -7,6 +7,7 @@ using System.Reflection;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.Scripting;
+using FlaxEngine.GUI;
 
 namespace FlaxEvents;
 
@@ -30,9 +31,10 @@ public class PersistentParameterEditor : CustomEditor
 
         var vc = itemInfo.GetValues(Values);
 
-        // Type has to be set manually, because arrays and lists would default back to type of System.Object and this causes editor issues
+        // Type has to be set manually, because arrays and lists would default back to type of System.Object 
+        // and this causes editor and conversion issues
         vc.SetType(new ScriptType(type));
-
+        
         layout.Object(vc, editor);
     }
 
