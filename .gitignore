@@ -21,15 +21,8 @@ Source/GameEditorTarget.Build.cs
 Source/GameTarget.Build.cs
 FlaxEvent.sln
 FlaxEvent.code-workspace
-<<<<<<< Updated upstream
-FlaxEvent.sln.DotSettings.user
-=======
-FlaxEvent.sln.DotSettings.user
-FlaxEventProject.flaxproj
-Content/Scene 0.scene
-.gitignore
->>>>>>> Stashed changes
 
 Content/Scene 0.scene
 Content/Scene.scene
 Content/Scene 1.scene
+FlaxEvent.sln.DotSettings.user
