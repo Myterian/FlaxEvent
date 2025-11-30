@@ -72,8 +72,6 @@ namespace FlaxEvents;
 [CustomEditor(typeof(FlaxEventBase)), DefaultEditor]
 public class FlaxEventEditor : CustomEditor
 {
-    private bool isClassNameSet = false;
-
     public override void Initialize(LayoutElementsContainer layout)
     {
         // Ui to create a new instance, when somebody forgets to add a default value
@@ -104,33 +102,28 @@ public class FlaxEventEditor : CustomEditor
         // Show what kind of argument types are being passed by the event in the header name
         DropPanel dropPanel = layout.Control as DropPanel;
         Type[] argTypes = Values[0].GetType().GetGenericArguments();
+        StringBuilder headerBuilder = new(Values.Info.Name);
 
-        if (!isClassNameSet)
+        if (0 < argTypes.Length)
         {
-            isClassNameSet = true;
-            StringBuilder headerBuilder = new();
-            headerBuilder.Append(dropPanel.HeaderText);
+            headerBuilder.Append(" <");
 
-            if (0 < argTypes.Length)
+            for (int i = 0; i < argTypes.Length; i++)
             {
-                headerBuilder.Append(" <");
+                headerBuilder.Append(argTypes[i].ToString().Split('.').Last());
 
-                for (int i = 0; i < argTypes.Length; i++)
-                {
-                    headerBuilder.Append(argTypes[i].ToString().Split('.').Last());
-
-                    if (i < argTypes.Length - 1)
-                        headerBuilder.Append(", ");
-                }
-
-                headerBuilder.Append(">");
+                if (i < argTypes.Length - 1)
+                    headerBuilder.Append(", ");
             }
 
-            headerBuilder.Append(" (");
-            headerBuilder.Append(activePersistentCalls.Count);
-            headerBuilder.Append(')');
-            dropPanel.HeaderText = headerBuilder.ToString();
+            headerBuilder.Append(">");
         }
+
+        headerBuilder.Append(" (");
+        headerBuilder.Append(activePersistentCalls.Count);
+        headerBuilder.Append(')');
+        dropPanel.HeaderText = headerBuilder.ToString();
+
 
 
         // Base panel contains a large panel for all persistent call editor elements and another panel for the buttons
