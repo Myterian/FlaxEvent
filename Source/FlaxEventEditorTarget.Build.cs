@@ -1,14 +1,13 @@
 using Flax.Build;
 
-public class GameTarget : GameProjectTarget
+public class FlaxEventEditorTarget : GameProjectEditorTarget
 {
     /// <inheritdoc />
     public override void Init()
     {
         base.Init();
 
-        // Reference the modules for game
+        // Reference the modules for editor
         Modules.Add(nameof(FlaxEvent));
-        Modules.Add("Game");
     }
 }
