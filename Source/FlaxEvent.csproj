@@ -381,10 +381,9 @@
     <Compile Include="FlaxEvent\FlaxEvent.cs" />
     <Compile Include="FlaxEvent\FlaxEventConverter.cs" />
     <Compile Include="FlaxEvent\FlaxEventPlugin.cs" />
-    <Compile Include="FlaxEvent\PersistentCall.cs" />
-    <Compile Include="FlaxEvent\PersistentParameter.cs" />
-    <Compile Include="FlaxEvent\PersistentParameterConverter.cs" />
-    <Compile Include="FlaxEvent\Test.cs" />
+    <Compile Include="FlaxEvent\PersistentData\PersistentCall.cs" />
+    <Compile Include="FlaxEvent\PersistentData\PersistentParameter.cs" />
+    <Compile Include="FlaxEvent\PersistentData\PersistentParameterConverter.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Debug|x64' " >
     <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\x64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
