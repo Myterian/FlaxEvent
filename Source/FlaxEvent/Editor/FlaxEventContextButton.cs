@@ -9,9 +9,7 @@ using FlaxEngine.GUI;
 
 namespace FlaxEvents;
 
-/// <summary>
-/// FlaxEventContextButton class.
-/// </summary>
+/// <summary>Button that is used in the method selection menu in <see cref="PersistentCallEditor"/>. Contains information about target methods and highlights existing selection.</summary>
 [HideInEditor]
 public class FlaxEventContextButton : ContextMenuButton
 {

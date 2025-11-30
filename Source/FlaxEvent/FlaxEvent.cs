@@ -3,14 +3,16 @@
 using System;
 using System.Collections.Generic;
 using FlaxEngine;
+using Newtonsoft.Json;
 
 namespace FlaxEvents;
 
 /// <summary>Base Class of all FlaxEvent types</summary>
+[JsonConverter(typeof(FlaxEventConverter))]
 public abstract class FlaxEventBase
 {
     /// <summary>List of all editor-configured actions</summary>
-    public List<PersistentCall> PersistentCallList = new();
+    [Serialize] public List<PersistentCall> PersistentCallList { get; protected set; } = new();
 
     /// <summary>Add a new persistent call</summary>
     /// <param name="call">Call to add</param>

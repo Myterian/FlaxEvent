@@ -379,6 +379,7 @@
     <Compile Include="FlaxEvent\Editor\PersistentParameterEditor.cs" />
     <Compile Include="FlaxEvent\Editor\TypeExtension.cs" />
     <Compile Include="FlaxEvent\FlaxEvent.cs" />
+    <Compile Include="FlaxEvent\FlaxEventConverter.cs" />
     <Compile Include="FlaxEvent\FlaxEventPlugin.cs" />
     <Compile Include="FlaxEvent\PersistentCall.cs" />
     <Compile Include="FlaxEvent\PersistentParameter.cs" />

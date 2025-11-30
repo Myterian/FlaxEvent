@@ -1,13 +1,13 @@
-using Flax.Build;
+// using Flax.Build;
 
-public class GameTarget : GameProjectTarget
-{
-    /// <inheritdoc />
-    public override void Init()
-    {
-        base.Init();
+// public class GameTarget : GameProjectTarget
+// {
+//     /// <inheritdoc />
+//     public override void Init()
+//     {
+//         base.Init();
 
-        // Reference the modules for game
-        Modules.Add(nameof(FlaxEvent));
-    }
-}
+//         // Reference the modules for game
+//         Modules.Add(nameof(FlaxEvent));
+//     }
+// }

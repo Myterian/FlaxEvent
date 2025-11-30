@@ -196,7 +196,6 @@ public class PersistentCallEditor : CustomEditor
         // might be a script, which doens't have access to the entire actors script hierarchy
         // NOTE: Yes, it does via Script.Actor. This works completly fine, but could be removed
         PersistentCall call = (PersistentCall)Values[0];
-        // Actor parentActor = ((PersistentCall)Values[0]).Parent;
 
         if (call.Parent == null)
             return;
@@ -285,7 +284,7 @@ public class PersistentCallEditor : CustomEditor
             ContextMenuButton button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, paraTypes, SetCall);
             button.ShortKeys = shortKeys;
 
-            // Selection indicator. Highlight this button, when the stored method name matches this method
+            // Selection indicator. Highlight existing selection.
             if (!string.IsNullOrEmpty(callMethodName) && callMethodName.Equals(methods[x].Name) && sameOverloadMethod)
             {
                 button.Icon = Editor.Instance.Icons.ArrowRight12;

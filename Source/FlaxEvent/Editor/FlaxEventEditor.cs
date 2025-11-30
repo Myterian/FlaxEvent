@@ -133,7 +133,6 @@ public class FlaxEventEditor : CustomEditor
         // };
 
     }
-
 }
 
 #endif

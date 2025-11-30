@@ -9,7 +9,7 @@ namespace FlaxEvents;
 
 /// <summary>Data container for parameters of a <see cref="PersistentCall"/></summary>
 [JsonConverter(typeof(PersistentParameterConverter))]
-public record struct PersistentParameter// : IJsonSerializable
+public record struct PersistentParameter
 {
     /// <summary>Value of the parameter</summary>
     public object ParameterValue;
@@ -17,7 +17,8 @@ public record struct PersistentParameter// : IJsonSerializable
     /// <summary>Type of the parameter</summary>
     public Type ParameterType;
 
-    // private object cachedValue;
+    /// <summary>Cached value of the parameterValue conversion</summary>
+    private object cachedValue;
 
     /// <summary>Converts the stored object to the runtime type</summary>
     /// <returns>Type-Converted object. Returns null if failed.</returns>
@@ -25,6 +26,9 @@ public record struct PersistentParameter// : IJsonSerializable
     {
         if (ParameterValue == null || ParameterType == null)
             return null;
+
+        if (cachedValue != null)
+            return cachedValue;
 
         // Convert ParameterValue to Arrays, because Convert.ChangeType can't
         if (ParameterType.IsArray)
@@ -41,6 +45,7 @@ public record struct PersistentParameter// : IJsonSerializable
             for (int i = 0; storedArray != null && i < count; i++)
                 newArray.SetValue(Convert.ChangeType(storedArray[i], elementType), i);
 
+            cachedValue = newArray;
             return newArray;
         }
 
@@ -58,10 +63,11 @@ public record struct PersistentParameter// : IJsonSerializable
             for (int i = 0; storedList != null && i < count; i++)
                 newList.Add(Convert.ChangeType(storedList[i], elementType));
 
+            cachedValue = newList;
             return newList;
         }
 
-        // cachedValue ??= Convert.ChangeType(ParameterValue, ParameterType);
+        cachedValue = Convert.ChangeType(ParameterValue, ParameterType);
 
         // Default
         return Convert.ChangeType(ParameterValue, ParameterType);

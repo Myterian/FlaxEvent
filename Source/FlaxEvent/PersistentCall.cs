@@ -26,9 +26,9 @@ public record struct PersistentCall
     public string MethodName => methodName;
 
     /// <summary>MethodInfo of the target method</summary>
-    public MethodInfo MethodInfo => CacheMethodInfo();
+    public MethodInfo MethodInfo => methodInfo ??= CacheMethodInfo();
 
-    public Delegate Delegate => GetDelegate();
+    public Delegate Delegate => cachedDelegate ??= GetDelegate();
 
     [Serialize] private string methodName = string.Empty;
 
@@ -186,8 +186,8 @@ public record struct PersistentCall
         // Early exit, we don't need to convert the parameters if we use runtime params
         if (canUseRuntimeParams)
         {
-            Delegate?.DynamicInvoke(eventParams);
-            // MethodInfo?.Invoke(TargetObject, eventParams);
+            // Delegate?.DynamicInvoke(eventParams);
+            MethodInfo?.Invoke(TargetObject, eventParams);
             return;
         }
 
@@ -197,8 +197,8 @@ public record struct PersistentCall
         for (int i = 0; i < Parameters.Length; i++)
             runtimeParameter[i] = Parameters[i].GetValue();
 
-        Delegate?.DynamicInvoke(runtimeParameter);
-        // MethodInfo?.Invoke(TargetObject, runtimeParameter);
+        // Delegate?.DynamicInvoke(runtimeParameter);
+        MethodInfo?.Invoke(TargetObject, runtimeParameter);
     }
 
     public PersistentCall()

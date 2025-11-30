@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -88,6 +89,7 @@ public class PersistentCallListEditor : CustomEditor
             newList.Add(element);
         }
 
+        
         SetValue(newList);
         RebuildLayoutOnRefresh();
     }
@@ -104,6 +106,7 @@ public class PersistentCallListEditor : CustomEditor
         if (((List<PersistentCall>)Values[0]).Count != persistentCallsCount)
             RebuildLayout();
     }
+
 
     #endregion
 

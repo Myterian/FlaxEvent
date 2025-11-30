@@ -10,7 +10,7 @@ using FlaxEngine.GUI;
 
 namespace FlaxEvents;
 
-/// <summary>FlaxEventContextChildMenu class.</summary>
+/// <summary>Child menu that is used in the method selection menu in <see cref="PersistentCallEditor"/>. It shows what methods are available and highlights existing selection.</summary>
 [HideInEditor]
 public class FlaxEventContextChildMenu : FlaxEventContextButton
 {
