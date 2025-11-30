@@ -9,9 +9,9 @@ Icons/
 Images/
 Content/Materials
 Content/SceneData
-Content/Scene 0.json
-Content/Scene.json
-Content/Json Asset.json
+Content/Scene*0.scene
+Content/Scene.scene
+Content/Json*Asset.json
 .vscode
 omnisharp.json
 
