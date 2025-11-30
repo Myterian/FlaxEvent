@@ -9,11 +9,17 @@ Icons/
 Images/
 Content/Materials
 Content/SceneData
+Content/Scene 0.json
+Content/Scene.json
+Content/Json Asset.json
 .vscode
 omnisharp.json
 
 Source/Game.Gen.cs
 Source/Game.csproj
+Source/GameEditorTarget.Build.cs
+Source/GameTarget.Build.cs
 FlaxEvent.sln
 FlaxEvent.code-workspace
 FlaxEvent.sln.DotSettings.user
+FlaxEventProject.flaxproj
