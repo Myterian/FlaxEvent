@@ -81,7 +81,13 @@ public class FlaxEventEditor : CustomEditor
 
         if (flaxEvent == null)
         {
-            var newButton = layout.Button("New", "Create a new flax event");
+            var spacer = layout.Space(20);
+
+            int buttonWidth = 120;
+
+            var newButton = spacer.Button("New", "Create a new flax event");
+            newButton.Button.AnchorPreset = AnchorPresets.MiddleCenter;
+            newButton.Button.Bounds = new((spacer.Control.Width - buttonWidth) * 0.5f, 1, buttonWidth, spacer.Control.Height);
             newButton.Button.ButtonClicked += (Button button) =>
             {
                 FlaxEventBase newInstance = (FlaxEventBase)Activator.CreateInstance(Values.Type.Type);
