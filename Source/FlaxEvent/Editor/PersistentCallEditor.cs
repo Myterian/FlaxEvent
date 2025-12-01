@@ -58,6 +58,20 @@ public class PersistentCallEditor : CustomEditor
         // var group = (LayoutElementsContainer)y;
         // var basePanel = layout.VerticalPanel();
 
+        // DropPanel dropPanelTest = new DropPanel();
+        // dropPanelTest.EnableDropDownIcon = true;
+
+        // VerticalPanel verticalPanel = new();
+        // verticalPanel.Parent = dropPanel;
+
+        // dropPanelTest.Parent = layout.ContainerControl;
+
+        // layout.Children.Add(dropPanelTest);
+
+        // var dropPanel = layout.CustomContainer<DropPanel>();
+        // dropPanel.ContainerControl.EnableDropDownIcon = true;
+        // var basePanel = dropPanel.VerticalPanel();
+
         group = layout.Group(headerText);
         group.Panel.MouseButtonRightClicked += RightClickContextMenu;
         bool isCallEnabled = call.IsEnabled;
@@ -196,15 +210,10 @@ public class PersistentCallEditor : CustomEditor
         ScriptMemberInfo scriptMember = new(memberInfo);
         GenericEditor.ItemInfo itemInfo = new(scriptMember);
 
+        var editor = new PersistentParameterArrayEditor();
+
         var vc = itemInfo.GetValues(Values);
-
-        for (int i = 0; i < call.Parameters.Length; i++)
-        {
-            var editor = new PersistentParameterArrayEditor();
-            editor.SetIndex(i);
-
-            layout.Object(vc, editor);
-        }
+        group.Object(vc, editor);
     }
 
     #region Editor-UI Setup
@@ -352,6 +361,7 @@ public class PersistentCallEditor : CustomEditor
         if (!Input.GetMouseButtonDown(MouseButton.Left))
             return;
 
+        // TODO: Re-Enable this control
         group.ContainerControl.Enabled = false;
         parentEditor.StartDrag(Index);
     }
@@ -361,17 +371,20 @@ public class PersistentCallEditor : CustomEditor
         Float2 mouse = group.ContainerControl.PointFromScreen(mousePosition);
         Float2 offeset = group.ContainerControl.Bounds.Size - mouse;
 
+        // TODO: Expand the drag area to include all sub-elements, too
         bool isMouseOver = 0 <= offeset.X && offeset.X <= group.ContainerControl.Width && 0 <= offeset.Y && offeset.Y <= group.ContainerControl.Height;
 
         if (isMouseOver == true)
         {
             group.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
             group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.Selection;
+            group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.Selection;
         }
         else
         {
             group.ContainerControl.BackgroundColor = Color.Transparent;
             group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.BackgroundNormal;
+            group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.BackgroundHighlighted;
         }
 
         return isMouseOver;
