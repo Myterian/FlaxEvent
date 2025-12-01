@@ -1,5 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
+#if FLAX_EDITOR
+
 using FlaxEditor;
 using FlaxEngine;
 
@@ -115,3 +117,5 @@ internal class DragOperation
         Editor.Instance.EditorUpdate += UpdateDrag;
     }
 }
+
+#endif
