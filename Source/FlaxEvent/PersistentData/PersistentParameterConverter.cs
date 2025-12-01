@@ -13,17 +13,25 @@ public class PersistentParameterConverter : JsonConverter
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
     {
         JObject obj = JObject.Load(reader);
-        PersistentParameter result = new();
+        
+        object paraValue = null;
+        Type paraType = null;
 
         string typeName = (string)obj["ParameterType"];
 
         if (!string.IsNullOrEmpty(typeName))
-            result.ParameterType = Type.GetType(typeName);
+            paraType = Type.GetType(typeName);
 
         JToken valueToken = obj["ParameterValue"];
 
-        if (valueToken != null && result.ParameterType != null)
-            result.ParameterValue = valueToken.ToObject(result.ParameterType, serializer);
+        if (valueToken != null && paraType != null)
+            paraValue = valueToken.ToObject(paraType, serializer);
+
+        PersistentParameter result = new()
+        {
+            ParameterType = paraType,
+            ParameterValue = paraValue
+        };
 
         return result;
     }

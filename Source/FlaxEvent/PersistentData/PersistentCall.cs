@@ -195,7 +195,7 @@ public record struct PersistentCall
         object[] runtimeParameter = new object[Parameters.Length];
 
         for (int i = 0; i < Parameters.Length; i++)
-            runtimeParameter[i] = Parameters[i].GetValue();
+            runtimeParameter[i] = Parameters[i].ParameterValue;
 
         // Delegate?.DynamicInvoke(runtimeParameter);
         MethodInfo?.Invoke(TargetObject, runtimeParameter);

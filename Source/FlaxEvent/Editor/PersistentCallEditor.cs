@@ -109,7 +109,7 @@ public class PersistentCallEditor : CustomEditor
 
         // Runtime Parameter Checkbox
         // var runtimeParameterCheckbox = layout.Checkbox("Use Event Inputs",
-        //                 "If checked, the event will try to pass the runtime parameters instead of the editor-configured parameters to the target method. Will only work, if the event signature and method signature match.");
+        //     "If checked, the event will try to pass the runtime parameters instead of the editor-configured parameters to the target method. Will only work, if the event signature and method signature match.");
         // runtimeParameterCheckbox.CheckBox.Checked = call.UseRuntimeParameters;
         // runtimeParameterCheckbox.CheckBox.StateChanged += (CheckBox box) =>
         // {
@@ -408,8 +408,13 @@ public class PersistentCallEditor : CustomEditor
 
             for (int i = 0; i < newParameters.Length; i++)
             {
-                newParameters[i].ParameterValue = flaxEventButton.ParameterTypes[i].GetDefault();
-                newParameters[i].ParameterType = flaxEventButton.ParameterTypes[i];
+                PersistentParameter newParameter = new()
+                {
+                    ParameterValue = flaxEventButton.ParameterTypes[i].GetDefault(),
+                    ParameterType = flaxEventButton.ParameterTypes[i]
+                };
+
+                newParameters[i] = newParameter;
             }
 
             call.Parameters = newParameters;

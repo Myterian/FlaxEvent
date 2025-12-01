@@ -40,12 +40,13 @@ public static class TypeExtension
         if (customEditor != null)
             return (CustomEditor)Activator.CreateInstance(customEditor.Type);
 
+        // Asset Picker. Checked before the Flax.Object type check, because assets are objects, too, but still have a dedicated editor
+        if (typeof(Asset).IsAssignableFrom(type))
+            return new AssetRefEditor();
+
         // For actors and scripst, we don't want their actual editors. We just want to set a object reference
         if (typeof(FlaxEngine.Object).IsAssignableFrom(type))
             return new FlaxObjectRefEditor();
-
-        // if (typeof(Asset).IsAssignableFrom(type))
-        //     return new AssetRefEditor();
 
         // Arrays
         if (type.IsArray)
