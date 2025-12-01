@@ -22,13 +22,13 @@ public class PersistentCallEditor : CustomEditor
 {
     private PersistentCallListEditor parentEditor;
     private GroupElement group;
-    private int index = -1;
+    public int Index { get; private set; } = -1;
     private bool isDragging = false;
 
     public void Setup(PersistentCallListEditor editor, int elementIndex)
     {
         parentEditor = editor;
-        index = elementIndex;
+        Index = elementIndex;
     }
 
     /// <summary>Sets the open state of the group element</summary>
@@ -56,6 +56,7 @@ public class PersistentCallEditor : CustomEditor
         // PropertyNameLabel x = new PropertyNameLabel("Some label");
         // PropertiesListElement y = layout.AddPropertyItem(x);
         // var group = (LayoutElementsContainer)y;
+        // var basePanel = layout.VerticalPanel();
 
         group = layout.Group(headerText);
         group.Panel.MouseButtonRightClicked += RightClickContextMenu;
@@ -104,7 +105,14 @@ public class PersistentCallEditor : CustomEditor
             Scale = new(0.9f)
         };
 
-        // dragButton.ButtonClicked +=
+        dragButton.HoverBegin -= StartAwaitingDrag;
+        dragButton.HoverBegin += StartAwaitingDrag;
+
+        dragButton.HoverEnd -= StopAwaitingDrag;
+        dragButton.HoverEnd += StopAwaitingDrag;
+
+        
+        // dragButton.ButtonClicked += (Button buttno) => parentEditor.StartDrag(Index);
         // RootControl.GameRoot.StartMouseCapture()
 
         // Object picker
@@ -315,18 +323,59 @@ public class PersistentCallEditor : CustomEditor
         ContextMenu menu = new();
 
         menu.AddButton("Copy", Copy);
-        menu.AddButton("Duplicate", () => parentEditor.DuplicatePersistentCall(index));
-        menu.AddButton("Paste", () => parentEditor.PastePersistentCall(index));
+        menu.AddButton("Duplicate", () => parentEditor.DuplicatePersistentCall(Index));
+        menu.AddButton("Paste", () => parentEditor.PastePersistentCall(Index));
 
         menu.AddSeparator();
 
-        menu.AddButton("Move up", () => parentEditor.MovePersistentCall(index, index - 1));
-        menu.AddButton("Move down", () => parentEditor.MovePersistentCall(index, index + 1));
-        menu.AddButton("Remove", () => parentEditor.RemovePersistentCall(index));
+        menu.AddButton("Move up", () => parentEditor.MovePersistentCall(Index, Index - 1));
+        menu.AddButton("Move down", () => parentEditor.MovePersistentCall(Index, Index + 1));
+        menu.AddButton("Remove", () => parentEditor.RemovePersistentCall(Index));
 
         menu.Show(dropPanel, location);
     }
 
+
+    private void StartAwaitingDrag()
+    {
+        Editor.Instance.EditorUpdate -= AwaitDrag;
+        Editor.Instance.EditorUpdate += AwaitDrag;
+    }
+
+    private void StopAwaitingDrag()
+    {
+        Editor.Instance.EditorUpdate -= AwaitDrag;
+    }
+
+    private void AwaitDrag()
+    {
+        if (!Input.GetMouseButtonDown(MouseButton.Left))
+            return;
+
+        group.ContainerControl.Enabled = false;
+        parentEditor.StartDrag(Index);
+    }
+
+    public bool IsMouseInBounds(Float2 mousePosition)
+    {
+        Float2 mouse = group.ContainerControl.PointFromScreen(mousePosition);
+        Float2 offeset = group.ContainerControl.Bounds.Size - mouse;
+
+        bool isMouseOver = 0 <= offeset.X && offeset.X <= group.ContainerControl.Width && 0 <= offeset.Y && offeset.Y <= group.ContainerControl.Height;
+
+        if (isMouseOver == true)
+        {
+            group.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
+            group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.Selection;
+        }
+        else
+        {
+            group.ContainerControl.BackgroundColor = Color.Transparent;
+            group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.BackgroundNormal;
+        }
+
+        return isMouseOver;
+    }
     #endregion
 
     #region Peristent Call Values Setter

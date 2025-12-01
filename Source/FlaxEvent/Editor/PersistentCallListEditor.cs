@@ -2,6 +2,7 @@
 
 #if FLAX_EDITOR
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor;
@@ -17,7 +18,9 @@ namespace FlaxEvents;
 public class PersistentCallListEditor : CustomEditor
 {
     private List<PersistentCallEditor> callEditors = new();
+    private LayoutElementsContainer dragFromElement = null;
     private int persistentCallsCount = -1;
+    private int dragFromIndex = -1;
 
     public override void Initialize(LayoutElementsContainer layout)
     {
@@ -93,7 +96,7 @@ public class PersistentCallListEditor : CustomEditor
             newList.Add(element);
         }
 
-        
+
         SetValue(newList);
         RebuildLayoutOnRefresh();
     }
@@ -185,7 +188,7 @@ public class PersistentCallListEditor : CustomEditor
     {
         var calls = (List<PersistentCall>)Values[0];
 
-        if (Mathf.IsNotInRange(toIndex, 0, calls.Count - 1))
+        if (Mathf.IsNotInRange(fromIndex, 0, calls.Count - 1) || Mathf.IsNotInRange(toIndex, 0, calls.Count - 1))
             return;
 
         PersistentCall tmp = calls[fromIndex];
@@ -195,6 +198,64 @@ public class PersistentCallListEditor : CustomEditor
 
         SetValue(calls);
         RebuildLayoutOnRefresh();
+    }
+
+    
+
+    public void StartDrag(int fromIndex)
+    {
+        Editor.Instance.EditorUpdate -= UpdateDrag;
+        Editor.Instance.EditorUpdate += UpdateDrag;
+
+        dragFromIndex = fromIndex;
+        // dragFromElement = fromElement;
+
+        Debug.Log("Start Dragging");
+    }
+
+    private void UpdateDrag()
+    {
+        Debug.Log("Update Dragging");
+        int copyToInt = GetChildFromMouse();
+
+        if (!Input.GetMouseButtonUp(MouseButton.Left))
+            return;
+
+        Editor.Instance.EditorUpdate -= UpdateDrag;
+
+        if (dragFromIndex == -1)
+            return;
+
+        MovePersistentCall(dragFromIndex, copyToInt);
+        dragFromIndex = -1;
+    }
+
+    
+    private int GetChildFromMouse()
+    {
+        Debug.Log("Calculating Mouse position");
+        int targetIndex = -1;
+
+        for (int i = 0; i < callEditors.Count; i++)
+        {
+            if (Mathf.IsNotInRange(i, 0, callEditors.Count - 1))
+            {
+                Debug.Log("Index out of range: " + i);
+                continue;
+            }
+
+            if (callEditors[i] == null)
+            {
+                Debug.Log("Editor was null at: " + i);
+                continue;
+            }
+
+            if (callEditors[i].IsMouseInBounds(Input.MouseScreenPosition))
+                targetIndex = callEditors[i].Index;
+
+        }
+
+        return targetIndex;
     }
 
     #endregion

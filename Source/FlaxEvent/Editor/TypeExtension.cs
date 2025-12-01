@@ -9,6 +9,7 @@ using System.Linq;
 using FlaxEditor;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.GUI.Dialogs;
 using FlaxEngine;
 
 namespace FlaxEvents;
