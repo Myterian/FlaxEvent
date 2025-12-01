@@ -78,18 +78,22 @@ public void MyMethod()
 
 ## Benchmark
 
+This Benchmark is meant to give you an idea, how FlaxEvents compare to regular C# delegates. Take these values with a grain of salt, as I only tested this on my old FX-8350 Cpu.
+
 Test setup: 
-- 5.000 Cube Actors
-- The test events invoke three method on each actor, making a single invoke to 15.000 listeners total
-- 20 iterations of invokes, amounting to 300.000 invokes total
+- 500 Cube Actors
+- The test events the "set_Name" method on each actor
+- 1.000 iterations of invokes, amounting to 500.000 invokes total
 
-Note: Take these values with a grain of salt, as I only tested this on my old FX-8350 Cpu.
+First Invoke: 500 method invokes
+Subsequent Invokes: 500.000 method invokes
 
-|Invokation Source        |(Editor) Avg. time first Invoke|(Editor) Avg. time per Invoke  |(Game) Avg. time first Invoke|(Game) Avg. time per Invoke |
+|Invokation Source        |(Editor) Avg. first Invoke     |(Editor) Avg. subsequent Invoke|(Game) Avg. first Invoke     |(Game) Avg. subsequent Invoke |
 |-------------------------|-------------------------------|-------------------------------|-----------------------------|----------------------------|
-|C# Action Delegate       |???                            | ???                           | ???                         |                            |
-|FlaxEvent Persistent Call| 0,0121ms                      | 0,0105ms                      | 0,0104ms                    | 0,0097ms                   |
-|FlaxEvent Runtime Call   |???                            |???                            | ???                         |                            |
+|C# Action Delegate       | < 0.001ms                     | < 0.001 ms                    | ???                         |                            |
+|FlaxEvent Persistent Call| ~0.02ms                       | ~0.01ms                       | 0,0104ms                    | 0,0097ms                   |
+|FlaxEvent Runtime Call   | < 0.001ms                     | < 0.001 ms                    | ???                         |                            |
+
 
 \
 Benchmark script
