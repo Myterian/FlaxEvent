@@ -2,7 +2,7 @@
 Editor-Configureable Events for the Flax Engine
 
 ![image](Images/Preview_3.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
-![image](Images/Parameter_Preview.jpg "Type integration for event parameters")
+![image](Images/Parameter_Preview_2.jpg "Type integration for event parameters")
 
 ## How to use in Editor
 
@@ -42,7 +42,7 @@ public class MyScript : Script
 }
 ```
 \
-Add the desired FlaxEvent type to your `Actor` or `Script`. FlaxEvents supports up to four generic arguments:
+FlaxEvents support up to four types of parameters:
 
 ```cs
 public FlaxEvent MySimpleEvent = new();
@@ -53,22 +53,22 @@ public FlaxEvent<T0, T1, T2, T3> MyHugeEvent = new();
 ```
 
 \
-To Invoke an event, simply call:
-
-```cs
-MyEvent?.Invoke();
-```
-
-\
-You can add and remove Listeners at runtime thru code. Note that runtime listeners are separate from editor-configured listeners.
+FlaxEvents also support runtime listeners, so you can dynamically add and remove methods, when the game is running:
 
 ```cs
 public FlaxEvent MyEvent = new();
-...
 
-MyEvent?.AddListener(MyMethod)
-MyEvent?.RemoveListener(MyMethod)
-...
+public override OnEnable()
+{
+    MyEvent?.AddListener(MyMethod);
+    ...
+}
+
+public override OnDisable()
+{
+    MyEvent?.RemoveListener(MyMethod);
+    ...
+}
 
 public void MyMethod()
 {
