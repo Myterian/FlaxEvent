@@ -370,6 +370,8 @@
   <ItemGroup>
     <Compile Include="FlaxEvent.Gen.cs" />
     <Compile Include="FlaxEvent\Editor\ContextMenuExtension.cs" />
+    <Compile Include="FlaxEvent\Editor\DragOperation.cs" />
+    <Compile Include="FlaxEvent\Editor\DragType.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventContextButton.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventContextChildMenu.cs" />
     <Compile Include="FlaxEvent\Editor\FlaxEventEditor.cs" />

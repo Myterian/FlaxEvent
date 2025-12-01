@@ -22,8 +22,10 @@ public class PersistentCallEditor : CustomEditor
 {
     private PersistentCallListEditor parentEditor;
     private GroupElement group;
+    private SpaceElement dragShiftIndicatorTop;
+    private DragOperation dragOperation;
+
     public int Index { get; private set; } = -1;
-    private bool isDragging = false;
 
     public void Setup(PersistentCallListEditor editor, int elementIndex)
     {
@@ -43,35 +45,18 @@ public class PersistentCallEditor : CustomEditor
 
     public override void Initialize(LayoutElementsContainer layout)
     {
-        // var dragIndicator = layout.VerticalPanel();
-        // dragIndicator.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
-        // dragIndicator.ContainerControl.Offsets = new(0);
-
         PersistentCall call = (PersistentCall)Values[0];
 
         Actor castActor = null;
         Script castScript = null;
         string headerText = "<null>";
 
-        // PropertyNameLabel x = new PropertyNameLabel("Some label");
-        // PropertiesListElement y = layout.AddPropertyItem(x);
-        // var group = (LayoutElementsContainer)y;
-        // var basePanel = layout.VerticalPanel();
+        // Drag and Drop indicator on the Top of this editor
+        dragShiftIndicatorTop = layout.Space(0.1f);
+        // Scaling will make the spacer overlap the group, while not creating empty spaces between the call elements
+        dragShiftIndicatorTop.ContainerControl.Scale = new(1, 50);
 
-        // DropPanel dropPanelTest = new DropPanel();
-        // dropPanelTest.EnableDropDownIcon = true;
-
-        // VerticalPanel verticalPanel = new();
-        // verticalPanel.Parent = dropPanel;
-
-        // dropPanelTest.Parent = layout.ContainerControl;
-
-        // layout.Children.Add(dropPanelTest);
-
-        // var dropPanel = layout.CustomContainer<DropPanel>();
-        // dropPanel.ContainerControl.EnableDropDownIcon = true;
-        // var basePanel = dropPanel.VerticalPanel();
-
+        // Properties group
         group = layout.Group(headerText);
         group.Panel.MouseButtonRightClicked += RightClickContextMenu;
         bool isCallEnabled = call.IsEnabled;
@@ -79,15 +64,6 @@ public class PersistentCallEditor : CustomEditor
         group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
         group.Panel.HeaderTextColor = isCallEnabled ? FlaxEngine.GUI.Style.Current.Foreground : FlaxEngine.GUI.Style.Current.ForegroundDisabled;
         group.Panel.EnableContainmentLines = false;
-
-
-
-        if (isDragging)
-        {
-            // group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.Selection;
-            // group.Panel.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
-
-        }
 
         float headerHeight = group.Panel.HeaderHeight;
 
@@ -105,7 +81,7 @@ public class PersistentCallEditor : CustomEditor
 
         toggle.StateChanged += SetCallEnabledState;
 
-        // Drag and Drop button. TODO: Drag Reorder
+        // Drag and Drop Reorder
         var dragButton = new Button
         {
             BackgroundBrush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
@@ -125,14 +101,13 @@ public class PersistentCallEditor : CustomEditor
         dragButton.HoverEnd -= StopAwaitingDrag;
         dragButton.HoverEnd += StopAwaitingDrag;
 
-        
-        // dragButton.ButtonClicked += (Button buttno) => parentEditor.StartDrag(Index);
-        // RootControl.GameRoot.StartMouseCapture()
 
-        // Object picker
-        var propertyList = group.AddPropertyItem("Target", "The target of this event call");
+        // Target Object Picker
+        var targetPanel = group.VerticalPanel();
+        var propertyList = targetPanel.AddPropertyItem("Target", "The target of this event call");
         var objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
 
+        // Runtime Parameter Checkbox
         // var runtimeParameterCheckbox = layout.Checkbox("Use Event Inputs",
         //                 "If checked, the event will try to pass the runtime parameters instead of the editor-configured parameters to the target method. Will only work, if the event signature and method signature match.");
         // runtimeParameterCheckbox.CheckBox.Checked = call.UseRuntimeParameters;
@@ -201,11 +176,9 @@ public class PersistentCallEditor : CustomEditor
         methodPicker.Button.ButtonClicked += CreateMethodSelectionMenu;
 
         // Parameter controls
-        MethodInfo methodInfo = call.MethodInfo;
-
-        if (methodInfo == null)
+        if (call.MethodInfo == null)
             return;
-
+        
         MemberInfo memberInfo = typeof(PersistentCall).GetMember("Parameters", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
         ScriptMemberInfo scriptMember = new(memberInfo);
         GenericEditor.ItemInfo itemInfo = new(scriptMember);
@@ -213,7 +186,9 @@ public class PersistentCallEditor : CustomEditor
         var editor = new PersistentParameterArrayEditor();
 
         var vc = itemInfo.GetValues(Values);
-        group.Object(vc, editor);
+        var parameterPanel = group.VerticalPanel();
+        var customEditor = parameterPanel.Object(vc, editor);
+        
     }
 
     #region Editor-UI Setup
@@ -344,50 +319,61 @@ public class PersistentCallEditor : CustomEditor
         menu.Show(dropPanel, location);
     }
 
+    #endregion
 
+    #region Drag and Drop
+
+    /// <summary>Readies the drag and drop funcionality</summary>
     private void StartAwaitingDrag()
     {
         Editor.Instance.EditorUpdate -= AwaitDrag;
         Editor.Instance.EditorUpdate += AwaitDrag;
     }
 
+    /// <summary>Disengages the drag and drop funcionality</summary>
     private void StopAwaitingDrag()
     {
         Editor.Instance.EditorUpdate -= AwaitDrag;
     }
 
+    /// <summary>Creates a drag operation, to move or shift this editors value to another index</summary>
     private void AwaitDrag()
     {
-        if (!Input.GetMouseButtonDown(MouseButton.Left))
+        if (!Input.GetMouseButtonDown(MouseButton.Left) || dragOperation?.IsDisposed == false)
             return;
 
         // TODO: Re-Enable this control
-        group.ContainerControl.Enabled = false;
-        parentEditor.StartDrag(Index);
+        if (dragOperation != null)
+            dragOperation.Dispose();
+
+        dragOperation = new(parentEditor, Index);
     }
 
-    public bool IsMouseInBounds(Float2 mousePosition)
+    /// <summary>Gets a value indicating if the mouse is over this editors group element</summary>
+    /// <returns>true if mouse is in bounds</returns>
+    internal bool IsMouseInBounds()
     {
-        Float2 mouse = group.ContainerControl.PointFromScreen(mousePosition);
-        Float2 offeset = group.ContainerControl.Bounds.Size - mouse;
+        return group.ContainerControl.IsMouseOver;
+    }
 
-        // TODO: Expand the drag area to include all sub-elements, too
-        bool isMouseOver = 0 <= offeset.X && offeset.X <= group.ContainerControl.Width && 0 <= offeset.Y && offeset.Y <= group.ContainerControl.Height;
+    /// <summary>Sets the editors elements color to their selection color</summary>
+    /// <param name="selectionType">Type of the active selection</param>
+    internal void SetDragSelectionColor(DragType selectionType)
+    {
+        group.ContainerControl.BackgroundColor = Color.Transparent;
+        group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.BackgroundNormal;
+        group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.BackgroundHighlighted;
+        dragShiftIndicatorTop.ContainerControl.BackgroundColor = Color.Transparent;
 
-        if (isMouseOver == true)
+        if (selectionType == DragType.Shift)
+            dragShiftIndicatorTop.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
+
+        if (selectionType == DragType.Move)
         {
-            group.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
-            group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.Selection;
-            group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.Selection;
+            group.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.DragWindow;
+            group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.DragWindow;
+            group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.DragWindow;
         }
-        else
-        {
-            group.ContainerControl.BackgroundColor = Color.Transparent;
-            group.Panel.HeaderColor = FlaxEngine.GUI.Style.Current.BackgroundNormal;
-            group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.BackgroundHighlighted;
-        }
-
-        return isMouseOver;
     }
     #endregion
 

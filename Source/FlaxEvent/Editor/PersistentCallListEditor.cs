@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Json;
@@ -18,9 +19,10 @@ namespace FlaxEvents;
 public class PersistentCallListEditor : CustomEditor
 {
     private List<PersistentCallEditor> callEditors = new();
-    private LayoutElementsContainer dragFromElement = null;
+    private VerticalPanelElement elementsPanel = null;
+    private SpaceElement dragIndicatorLast = null;
     private int persistentCallsCount = -1;
-    private int dragFromIndex = -1;
+
 
     public override void Initialize(LayoutElementsContainer layout)
     {
@@ -30,7 +32,7 @@ public class PersistentCallListEditor : CustomEditor
         MemberInfo memberInfo = typeof(PersistentCall);
 
         // PersistentCalls List elements
-        var elementsPanel = layout.VerticalPanel();
+        elementsPanel = layout.VerticalPanel();
         elementsPanel.Control.BackgroundColor = FlaxEngine.GUI.Style.Current.CollectionBackgroundColor;
 
         for (int i = 0; i < list.Count; i++)
@@ -46,6 +48,9 @@ public class PersistentCallListEditor : CustomEditor
             newEditor.Setup(this, i);
             callEditors.Add(newEditor);
         }
+
+        dragIndicatorLast = layout.Space(0.1f);
+        dragIndicatorLast.ContainerControl.Scale = new(1, 50f);
 
 
         // Add and Remove Buttons
@@ -121,6 +126,31 @@ public class PersistentCallListEditor : CustomEditor
 
         if (((List<PersistentCall>)Values[0]).Count != persistentCallsCount)
             RebuildLayout();
+    }
+
+    #endregion
+
+    #region Drag and Drop
+
+    /// <summary>Gets a value indicating if the mouse cursor is in the bottom half of this editor</summary>
+    /// <returns>true, if mouse is in bottom half</returns>
+    internal bool IsMouseInBottomArea()
+    {
+        Float2 mousePos = elementsPanel.ContainerControl.PointFromScreen(Input.MouseScreenPosition);
+        return elementsPanel.ContainerControl.Height * 0.5f <= mousePos.Y;
+    }
+
+    /// <summary>Sets the editors elements color to their selection color</summary>
+    /// <param name="dragType">Type of the active selection</param>
+    internal void SetDragSelectionColor(DragType dragType)
+    {
+        dragIndicatorLast.ContainerControl.BackgroundColor = Color.Transparent;
+
+        if (dragType == DragType.Shift)
+            dragIndicatorLast.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.Selection;
+
+        if (dragType == DragType.Move)
+            dragIndicatorLast.ContainerControl.BackgroundColor = FlaxEngine.GUI.Style.Current.DragWindow;
     }
 
 
@@ -200,62 +230,30 @@ public class PersistentCallListEditor : CustomEditor
         RebuildLayoutOnRefresh();
     }
 
-    
-
-    public void StartDrag(int fromIndex)
+    /// <summary>Shifts a persistent calls to a different index and moves all subsequent calls</summary>
+    /// <param name="elementIndex">The index of the element that we want to shift</param>
+    /// <param name="toIndex">The new index of the element</param>
+    public void ShiftPersistentCall(int elementIndex, int toIndex)
     {
-        Editor.Instance.EditorUpdate -= UpdateDrag;
-        Editor.Instance.EditorUpdate += UpdateDrag;
+        var calls = (List<PersistentCall>)Values[0];
 
-        dragFromIndex = fromIndex;
-        // dragFromElement = fromElement;
-
-        Debug.Log("Start Dragging");
-    }
-
-    private void UpdateDrag()
-    {
-        Debug.Log("Update Dragging");
-        int copyToInt = GetChildFromMouse();
-
-        if (!Input.GetMouseButtonUp(MouseButton.Left))
+        if (Mathf.IsNotInRange(elementIndex, 0, calls.Count - 1))
             return;
 
-        Editor.Instance.EditorUpdate -= UpdateDrag;
+        PersistentCall tmpCall = calls[elementIndex].DeepClone();
+        calls.RemoveAt(elementIndex);
 
-        if (dragFromIndex == -1)
-            return;
+        if (calls.Count <= toIndex)
+            calls.Add(tmpCall);
+        else
+            calls.Insert(toIndex, tmpCall);
+        
 
-        MovePersistentCall(dragFromIndex, copyToInt);
-        dragFromIndex = -1;
-    }
+        // int saveToIndex = Mathf.Clamp(toIndex, 0, calls.Count - 1);
+        
 
-    
-    private int GetChildFromMouse()
-    {
-        Debug.Log("Calculating Mouse position");
-        int targetIndex = -1;
-
-        for (int i = 0; i < callEditors.Count; i++)
-        {
-            if (Mathf.IsNotInRange(i, 0, callEditors.Count - 1))
-            {
-                Debug.Log("Index out of range: " + i);
-                continue;
-            }
-
-            if (callEditors[i] == null)
-            {
-                Debug.Log("Editor was null at: " + i);
-                continue;
-            }
-
-            if (callEditors[i].IsMouseInBounds(Input.MouseScreenPosition))
-                targetIndex = callEditors[i].Index;
-
-        }
-
-        return targetIndex;
+        SetValue(calls);
+        RebuildLayoutOnRefresh();
     }
 
     #endregion
