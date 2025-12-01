@@ -80,72 +80,18 @@ public void MyMethod()
 
 This Benchmark is meant to give you an idea, how FlaxEvents compare to regular C# delegates. Take these values with a grain of salt, as I only tested this on my old FX-8350 Cpu.
 
+
+|Invokation Source        |(Editor) Avg. First uncached Invoke     |(Editor) Avg. Subsequent cached Invoke|(Game) Avg. First uncached Invoke     |(Game) Avg. Subsequent cached Invoke|
+|-------------------------|-------------------------------|-------------------------------|-----------------------------|-----------------------------|
+|FlaxEvent Persistent Call| ~0.02ms                       | ~0.01ms                       | ~0.02ms                     | ~0.01ms                     |
+|FlaxEvent Runtime Call   | ~0.005ms                      | ~0.0007 ms                    | ~0.0005ms                   | < 0.0001ms                  |
+|C# Action Delegate       | ~0.005ms                      | ~0.0007 ms                    | ~0.0005ms                   | < 0.0001ms                  |
+
 Test setup: 
 - 500 Cube Actors
 - The test events the "set_Name" method on each actor
 - 1.000 iterations of invokes, amounting to 500.000 invokes total
 
-First Invoke: 500 method invokes
-Subsequent Invokes: 500.000 method invokes
-
-|Invokation Source        |(Editor) Avg. first Invoke     |(Editor) Avg. subsequent Invoke|(Game) Avg. first Invoke     |(Game) Avg. subsequent Invoke |
-|-------------------------|-------------------------------|-------------------------------|-----------------------------|----------------------------|
-|C# Action Delegate       | < 0.001ms                     | < 0.001 ms                    | ???                         |                            |
-|FlaxEvent Persistent Call| ~0.02ms                       | ~0.01ms                       | 0,0104ms                    | 0,0097ms                   |
-|FlaxEvent Runtime Call   | < 0.001ms                     | < 0.001 ms                    | ???                         |                            |
-
-
-\
-Benchmark script
-```cs
-public class Benchmark : Script
-{
-    public FlaxEvent<int> OnBenchmarkEvent = new();
-
-    public void BenchmarkTest()
-    {
-        // Cleanup
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-
-        Stopwatch stopwatch = new();
-        stopwatch.Start();
-
-        // Cold call 15.000 listeners
-        OnBenchmarkEvent?.Invoke(7);
-
-        stopwatch.Stop();
-
-        string timeString = $"Cold invoke took on average {stopwatch.Elapsed.TotalMilliseconds / 15_000}ms\n In a total time of: {stopwatch.Elapsed.TotalMilliseconds}ms";
-        Label.Control.Text = timeString;
-
-        #if FLAX_EDITOR
-        FlaxEngine.Debug.Log(timeString);
-        #endif
-
-
-        // 20 iterations of 15.000 listener invokes
-        stopwatch.Restart();
-
-        int interations = 20;
-
-        for (int i = 0; i < interations; i++)
-            OnBenchmarkEvent?.Invoke(7);
-        
-        stopwatch.Stop();
-
-        int totalIterations = interations * OnBenchmarkEvent.PersistentCallList.Count;
-        timeString = $"Warm invoke too on average: {stopwatch.Elapsed.TotalMilliseconds / totalIterations}\n In a total time of: {stopwatch.Elapsed.TotalMilliseconds}ms";
-        Label.Control.Text += "\n" + timeString;
-        
-        #if FLAX_EDITOR
-        FlaxEngine.Debug.Log(timeString);
-        #endif
-    }
-}
-
-```
 
 ## How to Set Up
 - [Install](#how-to-install) the plugin
