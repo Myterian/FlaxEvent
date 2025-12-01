@@ -66,7 +66,7 @@ public class FlaxEvent : FlaxEventBase
         InvokePersistent(null);
     }
 
-    /// <summary>Adds a listener action to this <see cref="FlaxEvent"/></summary>
+    /// <summary>Adds a runtime listener to this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to add</param>
     /// <param name="saveAdd">true prevents double subscription to this event, false will allow double subscription</param>
     public void AddListener(Action listener, bool saveAdd = true)
@@ -77,11 +77,17 @@ public class FlaxEvent : FlaxEventBase
         runtimeAction += listener;
     }
 
-    /// <summary>Removes a listener action from this <see cref="FlaxEvent"/></summary>
+    /// <summary>Removes a runtime listener from this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to remove</param>
     public void RemoveListener(Action listener)
     {
         runtimeAction -= listener;
+    }
+
+    /// <summary>Removes all runtime listeners (not editor-configured listeners)</summary>
+    public void ClearListeners()
+    {
+        runtimeAction = null;
     }
 
 }
@@ -98,7 +104,7 @@ public class FlaxEvent<T0> : FlaxEventBase
         InvokePersistent([parameter]);
     }
 
-    /// <summary>Adds a listener action to this <see cref="FlaxEvent"/></summary>
+    /// <summary>Adds a runtime listener to this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to add</param>
     /// <param name="saveAdd">true prevents double subscription to this event, false will allow double subscription</param>
     public void AddListener(Action<T0> listener, bool saveAdd = true)
@@ -109,11 +115,17 @@ public class FlaxEvent<T0> : FlaxEventBase
         runtimeAction += listener;
     }
 
-    /// <summary>Removes a listener action from this <see cref="FlaxEvent"/></summary>
+    /// <summary>Removes a runtime listener from this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to remove</param>
     public void RemoveListener(Action<T0> listener)
     {
         runtimeAction -= listener;
+    }
+
+    /// <summary>Removes all runtime listeners (not editor-configured listeners)</summary>
+    public void ClearListeners()
+    {
+        runtimeAction = null;
     }
 }
 
@@ -129,7 +141,7 @@ public class FlaxEvent<T0, T1> : FlaxEventBase
         InvokePersistent([parameter, parameter1]);
     }
 
-    /// <summary>Adds a listener action to this <see cref="FlaxEvent"/></summary>
+    /// <summary>Adds a runtime listener to this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to add</param>
     /// <param name="saveAdd">true prevents double subscription to this event, false will allow double subscription</param>
     public void AddListener(Action<T0, T1> listener, bool saveAdd = true)
@@ -140,11 +152,17 @@ public class FlaxEvent<T0, T1> : FlaxEventBase
         runtimeAction += listener;
     }
 
-    /// <summary>Removes a listener action from this <see cref="FlaxEvent"/></summary>
+    /// <summary>Removes a runtime listener from this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to remove</param>
     public void RemoveListener(Action<T0, T1> listener)
     {
         runtimeAction -= listener;
+    }
+
+    /// <summary>Removes all runtime listeners (not editor-configured listeners)</summary>
+    public void ClearListeners()
+    {
+        runtimeAction = null;
     }
 }
 
@@ -160,7 +178,7 @@ public class FlaxEvent<T0, T1, T2> : FlaxEventBase
         InvokePersistent([parameter, parameter1, parameter2]);
     }
 
-    /// <summary>Adds a listener action to this <see cref="FlaxEvent"/></summary>
+    /// <summary>Adds a runtime listener to this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to add</param>
     /// <param name="saveAdd">true prevents double subscription to this event, false will allow double subscription</param>
     public void AddListener(Action<T0, T1, T2> listener, bool saveAdd = true)
@@ -171,11 +189,17 @@ public class FlaxEvent<T0, T1, T2> : FlaxEventBase
         runtimeAction += listener;
     }
 
-    /// <summary>Removes a listener action from this <see cref="FlaxEvent"/></summary>
+    /// <summary>Removes a runtime listener from this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to remove</param>
     public void RemoveListener(Action<T0, T1, T2> listener)
     {
         runtimeAction -= listener;
+    }
+
+    /// <summary>Removes all runtime listeners (not editor-configured listeners)</summary>
+    public void ClearListeners()
+    {
+        runtimeAction = null;
     }
 }
 
@@ -191,7 +215,7 @@ public class FlaxEvent<T0, T1, T2, T3> : FlaxEventBase
         InvokePersistent([parameter, parameter1, parameter2, parameter3]);
     }
 
-    /// <summary>Adds a listener action to this <see cref="FlaxEvent"/></summary>
+    /// <summary>Adds a runtime listener to this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to add</param>
     /// <param name="saveAdd">true prevents double subscription to this event, false will allow double subscription</param>
     public void AddListener(Action<T0, T1, T2, T3> listener, bool saveAdd = true)
@@ -202,10 +226,16 @@ public class FlaxEvent<T0, T1, T2, T3> : FlaxEventBase
         runtimeAction += listener;
     }
 
-    /// <summary>Removes a listener action from this <see cref="FlaxEvent"/></summary>
+    /// <summary>Removes a runtime listener from this <see cref="FlaxEvent"/></summary>
     /// <param name="listener">The action to remove</param>
     public void RemoveListener(Action<T0, T1, T2, T3> listener)
     {
         runtimeAction -= listener;
+    }
+
+    /// <summary>Removes all runtime listeners (not editor-configured listeners)</summary>
+    public void ClearListeners()
+    {
+        runtimeAction = null;
     }
 }
