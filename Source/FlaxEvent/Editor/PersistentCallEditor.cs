@@ -114,7 +114,7 @@ public class PersistentCallEditor : CustomEditor
             Parent = group.Panel,
             Bounds = new(40, 0, headerHeight, headerHeight),
             HasBorder = false,
-            TooltipText = "If linked, the events tries to apply the runtime parameters instead of the editor configured"
+            TooltipText = "If linked, this listeners can use the event parameters.\n Requirement: The listener method must match the events signature."
         };
 
         runtimeCheckBox.ButtonClicked += SetUseRuntimeParameter;
