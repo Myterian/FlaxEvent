@@ -81,16 +81,19 @@ public void MyMethod()
 This Benchmark is meant to give you an idea, how FlaxEvents compare to regular C# delegates. Take these values with a grain of salt, as I only tested this on my old FX-8350 Cpu.
 
 
-|Invokation Source        |(Editor) Avg. First uncached Invoke     |(Editor) Avg. Subsequent cached Invoke|(Game) Avg. First uncached Invoke     |(Game) Avg. Subsequent cached Invoke|
+|Event Type        |(Editor) Avg. First uncached Invoke     |(Editor) Avg. Subsequent cached Invoke|(Game) Avg. First uncached Invoke     |(Game) Avg. Subsequent cached Invoke|
 |-------------------------|-------------------------------|-------------------------------|-----------------------------|-----------------------------|
-|FlaxEvent Persistent Call| ~0.02ms                       | ~0.01ms                       | ~0.02ms                     | ~0.01ms                     |
+|FlaxEvent Editor Call    | ~0.02ms                       | ~0.01ms                       | ~0.02ms                     | ~0.01ms                     |
 |FlaxEvent Runtime Call   | ~0.005ms                      | ~0.0007 ms                    | ~0.0005ms                   | < 0.0001ms                  |
 |C# Action Delegate       | ~0.005ms                      | ~0.0007 ms                    | ~0.0005ms                   | < 0.0001ms                  |
 
+\
 Test setup: 
-- 500 Cube Actors
-- The test events the "set_Name" method on each actor
-- 1.000 iterations of invokes, amounting to 500.000 invokes total
+- 500 Cube Actors in one scene
+- 3 different events were measured: FlaxEvent with only editor configured calls, FlaxEvent with only runtime calls and a C# Action
+- The test events invoked `Actor.OnActiveChanged` for every actor
+- First invoke is a single event invoke, amounting to 500 method invokes total, per event
+- Subsequent invoke are 1.000 event invokes, amounting to 500.000 method invokes total, per event
 
 
 ## How to Set Up
