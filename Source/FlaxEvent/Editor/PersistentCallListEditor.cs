@@ -168,9 +168,10 @@ public class PersistentCallListEditor : CustomEditor
             return;
 
         PersistentCall newCall = oldList[index].DeepClone();
-        oldList.Add(newCall);
+        List<PersistentCall> newList = [..oldList];
+        newList.Add(newCall);
 
-        SetValue(oldList);
+        SetValue(newList);
         RebuildLayoutOnRefresh();
     }
 
@@ -200,14 +201,15 @@ public class PersistentCallListEditor : CustomEditor
     public void PastePersistentCall(int index)
     {
         PersistentCall newCall = JsonSerializer.Deserialize<PersistentCall>(Clipboard.Text);
+        List<PersistentCall> oldList = (List<PersistentCall>)Values[0];
 
-        if (newCall == null)
+        if (newCall == null || Mathf.IsNotInRange(index, 0, oldList.Count - 1))
             return;
 
-        var calls = (List<PersistentCall>)Values[0];
-        calls[index] = newCall;
+        List<PersistentCall> newList = [..oldList];
+        newList[index] = newCall;
 
-        SetValue(calls);
+        SetValue(newList);
         RebuildLayoutOnRefresh();
     }
 
@@ -216,17 +218,18 @@ public class PersistentCallListEditor : CustomEditor
     /// <param name="toIndex">The new index of the element after the swap</param>
     public void MovePersistentCall(int fromIndex, int toIndex)
     {
-        var calls = (List<PersistentCall>)Values[0];
+        List<PersistentCall> oldList = (List<PersistentCall>)Values[0];
 
-        if (Mathf.IsNotInRange(fromIndex, 0, calls.Count - 1) || Mathf.IsNotInRange(toIndex, 0, calls.Count - 1))
+        if (Mathf.IsNotInRange(fromIndex, 0, oldList.Count - 1) || Mathf.IsNotInRange(toIndex, 0, oldList.Count - 1))
             return;
 
-        PersistentCall tmp = calls[fromIndex];
+        List<PersistentCall> newList = [..oldList];
+        PersistentCall tmp = newList[fromIndex].DeepClone();
 
-        calls[fromIndex] = calls[toIndex];
-        calls[toIndex] = tmp;
+        newList[fromIndex] = newList[toIndex];
+        newList[toIndex] = tmp;
 
-        SetValue(calls);
+        SetValue(newList);
         RebuildLayoutOnRefresh();
     }
 
@@ -235,24 +238,21 @@ public class PersistentCallListEditor : CustomEditor
     /// <param name="toIndex">The new index of the element</param>
     public void ShiftPersistentCall(int elementIndex, int toIndex)
     {
-        var calls = (List<PersistentCall>)Values[0];
+        List<PersistentCall> oldList = (List<PersistentCall>)Values[0];
 
-        if (Mathf.IsNotInRange(elementIndex, 0, calls.Count - 1))
+        if (Mathf.IsNotInRange(elementIndex, 0, oldList.Count - 1))
             return;
 
-        PersistentCall tmpCall = calls[elementIndex].DeepClone();
-        calls.RemoveAt(elementIndex);
+        List<PersistentCall> newList = [..oldList];
+        PersistentCall tmpCall = newList[elementIndex].DeepClone();
+        newList.RemoveAt(elementIndex);
 
-        if (calls.Count <= toIndex)
-            calls.Add(tmpCall);
+        if (newList.Count <= toIndex)
+            newList.Add(tmpCall);
         else
-            calls.Insert(toIndex, tmpCall);
-        
+            newList.Insert(toIndex, tmpCall);        
 
-        // int saveToIndex = Mathf.Clamp(toIndex, 0, calls.Count - 1);
-        
-
-        SetValue(calls);
+        SetValue(newList);
         RebuildLayoutOnRefresh();
     }
 

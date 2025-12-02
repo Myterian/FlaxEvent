@@ -66,7 +66,7 @@ public class PersistentCallEditor : CustomEditor
         group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
         group.Panel.HeaderTextColor = isCallEnabled ? FlaxEngine.GUI.Style.Current.Foreground : FlaxEngine.GUI.Style.Current.ForegroundDisabled;
         group.Panel.EnableContainmentLines = false;
-        group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.BackgroundNormal;
+        // group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.BackgroundNormal;
 
         float headerHeight = group.Panel.HeaderHeight;
 
