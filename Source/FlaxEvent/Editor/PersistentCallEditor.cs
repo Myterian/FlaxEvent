@@ -14,6 +14,7 @@ using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 using System.Text;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEngine.Utilities;
 
 namespace FlaxEvents;
 
@@ -154,14 +155,7 @@ public class PersistentCallEditor : CustomEditor
             group.Panel.HeaderText = headerBuilder.ToString();
         }
 
-        objectPicker.CustomControl.ValueChanged += () =>
-        {
-            PersistentCall call = (PersistentCall)Values[0];
-            call.SetParent(objectPicker.CustomControl.Value as Actor ?? (objectPicker.CustomControl.Value as Script)?.Actor ?? null);
-
-            SetValue(call);
-            RebuildLayoutOnRefresh();
-        };
+        objectPicker.CustomControl.ValueChanged += () => SetCallTarget(objectPicker);
 
         // Method picker button
         string buttonText = "<null>";
@@ -378,14 +372,29 @@ public class PersistentCallEditor : CustomEditor
     }
     #endregion
 
-    #region Peristent Call Values Setter
+    #region Persistent Call Values Setter
 
     /// <summary>Sets the enabled state of the linked <see cref="PersistentCall"/></summary>
     /// <param name="box">The checkbox to use for the enabled/checked state. Checkbox gets passed via action delegate</param>
     private void SetCallEnabledState(CheckBox box)
     {
-        PersistentCall call = (PersistentCall)Values[0];
+        PersistentCall oldCall = (PersistentCall)Values[0];
+        PersistentCall call = oldCall.DeepClone();
+
         call.SetEnabled(box.Checked);
+
+        SetValue(call);
+        RebuildLayoutOnRefresh();
+    }
+
+    /// <summary>Sets the target of the linked <see cref="PersistentCall"/> to the <see cref="FlaxObjectRefPickerControl"/> value</summary>
+    /// <param name="objectPicker">The object picker that is passed via action</param>
+    private void SetCallTarget(CustomElement<FlaxObjectRefPickerControl> objectPicker)
+    {
+        PersistentCall oldCall = (PersistentCall)Values[0];
+        PersistentCall call = oldCall.DeepClone();
+
+        call.SetParent(objectPicker.CustomControl.Value as Actor ?? (objectPicker.CustomControl.Value as Script)?.Actor ?? null);
 
         SetValue(call);
         RebuildLayoutOnRefresh();
@@ -397,7 +406,8 @@ public class PersistentCallEditor : CustomEditor
     {
         var flaxEventButton = button as FlaxEventContextButton;
 
-        PersistentCall call = (PersistentCall)Values[0];
+        PersistentCall oldCall = (PersistentCall)Values[0];
+        PersistentCall call = oldCall.DeepClone();
 
         call.SetTarget(flaxEventButton.TargetObject);
         call.SetMethodName(flaxEventButton.MethodName);

@@ -7,7 +7,6 @@ using System.Reflection;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.Scripting;
-using FlaxEngine.GUI;
 
 namespace FlaxEvents;
 
@@ -21,9 +20,6 @@ public class PersistentParameterEditor : CustomEditor
         type = parameter.ParameterType;
 
         CustomEditor editor = type.GetTypeEditor();
-
-        // if (editor is GenericEditor)
-        //     layout.Label("Editor for type '" + parameter.ParameterType.ToString() + "' could not be found");
 
         MemberInfo memberInfo = typeof(PersistentParameter).GetMember("ParameterValue", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
         ScriptMemberInfo scriptMember = new(memberInfo);
