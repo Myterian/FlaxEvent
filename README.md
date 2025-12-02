@@ -22,22 +22,17 @@
 ```cs
 public class MyScript : Script
 {
-    // Simple Event
-    public FlaxEvent MyEvent = new();
-
-    // Event with parameters
-    public FlaxEvent<string, int> MyLargeEvent = new();
-    ...
+    
+    public FlaxEvent MyEvent = new();                   // Event without parameters
+    public FlaxEvent<string, int> MyLargeEvent = new(); // Event with parameters
 
     public override void OnUpdate()
     {
-        // Simple invoke
-        if (Input.GetKeyDown(KeyboardKeys.Spacebar))
-            MyEvent?.Invoke();
+        ...
+        MyEvent?.Invoke();
 
-        // Invoke with parameters
-        if (Input.GetKeyDown(KeyboardKeys.Return))
-            MyLargeEvent?.Invoke("some cool text", 7);
+        ...
+        MyLargeEvent?.Invoke("some cool text", 7);
     }
 }
 ```
@@ -56,7 +51,7 @@ public FlaxEvent<T0, T1, T2, T3> MyHugeEvent = new();
 #### Runtime listeners
 
 ```cs
-public FlaxEvent<string> MyEvent = new();
+public FlaxEvent<string, int> MyEvent = new();
 
 public override OnEnable()
 {
@@ -71,15 +66,15 @@ public override OnDisable()
 }
 
 // Runtime listeners need to match the event signature
-public void HelloWorldMethod(string message)
+public void HelloWorldMethod(string message, int intValue)
 {
-    Debug.Log(message);
+    Debug.Log(message + intValue.ToString());
 }
 ```
 
 ## Benchmark
 
-These numbers show how FlaxEvents compare to standard C# delegates. May vary dependend on your hardware (tested on my old FX-8350 CPU).
+These numbers show how FlaxEvents compare to standard C# delegates. Results may vary dependend on hardware (tested on my old FX-8350 CPU).
 
 
 |Event Type        |(Editor) Avg. First uncached Invoke|(Editor) Avg. Subsequent cached Invoke|(Game) Avg. First uncached Invoke|(Game) Avg. Subsequent cached Invoke|
