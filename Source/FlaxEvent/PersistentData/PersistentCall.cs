@@ -17,7 +17,7 @@ public class PersistentCall
     public PersistentParameter[] Parameters = [];
 
     /// <summary>Cached parameters used at runtime</summary>
-    private object[] runtimeParameter;
+    private object[] cachedParameterValues;
 
     /// <summary>Editor-Configured parent of target (is really only used in editor for ui purposes)</summary>
     [Serialize] private Actor parent = null;
@@ -29,10 +29,10 @@ public class PersistentCall
     private MethodInfo methodInfo;
 
     /// <summary>Enables or disables the invokation of this call</summary>
-    private bool isEnabled = true;
+    [Serialize] private bool isEnabled = true;
 
     /// <summary>if true, the call tries to use the invokation parameters if true, otherwise only uses the editor configured parameters</summary>
-    private bool tryUseRuntimeParameters = true;
+    [Serialize] private bool tryUseRuntimeParameters = true;
 
     /// <summary>The parent actor of the <see cref="TargetObject"/>. This is used for editor purposes, ie. listing all available scripts and methods.</summary>
     public Actor Parent => parent;
@@ -94,28 +94,26 @@ public class PersistentCall
     }
 
     /// <summary>Invokes the stored persistent action, if <see cref="IsEnabled"/> is true</summary>
-    /// <param name="eventParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>
-    public void Invoke(object[] eventParams)
+    /// <param name="runtimeParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>
+    public void Invoke(object[] runtimeParams)
     {
         if (!IsEnabled || MethodInfo == null)
             return;
 
         // Parameter signature matching check
-        bool canUseRuntimeParams = tryUseRuntimeParameters && eventParams != null ? eventParams.Length == Parameters.Length : false;
+        bool canUseRuntimeParams = TryUseRuntimeParameters && runtimeParams != null ? runtimeParams.Length == Parameters.Length : false;
 
-        if (tryUseRuntimeParameters)
+        if (canUseRuntimeParams)
         {
             // TODO: Instead of instantly returning false when parameter types dont match, the types could be checked
             // for assignability, like with floats that can be assigned from ints.
             // useRuntimeParams = Parameters[i].ParameterType.IsAssignableFrom(eventParams[i].GetType());
             // Q: Will there be a noticable performance difference, when checking for 100 invokes?
 
-            for (int i = 0; canUseRuntimeParams && i < eventParams.Length; i++)
-                if (Parameters[i].ParameterType == null || eventParams[i].GetType() != Parameters[i].ParameterType)
+            for (int i = 0; canUseRuntimeParams && i < runtimeParams.Length; i++)
+                if (Parameters[i].ParameterType == null || runtimeParams[i].GetType() != Parameters[i].ParameterType)
                     canUseRuntimeParams = false;
         }
-
-        // TODO: Check that saved parameters match the parameter types of the target method
 
         // TODO: useRuntimeParams can probably be cached, since the event signature and this call signature won't
         // change at runtime. Also, for micro-optimization, the target method could be susbscribed to the action
@@ -125,13 +123,13 @@ public class PersistentCall
         // Early exit, we don't need to convert the parameters if we use runtime params
         if (canUseRuntimeParams)
         {
-            MethodInfo?.Invoke(TargetObject, eventParams);
+            MethodInfo?.Invoke(TargetObject, runtimeParams);
             return;
         }
 
         // Use the serialized parameters
-        runtimeParameter ??= GetParameterValues();
-        MethodInfo?.Invoke(TargetObject, runtimeParameter);
+        cachedParameterValues ??= GetParameterValues();
+        MethodInfo?.Invoke(TargetObject, cachedParameterValues);
     }
 
     /// <summary>Gets an array containing the types of the stored <see cref="PersistentParameter"/></summary>

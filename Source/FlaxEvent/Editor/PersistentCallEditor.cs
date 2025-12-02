@@ -15,6 +15,7 @@ using Object = FlaxEngine.Object;
 using System.Text;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine.Utilities;
+using FlaxEditor.CustomEditors.GUI;
 
 namespace FlaxEvents;
 
@@ -65,15 +66,16 @@ public class PersistentCallEditor : CustomEditor
         group.Panel.HeaderTextMargin = new(44, 0, 0, 0);
         group.Panel.HeaderTextColor = isCallEnabled ? FlaxEngine.GUI.Style.Current.Foreground : FlaxEngine.GUI.Style.Current.ForegroundDisabled;
         group.Panel.EnableContainmentLines = false;
+        group.Panel.HeaderColorMouseOver = FlaxEngine.GUI.Style.Current.BackgroundNormal;
 
         float headerHeight = group.Panel.HeaderHeight;
 
         // Checkbox with enable/disable logic
         var toggle = new CheckBox
         {
+            Checked = isCallEnabled,
             TooltipText = "If checked, the target will be invoked",
             IsScrollable = false,
-            Checked = isCallEnabled,
             Parent = group.Panel,
             Size = new(headerHeight),
             Bounds = new(headerHeight, 0, headerHeight, headerHeight),
@@ -102,24 +104,27 @@ public class PersistentCallEditor : CustomEditor
         dragButton.HoverEnd -= StopAwaitingDrag;
         dragButton.HoverEnd += StopAwaitingDrag;
 
+        // Runtime Parameter enable/disable
+        var runtimeCheckBox = new Button
+        {
+
+            BackgroundBrush = call.TryUseRuntimeParameters ? new SpriteBrush(Editor.Instance.Icons.Link32) : new SpriteBrush(Editor.Instance.Icons.BrokenLink32),
+            BackgroundColor = call.TryUseRuntimeParameters ? FlaxEngine.GUI.Style.Current.BorderSelected.RGBMultiplied(1.25f) : FlaxEngine.GUI.Style.Current.ForegroundGrey,
+            BackgroundColorHighlighted = call.TryUseRuntimeParameters ? FlaxEngine.GUI.Style.Current.BorderSelected.RGBMultiplied(1.5f) : FlaxEngine.GUI.Style.Current.ForegroundGrey.RGBMultiplied(1.5f),
+            AnchorPreset = AnchorPresets.TopRight,
+            Parent = group.Panel,
+            Bounds = new(40, 0, headerHeight, headerHeight),
+            HasBorder = false,
+            TooltipText = "If linked, the events tries to apply the runtime parameters instead of the editor configured"
+        };
+
+        runtimeCheckBox.ButtonClicked += SetUseRuntimeParameter;
+
 
         // Target Object Picker
         var targetPanel = group.VerticalPanel();
         var propertyList = targetPanel.AddPropertyItem("Target", "The target of this event call");
         var objectPicker = propertyList.Custom<FlaxObjectRefPickerControl>();
-
-        // Runtime Parameter Checkbox
-        // var runtimeParameterCheckbox = layout.Checkbox("Use Event Inputs",
-        //     "If checked, the event will try to pass the runtime parameters instead of the editor-configured parameters to the target method. Will only work, if the event signature and method signature match.");
-        // runtimeParameterCheckbox.CheckBox.Checked = call.UseRuntimeParameters;
-        // runtimeParameterCheckbox.CheckBox.StateChanged += (CheckBox box) =>
-        // {
-        //     PersistentCall call = (PersistentCall)Values[0];
-        //     call.UseRuntimeParameters = box.Checked;
-
-        //     SetValue(call);
-        //     RebuildLayoutOnRefresh();
-        // };
 
 
         if (call.TargetObject != null)
@@ -165,14 +170,15 @@ public class PersistentCallEditor : CustomEditor
 
         var methodPicker = propertyList.Button(buttonText);
         methodPicker.Button.Height = 18;
-        methodPicker.Button.Margin = new(2, 0, 0, 0);
+        methodPicker.Button.Margin = new(3, 0, 0, 0);
         methodPicker.Button.HorizontalAlignment = TextAlignment.Near;
         methodPicker.Button.ButtonClicked += CreateMethodSelectionMenu;
 
         // Parameter controls
         if (call.MethodInfo == null)
             return;
-        
+
+        // Parameter editors
         MemberInfo memberInfo = typeof(PersistentCall).GetMember("Parameters", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
         ScriptMemberInfo scriptMember = new(memberInfo);
         GenericEditor.ItemInfo itemInfo = new(scriptMember);
@@ -395,6 +401,19 @@ public class PersistentCallEditor : CustomEditor
         PersistentCall call = oldCall.DeepClone();
 
         call.SetParent(objectPicker.CustomControl.Value as Actor ?? (objectPicker.CustomControl.Value as Script)?.Actor ?? null);
+
+        SetValue(call);
+        RebuildLayoutOnRefresh();
+    }
+
+    /// <summary>Sets the state for runtime parameter use of the linked <see cref="PersistentCall"/></summary>
+    /// <param name="button">The Button that is passed via action</param>
+    private void SetUseRuntimeParameter(Button button)
+    {
+        PersistentCall oldCall = (PersistentCall)Values[0];
+        PersistentCall call = oldCall.DeepClone();
+
+        call.SetUseRuntimeParameters(!call.TryUseRuntimeParameters);
 
         SetValue(call);
         RebuildLayoutOnRefresh();
