@@ -353,7 +353,9 @@ public class PersistentCallEditor : CustomEditor
     /// <returns>true if mouse is in bounds</returns>
     internal bool IsMouseInBounds()
     {
-        return group.ContainerControl.IsMouseOver;
+        Float2 mousePos = group.ContainerControl.PointFromScreen(Input.MouseScreenPosition);
+        return 0 <= mousePos.Y && mousePos.Y <= group.ContainerControl.Height;
+        // return group.ContainerControl.IsMouseOver;
     }
 
     /// <summary>Sets the editors elements color to their selection color</summary>
@@ -384,7 +386,7 @@ public class PersistentCallEditor : CustomEditor
     private void SetCallEnabledState(CheckBox box)
     {
         PersistentCall call = (PersistentCall)Values[0];
-        call.IsEnabled = box.Checked;
+        call.SetEnabled(box.Checked);
 
         SetValue(call);
         RebuildLayoutOnRefresh();

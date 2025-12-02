@@ -1,10 +1,7 @@
 ﻿// Copyright © 2025 Thomas Jungclaus. All rights reserved. Released under the MIT License.
 
 using System;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Emit;
 using FlaxEngine;
 using Object = FlaxEngine.Object;
 
@@ -13,8 +10,29 @@ namespace FlaxEvents;
 /// <summary>Stores infos about object and method/member, that will be dynamically invoked by a <see cref="FlaxEventBase"/></summary>
 public record struct PersistentCall
 {
+    /// <summary>Editor-Configured method name</summary>
+    [Serialize] private string methodName = string.Empty;
+
     /// <summary>Editor-Configured invokation parameters</summary>
     public PersistentParameter[] Parameters = [];
+
+    /// <summary>Cached parameters used at runtime</summary>
+    private object[] runtimeParameter;
+
+    /// <summary>Editor-Configured parent of target (is really only used in editor for ui purposes)</summary>
+    [Serialize] private Actor parent = null;
+
+    /// <summary>Editor-Configured target object</summary>
+    [Serialize] private Object targetObject = null;
+    
+    /// <summary>Cached methodinfo</summary>
+    private MethodInfo methodInfo;
+
+    /// <summary>Enables or disables the invokation of this call</summary>
+    private bool isEnabled = true;
+
+    /// <summary>if true, the call tries to use the invokation parameters if true, otherwise only uses the editor configured parameters</summary>
+    private bool tryUseRuntimeParameters = true;
 
     /// <summary>The parent actor of the <see cref="TargetObject"/>. This is used for editor purposes, ie. listing all available scripts and methods.</summary>
     public Actor Parent => parent;
@@ -22,31 +40,19 @@ public record struct PersistentCall
     /// <summary>Editor-Configured invokation target</summary>
     public Object TargetObject => targetObject;
 
+    /// <summary>MethodInfo of the target method</summary>
+    public MethodInfo MethodInfo => methodInfo ??= GetMethodInfo();
+
     /// <summary>Editor-Configured invokation method</summary>
     public string MethodName => methodName;
 
-    /// <summary>MethodInfo of the target method</summary>
-    public MethodInfo MethodInfo => methodInfo ??= CacheMethodInfo();
-
-    public Delegate Delegate => cachedDelegate ??= GetDelegate();
-
-    [Serialize] private string methodName = string.Empty;
-
-    [Serialize] private Actor parent = null;
-
-    [Serialize] private Object targetObject = null;
-
-    
-
-    private MethodInfo methodInfo;
-
-    private Delegate cachedDelegate;
-
-    /// <summary>Enables or disables the invokation of this call</summary>
-    public bool IsEnabled = true;
+    /// <summary>The enabled state of this <see cref="PersistentCall"/>. Disabled calls are not invoked.</summary>
+    public bool IsEnabled => isEnabled;
 
     /// <summary>if true, the call tries to use the invokation parameters if true, otherwise only uses the editor configured parameters</summary>
-    public bool UseRuntimeParameters = true;
+    public bool TryUseRuntimeParameters => tryUseRuntimeParameters;
+
+#if FLAX_EDITOR
 
     /// <summary>Sets the parent of the call. For editor purposes, this also sets the target object, but that can be overriden.</summary>
     /// <param name="newParent">The new parent actor, where the target of this call is.</param>
@@ -75,8 +81,90 @@ public record struct PersistentCall
         methodInfo = null;
     }
 
+    /// <summary>Sets the enabled state of this call. Disabled calls are not invoked</summary>
+    /// <param name="enable">true for enabled, false for disabled</param>
+    public void SetEnabled(bool enable)
+    {
+        isEnabled = enable;
+    }
+
+    /// <summary>Enables or disables the use of runtime parameters. If enabled, the invoke tries to apply the event arguments to the target method.</summary>
+    /// <param name="enable">true for enabled, false for disabled</param>
+    public void SetUseRuntimeParameters(bool enable)
+    {
+        tryUseRuntimeParameters = enable;
+    }
+
+  #endif
+
+    /// <summary>Invokes the stored persistent action, if <see cref="IsEnabled"/> is true</summary>
+    /// <param name="eventParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>
+    public void Invoke(object[] eventParams)
+    {
+        if (!IsEnabled || MethodInfo == null)
+            return;
+
+        // Parameter signature matching check
+        bool canUseRuntimeParams = tryUseRuntimeParameters && eventParams != null ? eventParams.Length == Parameters.Length : false;
+
+        if (tryUseRuntimeParameters)
+        {
+            // TODO: Instead of instantly returning false when parameter types dont match, the types could be checked
+            // for assignability, like with floats that can be assigned from ints.
+            // useRuntimeParams = Parameters[i].ParameterType.IsAssignableFrom(eventParams[i].GetType());
+            // Q: Will there be a noticable performance difference, when checking for 100 invokes?
+
+            for (int i = 0; canUseRuntimeParams && i < eventParams.Length; i++)
+                if (Parameters[i].ParameterType == null || eventParams[i].GetType() != Parameters[i].ParameterType)
+                    canUseRuntimeParams = false;
+        }
+
+        // TODO: Check that saved parameters match the parameter types of the target method
+
+        // TODO: useRuntimeParams can probably be cached, since the event signature and this call signature won't
+        // change at runtime. Also, for micro-optimization, the target method could be susbscribed to the action
+        // delegate in the main event, but there isn't a proper pipeline for that right now.
+        // Not sure if worth exploring.
+
+        // Early exit, we don't need to convert the parameters if we use runtime params
+        if (canUseRuntimeParams)
+        {
+            MethodInfo?.Invoke(TargetObject, eventParams);
+            return;
+        }
+
+        // Use the serialized parameters
+        runtimeParameter ??= GetParameterValues();
+        MethodInfo?.Invoke(TargetObject, runtimeParameter);
+    }
+
+    /// <summary>Gets an array containing the types of the stored <see cref="PersistentParameter"/></summary>
+    /// <returns>Type[]</returns>
+    private Type[] GetParameterTypes()
+    {
+        Type[] parameterTypes = new Type[Parameters.Length];
+
+        for (int i = 0; i < parameterTypes.Length; i++)
+            parameterTypes[i] = Parameters[i].ParameterType;
+
+        return parameterTypes;
+    }
+
+    /// <summary>Gets an array containing the values of the stored <see cref="PersistentParameter"/></summary>
+    /// <returns>object[]</returns>
+    private object[] GetParameterValues()
+    {
+        object[] values = new object[Parameters.Length];
+
+        for (int i = 0; i < values.Length; i++)
+            values[i] = Parameters[i].ParameterValue;
+
+        return values;
+    }
+
     /// <summary>Caches the method info for runtime, because flax doesn't serialize methodinfo types</summary>
-    private MethodInfo CacheMethodInfo()
+    /// <returns>MethodInfo of target method. null if failed.</returns>
+    private MethodInfo GetMethodInfo()
     {
         if (TargetObject == null || string.IsNullOrEmpty(MethodName))
             return null;
@@ -113,92 +201,7 @@ public record struct PersistentCall
             return methodinfos[i];
         }
 
-        // This should never happen
         return null;
-    }
-
-    /// <summary>Creates a delegate, that can be invoked</summary>
-    /// <returns>Delegate</returns>
-    private Delegate GetDelegate()
-    {
-        if (MethodInfo == null)
-            return null;
-
-        Type[] parameterTypes = GetParameterTypes();
-
-        Type delegateType = Expression.GetActionType(parameterTypes);
-
-        if (MethodInfo.ReturnType == typeof(void))
-            return MethodInfo.CreateDelegate(delegateType, TargetObject);
-
-        ParameterExpression[] paramsExpr = parameterTypes.Select(Expression.Parameter).ToArray();
-        MethodCallExpression call = TargetObject != null ? Expression.Call(Expression.Constant(TargetObject), MethodInfo, paramsExpr) : Expression.Call(MethodInfo, paramsExpr);
-        LambdaExpression ignoreReturn = Expression.Lambda(delegateType, Expression.Block(call, Expression.Empty()), paramsExpr);
-
-        return ignoreReturn.Compile();
-    }
-
-    /// <summary>Gets an array containing the types of the stored <see cref="PersistentParameter"/></summary>
-    /// <returns>Type[]</returns>
-    private Type[] GetParameterTypes()
-    {
-        Type[] parameterTypes = new Type[Parameters.Length];
-
-        for (int i = 0; i < parameterTypes.Length; i++)
-            parameterTypes[i] = Parameters[i].ParameterType;
-
-        return parameterTypes;
-    }
-
-    /// <summary>Invokes the stored persistent action, if <see cref="IsEnabled"/> is true</summary>
-    /// <param name="eventParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>
-    public void Invoke(object[] eventParams)
-    {
-        if (!IsEnabled || MethodInfo == null)
-            return;
-
-
-        // Parameter signature matching check
-        bool canUseRuntimeParams = UseRuntimeParameters && eventParams != null ? eventParams.Length == Parameters.Length : false;
-
-        if (UseRuntimeParameters)
-        {
-            // TODO: Instead of instantly returning false when parameter types dont match, the types could be checked
-            // for assignability, like with ints and floats, where an int gets automatically converted to a float.
-            // useRuntimeParams = Parameters[i].ParameterType.IsAssignableFrom(eventParams[i].GetType());
-            // Q: Will there be a noticable performance difference, when checking for 100 invokes?
-
-            for (int i = 0; canUseRuntimeParams && i < eventParams.Length; i++)
-                if (Parameters[i].ParameterType == null || eventParams[i].GetType() != Parameters[i].ParameterType)
-                    canUseRuntimeParams = false;
-        }
-        
-        // TODO: Check that saved parameters match the parameter types of the target method
-
-        // TODO: useRuntimeParams can probably be cached, since the event signature and this call signature won't
-        // change at runtime. Also, for micro-optimization, the target method could be susbscribed to the action
-        // delegate in the main event, but there isn't a proper pipeline for that right now.
-        // Not sure if worth exploring.
-
-        // TODO: Stress test witch a lot of persistent calls. Current testen with ~5 calls yields same result
-        // both with MethodInfo.Invoke and Delegate.DynamicInvoke
-
-        // Early exit, we don't need to convert the parameters if we use runtime params
-        if (canUseRuntimeParams)
-        {
-            // Delegate?.DynamicInvoke(eventParams);
-            MethodInfo?.Invoke(TargetObject, eventParams);
-            return;
-        }
-
-        // Use the serialized parameters
-        object[] runtimeParameter = new object[Parameters.Length];
-
-        for (int i = 0; i < Parameters.Length; i++)
-            runtimeParameter[i] = Parameters[i].ParameterValue;
-
-        // Delegate?.DynamicInvoke(runtimeParameter);
-        MethodInfo?.Invoke(TargetObject, runtimeParameter);
     }
 
     public PersistentCall()
