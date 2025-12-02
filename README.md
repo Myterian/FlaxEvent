@@ -4,16 +4,49 @@
 ![image](Images/Preview_3.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
 
 #### Table of Contents
-1. [How to use in Editor](#how-to-use-in-editor)
-2. [How to use in Code](#how-to-use-in-code)
-3. [Features](#features)
+1. [Features](#features)
+2. [How to use in Editor](#how-to-use-in-editor)
+3. [How to use in Code](#how-to-use-in-code)
 4. [Benchmark](#benchmark)
 5. [Setup](#how-to-set-up)
 6. [Installation](#how-to-install)
 
+## Features
+
+> ... _for artists, designers, and anyone who prefers visual setup_
+
+#### Easy Visual Setup
+
+-   **Drag & Drop Target Selection** - Pick Actors and methods directly in the Editor.
+    
+-   **Automatic Parameter Matching** - Setup any parameters a method requires
+    
+
+#### List & Call Management
+
+-   **Drag & Drop Reorder** - Move calls up or down in the list
+    
+-   **Drag & Drop Swap** - Swap the position of two calls instantly
+    
+
+#### Copy & Duplication Tools
+
+-   **Copy** - Copies the entire call entry
+    
+-   **Paste** - Overwrites the selected call with the copied data
+    
+-   **Duplicate** - Creates a brand-new call entry at the end of the list, identical to the selected one
+    
+
+#### Per-Call Toggles
+
+- **Enable / Disable** - Turn a call on or off without deleting it
+    
+- **Link / Unlink Runtime Parameters**  
+    Control whether a call automatically receives the parameters passed into `Invoke()`  
+    _(only works when the method signature matches the event signature)_.
 
 ## How to use in Editor
-<sup>... _for artists, designers, and anyone who prefers visual setup_</sup>
 
 #### Drag an object into the events target field
 ![image](Images/Drag_Preview.jpg "Drag an object into the target selector")
@@ -83,10 +116,6 @@ public void HelloWorldMethod(string message, int intValue)
     Debug.Log(message + intValue.ToString());
 }
 ```
-## Features
-- Drag and Drop Reorder
-- Quick Swap
-
 
 ## Benchmark
 
