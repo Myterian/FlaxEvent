@@ -83,9 +83,9 @@ This Benchmark is meant to give you an idea, how FlaxEvents compare to regular C
 
 |Event Type        |(Editor) Avg. First uncached Invoke     |(Editor) Avg. Subsequent cached Invoke|(Game) Avg. First uncached Invoke     |(Game) Avg. Subsequent cached Invoke|
 |-------------------------|-------------------------------|-------------------------------|-----------------------------|-----------------------------|
-|FlaxEvent Editor Call    | ~0.02ms                       | ~0.01ms                       | ~0.02ms                     | ~0.01ms                     |
-|FlaxEvent Runtime Call   | ~0.005ms                      | ~0.0007 ms                    | ~0.0005ms                   | < 0.0001ms                  |
-|C# Action Delegate       | ~0.005ms                      | ~0.0007 ms                    | ~0.0005ms                   | < 0.0001ms                  |
+|FlaxEvent Editor Call    | ~0.02ms                       | ~0.0008ms                     | ~0.02ms                     | ~0.0005ms                   |
+|FlaxEvent Runtime Call   | ~0.003ms                      | ~0.0007 ms                    | ~0.0008ms                   | < 0.00001ms                 |
+|C# Action Delegate       | ~0.001ms                      | ~0.0005 ms                    | ~0.0003ms                   | < 0.00001ms                 |
 
 \
 Test setup: 
