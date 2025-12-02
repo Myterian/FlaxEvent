@@ -1,10 +1,10 @@
-# FlaxEvent 3
-Editor-Configureable Events for the Flax Engine
+# FlaxEvent 3 - Editor-Configureable Events for the Flax Engine
+
 
 ![image](Images/Preview_3.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
-![image](Images/Parameter_Preview_2.jpg "Type integration for event parameters")
 
 ## How to use in Editor
+#### _for artists, designers, and anyone who prefers visual setup_
 
 1. Drag an object into the target selector
 ![image](Images/Drag_Preview.jpg "Drag an object into the target selector")
@@ -12,13 +12,13 @@ Editor-Configureable Events for the Flax Engine
 2. Select a target method, either from the actor or one if its scripts
 ![image](Images/Selection_Preview.jpg "Select the target method you want to invoke")
 
-3. Set any parameters to the desired value
-![image](Images/Done_Preview.jpg "(Optional) Set the parameters to the desired value")
+3. Any parameter type can be set
+![image](Images/Parameter_Preview_2.jpg "Type integration for event parameters")
 
 
 ## How to use in Code
 
-Example:
+#### Example
 ```cs
 public class MyScript : Script
 {
@@ -41,8 +41,8 @@ public class MyScript : Script
     }
 }
 ```
-\
-FlaxEvents support up to four types of parameters:
+
+#### Supported event signatures
 
 ```cs
 public FlaxEvent MySimpleEvent = new();
@@ -52,33 +52,34 @@ public FlaxEvent<T0, T1, T2> MyLargeEvent = new();
 public FlaxEvent<T0, T1, T2, T3> MyHugeEvent = new();
 ```
 
-\
-FlaxEvents also support runtime listeners, so you can dynamically add and remove methods, when the game is running:
+
+#### Runtime listeners
 
 ```cs
-public FlaxEvent MyEvent = new();
+public FlaxEvent<string> MyEvent = new();
 
 public override OnEnable()
 {
-    MyEvent?.AddListener(MyMethod);
+    MyEvent?.AddListener(HelloWorldMethod);
     ...
 }
 
 public override OnDisable()
 {
-    MyEvent?.RemoveListener(MyMethod);
+    MyEvent?.RemoveListener(HelloWorldMethod);
     ...
 }
 
-public void MyMethod()
+// Runtime listeners need to match the event signature
+public void HelloWorldMethod(string message)
 {
-    Debug.Log("Hello World");
+    Debug.Log(message);
 }
 ```
 
 ## Benchmark
 
-This Benchmark is meant to give you an idea, how FlaxEvents compare to regular C# delegates. Take these values with a grain of salt, as I only tested this on my old FX-8350 Cpu.
+These numbers show how FlaxEvents compare to standard C# delegates. May vary dependend on your hardware (tested on my old FX-8350 CPU).
 
 
 |Event Type        |(Editor) Avg. First uncached Invoke|(Editor) Avg. Subsequent cached Invoke|(Game) Avg. First uncached Invoke|(Game) Avg. Subsequent cached Invoke|
@@ -90,15 +91,15 @@ This Benchmark is meant to give you an idea, how FlaxEvents compare to regular C
 \
 Test setup: 
 - 500 Cube Actors in one scene
-- 3 different events were measured: FlaxEvent with only editor configured calls, FlaxEvent with only runtime calls and a C# Action
-- The test events invoked `Actor.OnActiveChanged` for every actor
-- Benchmark first event invoke: Event is uncached and does 500 method invokes total
-- Benchmark subsequent event invokes: Events are cached and invoked 1.000 times, amounting to 500.000 method invokes total
+- 3 cases measured: editor-configured-only event, runtime-only event, pure C# Action
+- Each invoked `Actor.OnActiveChanged` on every cube actor
+- First Invoke: no cached calls; does 500 method invokes total
+- Subsequent Invokes: cached calls, repeated 1.000x (500.000 method invokes total)
 
 
 ## How to Set Up
 - [Install](#how-to-install) the plugin
-- Add the dependency to the `*.Build.cs` file of every module where you want to use FlaxEvents
+- Add the dependency to the `*.Build.cs` file in any module that uses FlaxEvents
 ```cs
 /// <inheritdoc />
 public override void Setup(BuildOptions options)
@@ -114,12 +115,14 @@ public override void Setup(BuildOptions options)
 
 
 ## How to Install
-The easy method: 
-- In the Flax Editor, go to `Tools > Plugins > Clone Project` and paste this repo link `https://github.com/Myterian/FlaxEvent.git` into the `Git Path`, then `Clone`
+#### The easy way: 
+- In the Flax Editor, go to `Tools > Plugins > Clone Project`
+- Paste this repo link `https://github.com/Myterian/FlaxEvent.git` into the `Git Path`
+- Click `Clone`
 - Restart the Editor
 - Done
 
-Alternatively, you can manually add this plugin:
+#### Manual installation:
 - Close the Editor
 - Clone this repo into `<your-game-project-folder>\Plugins\FlaxEvent\`
 - Add a reference to FlaxEvent to your game, by modifying the `<your-game>.flaxproj` file
@@ -134,7 +137,8 @@ Alternatively, you can manually add this plugin:
     }
 ]
 ```
-- Restart and done
+- Restart the Editor
+- Done
 
 
 ## Known Issues
