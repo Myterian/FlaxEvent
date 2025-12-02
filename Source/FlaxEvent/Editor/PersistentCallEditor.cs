@@ -355,7 +355,6 @@ public class PersistentCallEditor : CustomEditor
     {
         Float2 mousePos = group.ContainerControl.PointFromScreen(Input.MouseScreenPosition);
         return 0 <= mousePos.Y && mousePos.Y <= group.ContainerControl.Height;
-        // return group.ContainerControl.IsMouseOver;
     }
 
     /// <summary>Sets the editors elements color to their selection color</summary>

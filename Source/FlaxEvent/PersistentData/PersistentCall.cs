@@ -8,7 +8,7 @@ using Object = FlaxEngine.Object;
 namespace FlaxEvents;
 
 /// <summary>Stores infos about object and method/member, that will be dynamically invoked by a <see cref="FlaxEventBase"/></summary>
-public record struct PersistentCall
+public class PersistentCall
 {
     /// <summary>Editor-Configured method name</summary>
     [Serialize] private string methodName = string.Empty;
@@ -52,8 +52,6 @@ public record struct PersistentCall
     /// <summary>if true, the call tries to use the invokation parameters if true, otherwise only uses the editor configured parameters</summary>
     public bool TryUseRuntimeParameters => tryUseRuntimeParameters;
 
-#if FLAX_EDITOR
-
     /// <summary>Sets the parent of the call. For editor purposes, this also sets the target object, but that can be overriden.</summary>
     /// <param name="newParent">The new parent actor, where the target of this call is.</param>
     public void SetParent(Actor newParent)
@@ -94,8 +92,6 @@ public record struct PersistentCall
     {
         tryUseRuntimeParameters = enable;
     }
-
-  #endif
 
     /// <summary>Invokes the stored persistent action, if <see cref="IsEnabled"/> is true</summary>
     /// <param name="eventParams">Invokation parameters of an event. Will be ignored, when method signatures don't match.</param>

@@ -7,7 +7,7 @@ namespace FlaxEvents;
 
 /// <summary>Data container for parameters of a <see cref="PersistentCall"/></summary>
 [JsonConverter(typeof(PersistentParameterConverter))]
-public record struct PersistentParameter
+public class PersistentParameter
 {
     /// <summary>Value of the parameter</summary>
     public object ParameterValue { get; init; }
