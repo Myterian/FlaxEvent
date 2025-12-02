@@ -3,16 +3,25 @@
 
 ![image](Images/Preview_3.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
 
-## How to use in Editor
-#### _for artists, designers, and anyone who prefers visual setup_
+#### Table of Contents
+1. [How to use in Editor](#how-to-use-in-editor)
+2. [How to use in Code](#how-to-use-in-code)
+3. [Features](#features)
+4. [Benchmark](#benchmark)
+5. [Setup](#how-to-set-up)
+6. [Installation](#how-to-install)
 
-1. Drag an object into the target selector
+
+## How to use in Editor
+<sup>... _for artists, designers, and anyone who prefers visual setup_</sup>
+
+#### Drag an object into the events target field
 ![image](Images/Drag_Preview.jpg "Drag an object into the target selector")
 
-2. Select a target method, either from the actor or one if its scripts
+#### Choose the method you want to call (from the Actor or any of its Scripts)
 ![image](Images/Selection_Preview.jpg "Select the target method you want to invoke")
 
-3. Any parameter type can be set
+#### Fill in any parameters the method requires ...
 ![image](Images/Parameter_Preview_2.jpg "Type integration for event parameters")
 
 
@@ -23,16 +32,18 @@
 public class MyScript : Script
 {
     
-    public FlaxEvent MyEvent = new();                   // Event without parameters
-    public FlaxEvent<string, int> MyLargeEvent = new(); // Event with parameters
+    public FlaxEvent MyEvent = new();                     // Event without parameters
+    public FlaxEvent<string, int> ParameterEvent = new(); // Event with parameters
 
     public override void OnUpdate()
     {
-        ...
+        // Invoking the event from code
         MyEvent?.Invoke();
 
-        ...
-        MyLargeEvent?.Invoke("some cool text", 7);
+        // Editor-Configured listeners can receive the parameters you pass here.
+        // The ONLY requirement: The listener method must match the events signature 
+        // > i.e. (string, int)
+        ParameterEvent?.Invoke("some cool text", 7);
     }
 }
 ```
@@ -65,19 +76,24 @@ public override OnDisable()
     ...
 }
 
-// Runtime listeners need to match the event signature
+// Runtime listeners need to match the events signature 
+// > i.e. (string, int)
 public void HelloWorldMethod(string message, int intValue)
 {
     Debug.Log(message + intValue.ToString());
 }
 ```
+## Features
+- Drag and Drop Reorder
+- Quick Swap
+
 
 ## Benchmark
 
 These numbers show how FlaxEvents compare to standard C# delegates. Results may vary dependend on hardware (tested on my old FX-8350 CPU).
 
 
-|Event Type        |(Editor) Avg. First uncached Invoke|(Editor) Avg. Subsequent cached Invoke|(Game) Avg. First uncached Invoke|(Game) Avg. Subsequent cached Invoke|
+|Event Type        |(Editor) First Uncached|(Editor) Cached|(Game) First Uncached|(Game) Cached|
 |-------------------------|-------------------------------|-------------------------------|-----------------------------|-----------------------------|
 |FlaxEvent Editor Call    | ~0.02ms                       | ~0.0008ms                     | ~0.02ms                     | ~0.0005ms                   |
 |FlaxEvent Runtime Call   | ~0.003ms                      | ~0.0007 ms                    | ~0.0008ms                   | < 0.00001ms                 |
