@@ -15,7 +15,6 @@ using Object = FlaxEngine.Object;
 using System.Text;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine.Utilities;
-using FlaxEditor.CustomEditors.GUI;
 
 namespace FlaxEvents;
 
@@ -270,7 +269,7 @@ public class PersistentCallEditor : CustomEditor
 
             Type[] paraTypes = methods[x].GetParameterTypes();
             string shortKeys = null;
-            bool sameOverloadMethod = true;
+            bool sameOverloadMethod = false;
 
             for (int q = 0; q < paraTypes.Length; q++)
             {
@@ -279,8 +278,8 @@ public class PersistentCallEditor : CustomEditor
                 if (q != paraTypes.Length - 1)
                     methodNameBuilder.Append(", ");
 
-                if (call.Parameters == null || call.Parameters.Length != paraTypes.Length || call.Parameters[q].ParameterType != paraTypes[q])
-                    sameOverloadMethod = false;
+                if (call.Parameters != null && call.Parameters.Length == paraTypes.Length && call.Parameters[q].ParameterType == paraTypes[q])
+                    sameOverloadMethod = true;
             }
 
             methodNameBuilder.Append(')');
