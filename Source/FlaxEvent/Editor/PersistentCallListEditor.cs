@@ -162,7 +162,7 @@ public class PersistentCallListEditor : CustomEditor
     /// <param name="index">The index of the element, that gets duplicated</param>
     public void DuplicatePersistentCall(int index)
     {
-        var oldList = (List<PersistentCall>)Values[0];
+        List<PersistentCall> oldList = (List<PersistentCall>)Values[0];
 
         if (Mathf.IsNotInRange(index, 0, oldList.Count - 1))
             return;
@@ -179,18 +179,20 @@ public class PersistentCallListEditor : CustomEditor
     /// <param name="index">The index of the element to remove</param>
     public void RemovePersistentCall(int index)
     {
-        var oldList = (List<PersistentCall>)Values[0];
-        List<PersistentCall> newList = new();
+        List<PersistentCall> oldList = (List<PersistentCall>)Values[0];
+        List<PersistentCall> newList = [..oldList];
 
-        for (int i = 0; i < index; i++)
-        {
-            newList.Add(oldList[i]);
-        }
+        newList.RemoveAt(index);
 
-        for (int i = index + 1; i < oldList.Count; i++)
-        {
-            newList.Add(oldList[i]);
-        }
+        // for (int i = 0; i < index; i++)
+        // {
+        //     newList.Add(oldList[i]);
+        // }
+
+        // for (int i = index + 1; i < oldList.Count; i++)
+        // {
+        //     newList.Add(oldList[i]);
+        // }
 
         SetValue(newList);
         RebuildLayoutOnRefresh();
