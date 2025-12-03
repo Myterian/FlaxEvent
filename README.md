@@ -13,11 +13,11 @@
 
 ## Features
 
-> ... _for artists, designers, and anyone who prefers visual setup_
+
 
 #### Easy Visual Setup
 
--   **Drag & Drop Target Selection** - Pick Actors and methods directly in the Editor.
+-   **Drag & Drop Target Selection** - <br/> Pick Actors and methods directly in the Editor.
     
 -   **Automatic Parameter Matching** - Setup any parameters a method requires
     
@@ -36,7 +36,26 @@
 -   **Paste** - Overwrites the selected call with the copied data
     
 -   **Duplicate** - Creates a brand-new call entry at the end of the list, identical to the selected one
-    
+
+|**Easy Visual Setup**||
+|-----|------|
+|**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
+|**Automatic Parameter Matching** <br/> Setup any parameters a method requires|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
+
+|**List Management**||
+|-----|------|
+|**Drag & Drop Reorder** <br/> Move calls up or down in the list|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
+|**Drag & Drop Swap** <br/> Swap the position of two calls instantly|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
+
+|**Per-Call Toggles**||
+|-----|------|
+|**Enable / Disable** <br/> Turn a call on or off without deleting it||
+|**Link / Unlink Runtime Parameters** <br/> Control whether a call automatically receives the parameters passed into `Invoke()`||
+
+|**Copy & Duplication**||
+|-----|------|
+|Copy/Paste/Duplicate||
+
 
 #### Per-Call Toggles
 
@@ -48,14 +67,13 @@
 
 ## How to use in Editor
 
-#### Drag an object into the events target field
-![image](Images/Drag_Preview.jpg "Drag an object into the target selector")
+> ... _for artists, designers, and anyone who prefers visual setup_
 
-#### Choose the method you want to call (from the Actor or any of its Scripts)
-![image](Images/Selection_Preview.jpg "Select the target method you want to invoke")
-
-#### Fill in any parameters the method requires ...
-![image](Images/Parameter_Preview_2.jpg "Type integration for event parameters")
+|**Easy Visual Setup**||
+|---|---|
+|**Drag & Drop Target Selection**|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
+|**Choose target method**|![image](Images/Selection_Preview.jpg "Select the target method you want to invoke")|
+|**Fill in any parameters the method requires ...**|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
 
 
 ## How to use in Code
