@@ -263,6 +263,10 @@ public class PersistentCallEditor : CustomEditor
 
         for (int x = 0; x < methods.Length; x++)
         {
+            // Can't invoke generic methods
+            if (methods[x].IsGenericMethod)
+                continue;
+                
             // Creates the display name for a button, which shows the method name, the parameter signature and selection indicator
             StringBuilder methodNameBuilder = new(methods[x].Name);
             methodNameBuilder.Append('(');
