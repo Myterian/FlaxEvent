@@ -5,7 +5,7 @@ using FlaxEngine;
 
 namespace FlaxEvents;
 
-/// <summary>FlaxEventPlugin GamePlugin.</summary>
+/// <summary>FlaxEvent GamePlugin.</summary>
 public class FlaxEventPlugin : GamePlugin
 {
     public static Version PluginVersion = new(3, 0, 0);
@@ -14,14 +14,14 @@ public class FlaxEventPlugin : GamePlugin
     public override void Initialize()
     {
         base.Initialize();
-        
+
     }
 
     /// <inheritdoc/>
     public override void Deinitialize()
     {
         base.Deinitialize();
-        
+
     }
 
     public FlaxEventPlugin()

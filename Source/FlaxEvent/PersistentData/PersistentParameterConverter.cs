@@ -4,6 +4,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using FlaxEngine;
+using FlaxEngine.Utilities;
 
 namespace FlaxEvents;
 
@@ -23,7 +24,7 @@ public class PersistentParameterConverter : JsonConverter
             string typeName = (string)obj["ParameterType"];
 
             if (!string.IsNullOrEmpty(typeName))
-                paraType = Type.GetType(typeName);
+                paraType = TypeUtils.GetType(typeName).Type;
 
             JToken valueToken = obj["ParameterValue"];
 
@@ -52,7 +53,7 @@ public class PersistentParameterConverter : JsonConverter
         PersistentParameter parameter = (PersistentParameter)value;
         writer.WriteStartObject();
         writer.WritePropertyName("ParameterType");
-        writer.WriteValue(parameter.ParameterType.AssemblyQualifiedName);
+        writer.WriteValue(parameter.ParameterType?.AssemblyQualifiedName);
         writer.WritePropertyName("ParameterValue");
         serializer.Serialize(writer, parameter.ParameterValue);
         writer.WriteEndObject();
