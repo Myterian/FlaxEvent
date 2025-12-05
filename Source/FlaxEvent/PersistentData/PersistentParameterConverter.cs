@@ -4,7 +4,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using FlaxEngine;
-using FlaxEngine.Utilities;
+using System.Reflection;
 
 namespace FlaxEvents;
 
@@ -21,15 +21,39 @@ public class PersistentParameterConverter : JsonConverter
             object paraValue = null;
             Type paraType = null;
 
+            // Deserialising the ParameterType
             string typeName = (string)obj["ParameterType"];
 
             if (!string.IsNullOrEmpty(typeName))
-                paraType = TypeUtils.GetType(typeName).Type;
+                paraType = Type.GetType(typeName);
 
+            // This is for parameters, that use custom classes/structs/Actors/Scripts/etc.
+            // Project-Level assemblies are not guaranteed to be loaded during deserialization.
+            // Loading them manually avoids errors and empty parameters.
+            if (paraType != null)
+            {
+                AssemblyName typeAssemblyName = new AssemblyName(paraType.Assembly.FullName);
+                Assembly.Load(typeAssemblyName);
+            }
+            
+            // Deserialising the ParameterValue
             JToken valueToken = obj["ParameterValue"];
 
-            if (valueToken != null && paraType != null)
-                paraValue = valueToken.ToObject(paraType, serializer);
+            // ParameterValue might be a type, which has to be resolved manually
+            if (paraType != null && valueToken != null && typeof(Type).IsAssignableFrom(paraType))
+            {
+                string valueName = valueToken.ToObject<string>();
+                Type valueAsType = Type.GetType(valueName);
+
+                AssemblyName valueAssemblyName = new AssemblyName(valueAsType.Assembly.FullName);
+                Assembly.Load(valueAssemblyName);
+
+                paraValue = valueAsType;
+            }
+            
+            // If ParameterValue is not a type, but a regular object (most cases)
+            if (paraValue == null && valueToken != null && paraType != null)
+                    paraValue = valueToken.ToObject(paraType, serializer);
 
             PersistentParameter result = new()
             {

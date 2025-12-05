@@ -210,6 +210,8 @@ public class PersistentCallEditor : CustomEditor
             FlaxEventContextChildMenu childMenu;
             bool isCallTarget = false;
 
+            // FlaxEditor.Utilities.Utils.CreateSearchPopup(out TextBox searchBox, out FlaxEditor.GUI.Tree.Tree tree);
+
             if (i == -1)
             {
                 target = call.Parent;
