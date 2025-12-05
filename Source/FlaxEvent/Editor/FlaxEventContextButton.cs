@@ -14,37 +14,23 @@ namespace FlaxEvents;
 public class FlaxEventContextButton : ContextMenuButton
 {
     public string MethodName => methodName;
-
     public Type[] ParameterTypes => parameterTypes;
-
     public FlaxEngine.Object TargetObject => targetObject;
 
     private string methodName;
-
     private Type[] parameterTypes;
-
     private FlaxEngine.Object targetObject;
 
+    public readonly int InitialIndex = -1;
+    public int CurrentRanking = -1;
     public bool IsActiveTarget = false;
 
-    [Obsolete("Don't you dare use this!")]
-    public FlaxEventContextButton(ContextMenu parent, string text, string shortKeys = "") : base(parent, text, shortKeys)
+
+    public override void PerformLayout(bool force = false)
     {
-        Parent = parent.ItemsContainer;
-        Text = text;
-        ShortKeys = shortKeys;
+        base.PerformLayout(force);
     }
 
-    public FlaxEventContextButton(ContextMenu parent, string text, FlaxEngine.Object target, string method, Type[] parameters, Action<ContextMenuButton> action, string shortKeys = "") : base(parent, text, shortKeys)
-    {
-        Parent = parent.ItemsContainer;
-        Text = text;
-        ShortKeys = shortKeys;
-        parameterTypes = parameters;
-        methodName = method;
-        targetObject = target;
-        ButtonClicked += action;
-    }
 
     public override void Draw()
     {
@@ -54,7 +40,7 @@ public class FlaxEventContextButton : ContextMenuButton
 
         Color color = Color.OrangeRed;
 
-        if(IsActiveTarget)
+        if (IsActiveTarget)
             color = Enabled ? current.BorderSelected : current.BorderSelected.RGBMultiplied(0.8f);
         else
             color = Enabled ? current.Foreground : current.ForegroundDisabled;
@@ -65,7 +51,7 @@ public class FlaxEventContextButton : ContextMenuButton
 
         else if (IsFocused)
             Render2D.FillRectangle(rect, current.LightBackground);
-        
+
 
         base.Draw();
 
@@ -73,13 +59,35 @@ public class FlaxEventContextButton : ContextMenuButton
 
         if (!string.IsNullOrEmpty(ShortKeys))
             Render2D.DrawText(current.FontMedium, ShortKeys, new Rectangle(layoutRect.X + ExtraAdjustmentAmount, layoutRect.Y, layoutRect.Width, layoutRect.Height), color, TextAlignment.Far, TextAlignment.Center);
-        
+
 
         SpriteHandle spriteHandle = Checked ? current.CheckBoxTick : Icon;
         if (spriteHandle.IsValid)
             Render2D.DrawSprite(spriteHandle, new Rectangle(-15f, (Height - 14f) / 2f, 14f, 14f), color);
-        
+
     }
+
+    
+    [Obsolete("Don't you dare use this!")]
+    public FlaxEventContextButton(ContextMenu parent, string text, string shortKeys = "") : base(parent, text, shortKeys)
+    {
+        Parent = parent.ItemsContainer;
+        Text = text;
+        ShortKeys = shortKeys;
+    }
+
+    public FlaxEventContextButton(ContextMenu parent, string text, FlaxEngine.Object target, string method, int childIndex, Type[] parameters, Action<ContextMenuButton> action, string shortKeys = "") : base(parent, text, shortKeys)
+    {
+        Parent = parent.ItemsContainer;
+        Text = text;
+        ShortKeys = shortKeys;
+        parameterTypes = parameters;
+        methodName = method;
+        targetObject = target;
+        ButtonClicked += action;
+        InitialIndex = childIndex;
+    }
+
 }
 
 #endif

@@ -263,12 +263,19 @@ public class PersistentCallEditor : CustomEditor
         BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Instance;
         MethodInfo[] methods = target.GetType().GetMethods(flags);
 
+        // TextBox searchBox = menu.AddChild<TextBox>();
+        // searchBox.WatermarkText = "TODO: Implement seach feature ...";
+        // searchBox.AnchorPreset = AnchorPresets.HorizontalStretchTop;
+        // searchBox.Height = 20;
+
+        // menu.ItemsAreaMargin = new(0, 0, 40, 0);
+
         for (int x = 0; x < methods.Length; x++)
         {
             // Can't invoke generic methods
             if (methods[x].IsGenericMethod)
                 continue;
-                
+
             // Creates the display name for a button, which shows the method name, the parameter signature and selection indicator
             StringBuilder methodNameBuilder = new(methods[x].Name);
             methodNameBuilder.Append('(');
@@ -289,8 +296,8 @@ public class PersistentCallEditor : CustomEditor
             }
 
             methodNameBuilder.Append(')');
-            
-            ContextMenuButton button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, paraTypes, SetCall);
+
+            ContextMenuButton button = menu.AddButton(methodNameBuilder.ToString(), target, methods[x].Name, menu.ItemsContainer.ChildrenCount, paraTypes, SetCall);
             button.ShortKeys = shortKeys;
 
             // Selection indicator. Highlight existing selection.
