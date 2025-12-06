@@ -1,45 +1,31 @@
-# FlaxEvent 3 - Editor-Configureable Events for the Flax Engine
 
 
-![image](Images/Preview_3.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
+
+![image](Images/Preview_4.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
 
 #### Table of Contents
-1. [Features](#features)
+1. [What is FlaxEvent?](#what-is-flaxevent)
 2. [How to use in Editor](#how-to-use-in-editor)
 3. [How to use in Code](#how-to-use-in-code)
 4. [Benchmark](#benchmark)
 5. [Setup](#how-to-set-up)
 6. [Installation](#how-to-install)
 
-## Features
+## What is FlaxEvent?
+
+> _for artists, designers, and anyone who prefers visual setup_
+
+`FlaxEvent` is a visual event and messaging system for the Flax Engine. It lets artists, designers and programmers create modular and decoupled logic between actors, scripts and assets through the user interface.
 
 
 
-#### Easy Visual Setup
 
--   **Drag & Drop Target Selection** - <br/> Pick Actors and methods directly in the Editor.
-    
--   **Automatic Parameter Matching** - Setup any parameters a method requires
-    
-
-#### List & Call Management
-
--   **Drag & Drop Reorder** - Move calls up or down in the list
-    
--   **Drag & Drop Swap** - Swap the position of two calls instantly
-    
-
-#### Copy & Duplication Tools
-
--   **Copy** - Copies the entire call entry
-    
--   **Paste** - Overwrites the selected call with the copied data
-    
--   **Duplicate** - Creates a brand-new call entry at the end of the list, identical to the selected one
+## How to use in Editor
 
 |**Easy Visual Setup**||
 |-----|------|
 |**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
+|**Find methods instantly** <br/> Quickly search thru all available methods||
 |**Automatic Parameter Matching** <br/> Setup any parameters a method requires|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
 
 |**List Management**||
@@ -56,24 +42,6 @@
 |-----|------|
 |Copy/Paste/Duplicate||
 
-
-#### Per-Call Toggles
-
-- **Enable / Disable** - Turn a call on or off without deleting it
-    
-- **Link / Unlink Runtime Parameters**  
-    Control whether a call automatically receives the parameters passed into `Invoke()`  
-    _(only works when the method signature matches the event signature)_.
-
-## How to use in Editor
-
-> ... _for artists, designers, and anyone who prefers visual setup_
-
-|**Easy Visual Setup**||
-|---|---|
-|**Drag & Drop Target Selection**|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
-|**Choose target method**|![image](Images/Selection_Preview.jpg "Select the target method you want to invoke")|
-|**Fill in any parameters the method requires ...**|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
 
 
 ## How to use in Code
@@ -99,6 +67,8 @@ public class MyScript : Script
 }
 ```
 
+
+
 #### Supported event signatures
 
 ```cs
@@ -108,6 +78,7 @@ public FlaxEvent<T0, T1> MyMediumEvent = new();
 public FlaxEvent<T0, T1, T2> MyLargeEvent = new();
 public FlaxEvent<T0, T1, T2, T3> MyHugeEvent = new();
 ```
+
 
 
 #### Runtime listeners
@@ -135,6 +106,8 @@ public void HelloWorldMethod(string message, int intValue)
 }
 ```
 
+
+
 ## Benchmark
 
 These numbers show how FlaxEvents compare to standard C# delegates. Results may vary dependend on hardware (tested on my old FX-8350 CPU).
@@ -155,6 +128,7 @@ Test setup:
 - Subsequent Invokes: cached calls, repeated 1.000x (500.000 method invokes total)
 
 
+
 ## How to Set Up
 - [Install](#how-to-install) the plugin
 - Add the dependency to the `*.Build.cs` file in any module that uses FlaxEvents
@@ -170,6 +144,7 @@ public override void Setup(BuildOptions options)
     ...
 }
 ```
+
 
 
 ## How to Install
@@ -194,13 +169,16 @@ public override void Setup(BuildOptions options)
         "Name": "$(ProjectPath)/Plugins/FlaxEvent/FlaxEvent.flaxproj"
     }
 ]
+...
 ```
 - Restart the Editor
 - Done
 
 
+
 ## Known Issues
-- None, but bug reports are open
-- Tested on Flax v. 1.11
+Tested on FlaxEngine v. 1.11
+- FlaxEditors `Undo` will throw an error, when trying to undo changes to a FlaxEvent FlaxEngine/FlaxEngine#3832
+
 
 ![image](Images/Preview.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
