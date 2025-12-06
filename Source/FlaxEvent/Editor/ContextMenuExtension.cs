@@ -3,13 +3,11 @@
 #if FLAX_EDITOR
 
 using System;
-using System.Collections.Generic;
 using FlaxEditor.GUI.ContextMenu;
-using FlaxEngine;
 
 namespace FlaxEvents;
 
-/// <summary>Extends <see cref="ContextMenu"/> to include custom FlaxEvent types for buttons and child menus</summary>
+/// <summary>Extends <see cref="ContextMenu"/> to include custom FlaxEvent buttons and child menus</summary>
 public static class ContextMenuExtension
 {
     public static ContextMenuButton AddButton(this ContextMenu menu, string buttonDisplayText, FlaxEngine.Object target, string methodName, int index,Type[] parameters, Action<ContextMenuButton> action, string shortKeys = "")

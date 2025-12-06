@@ -26,12 +26,6 @@ public class FlaxEventContextButton : ContextMenuButton
     public bool IsActiveTarget = false;
 
 
-    public override void PerformLayout(bool force = false)
-    {
-        base.PerformLayout(force);
-    }
-
-
     public override void Draw()
     {
         Style current = Style.Current;
@@ -65,15 +59,6 @@ public class FlaxEventContextButton : ContextMenuButton
         if (spriteHandle.IsValid)
             Render2D.DrawSprite(spriteHandle, new Rectangle(-15f, (Height - 14f) / 2f, 14f, 14f), color);
 
-    }
-
-    
-    [Obsolete("Don't you dare use this!")]
-    public FlaxEventContextButton(ContextMenu parent, string text, string shortKeys = "") : base(parent, text, shortKeys)
-    {
-        Parent = parent.ItemsContainer;
-        Text = text;
-        ShortKeys = shortKeys;
     }
 
     public FlaxEventContextButton(ContextMenu parent, string text, FlaxEngine.Object target, string method, int childIndex, Type[] parameters, Action<ContextMenuButton> action, string shortKeys = "") : base(parent, text, shortKeys)

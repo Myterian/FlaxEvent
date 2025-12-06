@@ -2,7 +2,6 @@
 
 #if FLAX_EDITOR
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.GUI.ContextMenu;
@@ -16,9 +15,7 @@ namespace FlaxEvents;
 public class FlaxEventContextChildMenu : FlaxEventContextButton
 {
     public readonly ContextMenu ContextMenu = new ContextMenu();
-
     private readonly TextBox SearchBox;
-
 
     /// <summary>Simple search method. Orders child buttons by how good they match the users search term.</summary>
     private void OrderBySearch()
@@ -153,14 +150,6 @@ public class FlaxEventContextChildMenu : FlaxEventContextButton
 
         ShowChild(parentContextMenu);
         return base.OnMouseUp(location, button);
-    }
-
-
-    [Obsolete("Don't use!")]
-    public FlaxEventContextChildMenu(ContextMenu parent, string text, string shortKeys = "") : base(parent, text, shortKeys)
-    {
-        Text = text;
-        CloseMenuOnClick = false;
     }
 
     public FlaxEventContextChildMenu(ContextMenu parent, string text, bool isActiveTarget, string shortKeys = "") : base(parent, text, null, null, -1,null, null, shortKeys)
