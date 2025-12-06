@@ -101,7 +101,8 @@ public class FlaxEventContextChildMenu : FlaxEventContextButton
 
     private void ShowChild(ContextMenu parentContextMenu)
     {
-        float top = parentContextMenu.ItemsAreaMargin.Top;
+        // Add more padding on top, because the searchbar disappears, when the menu gets to high
+        float top = parentContextMenu.ItemsAreaMargin.Top - 40;
         Float2 location = new Float2(Width, 0f - top);
 
         location = PointToParent(parentContextMenu, location);
