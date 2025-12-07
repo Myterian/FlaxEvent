@@ -17,7 +17,7 @@
 
 `FlaxEvent` is a visual event and messaging system for the Flax Engine. It lets artists, designers and programmers create modular and decoupled logic between actors, scripts and assets through the user interface.
 
-![image](Images/Functionality_Preview.jpg "A visual event and messaging system")
+![image](Images/Functionality_Preview_2.jpg "A visual event and messaging system")
 
 
 
@@ -25,23 +25,18 @@
 
 |**Easy Visual Setup**||
 |-----|------|
-|**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
-|**Find methods instantly** <br/> Quickly search through all available methods||
+|**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|![image](Images/Drag.jpg "Drag an object into the target selector")|
+|**Find methods instantly** <br/> Quickly search through all available methods|![image](Images/Search.jpg "Quickly search through all available methods")||
 |**Automatic Parameter Matching** <br/> Setup any parameters a method requires|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
+
+|**Per-Listener Toggles**||
+|-----|------|
+|**Enable / Disable** <br/> Turn a call on or off without deleting it </br></br> **Link / Unlink Runtime Parameters** <br/> Control whether a call receives the parameters passed into `Invoke()`|![image](Images/Toggles.jpg "On/Off and Link/Unlink")|
 
 |**List Management**||
 |-----|------|
-|**Drag & Drop Reorder** <br/> Move calls up or down in the list|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
-|**Drag & Drop Swap** <br/> Swap the position of two calls instantly|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
-
-|**Per-Call Toggles**||
-|-----|------|
-|**Enable / Disable** <br/> Turn a call on or off without deleting it||
-|**Link / Unlink Runtime Parameters** <br/> Control whether a call automatically receives the parameters passed into `Invoke()`||
-
-|**Copy & Duplication**||
-|-----|------|
-|Copy/Paste/Duplicate||
+|**Drag & Drop Reorder** <br/> Move listeners up or down in the list|![image](Images/Reorder.jpg "Drag an object into the target selector")|
+|**Drag & Drop Swap** <br/> Swap the position of two listeners instantly|![image](Images/Swap.jpg "Type integration for event parameters")|
 
 
 
@@ -114,19 +109,19 @@ public void HelloWorldMethod(string message, int intValue)
 These numbers show how FlaxEvents compare to standard C# delegates. Results may vary dependend on hardware (tested on my old FX-8350 CPU).
 
 
-|Event Type        |(Editor) First Uncached|(Editor) Cached|(Game) First Uncached|(Game) Cached|
+|Event and Listeners        |(Editor) First Uncached|(Editor) Cached|(Game) First Uncached|(Game) Cached|
 |-------------------------|-------------------------------|-------------------------------|-----------------------------|-----------------------------|
-|FlaxEvent Editor Call    | ~0.02ms                       | ~0.0008ms                     | ~0.02ms                     | ~0.0005ms                   |
-|FlaxEvent Runtime Call   | ~0.003ms                      | ~0.0007 ms                    | ~0.0008ms                   | < 0.00001ms                 |
+|FlaxEvent Editor Listener    | ~0.02ms                       | ~0.0008ms                     | ~0.02ms                     | ~0.0005ms                   |
+|FlaxEvent Runtime Listener   | ~0.003ms                      | ~0.0007 ms                    | ~0.0008ms                   | < 0.00001ms                 |
 |C# Action Delegate       | ~0.001ms                      | ~0.0005 ms                    | ~0.0003ms                   | < 0.00001ms                 |
 
 \
 Test setup: 
 - 500 Cube Actors in one scene
-- 3 cases measured: editor-configured-only event, runtime-only event, pure C# Action
+- 3 cases measured: editor-configured-listeners-only event, runtime-listeners-only event, pure C# Action
 - Each invoked `Actor.OnActiveChanged` on every cube actor
-- First Invoke: no cached calls; does 500 method invokes total
-- Subsequent Invokes: cached calls, repeated 1.000x (500.000 method invokes total)
+- First Invoke: no cached listeners; does 500 method invokes total
+- Subsequent Invokes: cached listeners, repeated 1.000x (500.000 method invokes total)
 
 
 
@@ -179,7 +174,7 @@ public override void Setup(BuildOptions options)
 
 ## Known Issues
 Tested on FlaxEngine v. 1.11
-- FlaxEditors `Undo` will throw an error, when trying to undo changes to a FlaxEvent FlaxEngine/FlaxEngine#3832
+- FlaxEditors `Undo` will throw an error, when trying to undo changes to a FlaxEvent and prevents further undos FlaxEngine/FlaxEngine#3832
 
 
 ![image](Images/Preview.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
