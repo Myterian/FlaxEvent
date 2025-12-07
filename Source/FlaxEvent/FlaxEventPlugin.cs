@@ -8,7 +8,7 @@ namespace FlaxEvents;
 /// <summary>FlaxEvent GamePlugin.</summary>
 public class FlaxEventPlugin : GamePlugin
 {
-    public static Version PluginVersion = new(3, 0, 0);
+    public static Version PluginVersion = new(3, 0, 168);
 
     /// <inheritdoc/>
     public override void Initialize()
