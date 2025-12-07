@@ -31,11 +31,11 @@ public class FlaxEventPlugin : GamePlugin
             Name = "FlaxEvent",
             Description = "Editor-Configurable Events for the Flax Engine",
             Category = "FlaxEvent",
-            RepositoryUrl = "https://github.com/Myterian/ExtensionMethods.git",
+            RepositoryUrl = "https://github.com/Myterian/FlaxEvent.git",
             Author = "Thomas Jungclaus",
-            AuthorUrl = "https://github.com/Myterian",
+            AuthorUrl = "https://github.com/Myterian/",
             IsAlpha = false,
-            IsBeta = true,
+            IsBeta = false,
             Version = PluginVersion
         };
     }
