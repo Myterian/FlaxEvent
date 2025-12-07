@@ -28,13 +28,9 @@
 |**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|![image](Images/Drag.jpg "Drag an object into the target selector")|
 |**Find methods instantly** <br/> Quickly search through all available methods|![image](Images/Search.jpg "Quickly search through all available methods")||
 |**Automatic Parameter Matching** <br/> Setup any parameters a method requires|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
-
-|**Per-Listener Toggles**||
-|-----|------|
-|**Enable / Disable** <br/> Turn a call on or off without deleting it </br></br> **Link / Unlink Runtime Parameters** <br/> Control whether a call receives the parameters passed into `Invoke()`|![image](Images/Toggles.jpg "On/Off and Link/Unlink")|
-
+|**Per-Listener Handles**||
+|**Control Listener Behaviour** <br/> Enable listeners and decide how parameters flow|![image](Images/Toggles.jpg "On/Off and Link/Unlink")|
 |**List Management**||
-|-----|------|
 |**Drag & Drop Reorder** <br/> Move listeners up or down in the list|![image](Images/Reorder.jpg "Drag an object into the target selector")|
 |**Drag & Drop Swap** <br/> Swap the position of two listeners instantly|![image](Images/Swap.jpg "Type integration for event parameters")|
 
