@@ -343,13 +343,10 @@ public class PersistentCallEditor : CustomEditor
     /// <summary>Creates a drag operation, to move or shift this editors value to another index</summary>
     private void AwaitDrag()
     {
-        if (!Input.GetMouseButtonDown(MouseButton.Left) || dragOperation?.IsDisposed == false)
+        if (!Input.GetMouseButtonDown(MouseButton.Left))
             return;
 
-        // TODO: Re-Enable this control
-        if (dragOperation != null)
-            dragOperation.Dispose();
-
+        dragOperation?.Dispose();
         dragOperation = new(parentEditor, Index);
     }
 
