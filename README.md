@@ -23,16 +23,22 @@
 
 ## How to use in Editor
 
-|**Easy Visual Setup**||
-|-----|------|
-|**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|![image](Images/Drag.jpg "Drag an object into the target selector")|
-|**Find methods instantly** <br/> Quickly search through all available methods|![image](Images/Search.jpg "Quickly search through all available methods")||
-|**Automatic Parameter Matching** <br/> Setup any parameters a method requires|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
-|**Per-Listener Handles**||
-|**Control Listener Behaviour** <br/> Enable listeners and decide how parameters flow|![image](Images/Toggles.jpg "On/Off and Link/Unlink")|
-|**List Management**||
-|**Drag & Drop Reorder** <br/> Move listeners up or down in the list|![image](Images/Reorder.jpg "Drag an object into the target selector")|
-|**Drag & Drop Swap** <br/> Swap the position of two listeners instantly|![image](Images/Swap.jpg "Type integration for event parameters")|
+|**Easy Visual Setup**|
+|-----|
+|**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|
+|![image](Images/Drag.jpg "Drag an object into the target selector")|
+|**Find methods instantly** <br/> Quickly search through all available methods|
+|![image](Images/Search.jpg "Quickly search through all available methods")||
+|**Automatic Parameter Matching** <br/> Setup any parameters a method requires|
+|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
+|**Per-Listener Handles**|
+|**Control Listener Behaviour** <br/> Enable listeners and decide how parameters flow|
+|![image](Images/Toggles.jpg "On/Off and Link/Unlink")|
+|**List Management**|
+|**Drag & Drop Reorder** <br/> Move listeners up or down in the list|
+|![image](Images/Reorder.jpg "Drag an object into the target selector")|
+|**Drag & Drop Swap** <br/> Swap the position of two listeners instantly|
+|![image](Images/Swap.jpg "Type integration for event parameters")|
 
 
 
@@ -52,7 +58,8 @@ public class MyScript : Script
         MyEvent?.Invoke();
 
         // Editor-Configured listeners can receive the parameters you pass here.
-        // The ONLY requirement: The listener method must match the events signature 
+        // Requirement: The listener is linked to runtime parameters and
+        // the target method must match the events signature.
         // > i.e. (string, int)
         ParameterEvent?.Invoke("some cool text", 7);
     }
@@ -170,7 +177,7 @@ public override void Setup(BuildOptions options)
 
 ## Known Issues
 Tested on FlaxEngine v. 1.11
-- FlaxEditors `Undo` will throw an error, when trying to undo changes to a FlaxEvent and prevents further undos FlaxEngine/FlaxEngine#3832
+- FlaxEditors `Undo` will throw an error, when trying to undo changes to a FlaxEvent. This also prevents further undos FlaxEngine/FlaxEngine#3832
 
 
 ![image](Images/Preview.jpg "FlaxEvents - Editor-Configureable Events for the Flax Engine")
