@@ -32,7 +32,7 @@ public class PersistentCall
     [Serialize] private bool isEnabled = true;
 
     /// <summary>if true, the call tries to use the invokation parameters if true, otherwise only uses the editor configured parameters</summary>
-    [Serialize] private bool tryUseRuntimeParameters = true;
+    [Serialize] private bool tryUseRuntimeParameters = false;
 
     /// <summary>The parent actor of the <see cref="TargetObject"/>. This is used for editor purposes, ie. listing all available scripts and methods.</summary>
     public Actor Parent => parent;
