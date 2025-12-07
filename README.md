@@ -17,6 +17,7 @@
 
 `FlaxEvent` is a visual event and messaging system for the Flax Engine. It lets artists, designers and programmers create modular and decoupled logic between actors, scripts and assets through the user interface.
 
+![image](Images/Functionality_Preview.jpg "A visual event and messaging system")
 
 
 
@@ -25,7 +26,7 @@
 |**Easy Visual Setup**||
 |-----|------|
 |**Drag & Drop Target Selection** <br/> Pick Actors and methods directly in the Editor|![image](Images/Drag_Preview.jpg "Drag an object into the target selector")|
-|**Find methods instantly** <br/> Quickly search thru all available methods||
+|**Find methods instantly** <br/> Quickly search through all available methods||
 |**Automatic Parameter Matching** <br/> Setup any parameters a method requires|![image](Images/Parameter_Preview_v2.jpg "Type integration for event parameters")|
 
 |**List Management**||
