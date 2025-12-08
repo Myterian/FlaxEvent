@@ -10,6 +10,7 @@
 4. [Benchmark](#benchmark)
 5. [Setup](#how-to-set-up)
 6. [Installation](#how-to-install)
+7. [Known Issues](#known-issues)
 
 ## What is FlaxEvent?
 
