@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Debug|x64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Debug|x64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -84,7 +84,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Debug|ARM64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -105,7 +105,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Development|x64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -126,7 +126,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Development|ARM64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -147,7 +147,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Release|x64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -168,7 +168,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Release|ARM64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -189,7 +189,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Debug|x64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -210,7 +210,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Debug|Win32' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -231,7 +231,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Debug|ARM64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -252,7 +252,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Development|x64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -273,7 +273,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Development|Win32' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -294,7 +294,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Development|ARM64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -315,7 +315,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Release|x64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -336,7 +336,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Release|Win32' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -357,13 +357,13 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Release|ARM64' ">
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Source\Platforms\DotNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="FlaxEngine.CSharp">
-      <HintPath>..\..\..\..\..\..\Programme\Flax_1.11\Binaries\Editor\Win64\Development\FlaxEngine.CSharp.dll</HintPath>
+      <HintPath>A:\Programme\Flax_1.11\Binaries\Editor\Win64\Development\FlaxEngine.CSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -388,48 +388,48 @@
     <Compile Include="FlaxEvent\PersistentData\PersistentParameterConverter.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Debug|x64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\x64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\x64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Debug|ARM64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\ARM64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\ARM64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Development|x64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\x64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\x64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Development|ARM64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\ARM64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\ARM64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Release|x64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\x64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\x64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Editor.Windows.Release|ARM64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\ARM64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventEditorTarget\Windows\ARM64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Debug|x64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\x64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\x64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Debug|Win32' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\Win32\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\Win32\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Debug|ARM64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\ARM64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\ARM64\Debug\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Development|x64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\x64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\x64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Development|Win32' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\Win32\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\Win32\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Development|ARM64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\ARM64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\ARM64\Development\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Release|x64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\x64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\x64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Release|Win32' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\Win32\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\Win32\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Game.Windows.Release|ARM64' " >
-    <Compile Visible="false" Include="A:\DevEnvironment\!Flax Plugins\FlaxEventProject\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\ARM64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
+    <Compile Visible="false" Include="C:\Users\Thomas\Documents\Flax Projects\FlaxSamples\BasicTemplate\Plugins\FlaxEvent\Cache\Intermediate\FlaxEventTarget\Windows\ARM64\Release\FlaxEvent\FlaxEvent.Bindings.Gen.cs" />
   </ItemGroup>
 </Project>
